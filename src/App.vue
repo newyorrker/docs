@@ -1,9 +1,9 @@
 <template>
   <div class="app-root">
-    <documents-list v-if="false" />
+    <documents-list v-if="true" />
     <document-view v-if="false" />
     <document-sign v-if="false" />
-    <document-reject />
+    <document-reject v-if="false" />
   </div>
 </template>
 

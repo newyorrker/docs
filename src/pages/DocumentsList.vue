@@ -4,11 +4,13 @@
             <document-card />
             <document-card />
             <document-card />
+            <document-card />
+            <document-card />
+            <document-card />
+            <document-card />
         </div>
 
-        <div v-if="false" class="documents-list__filter">
-          <document-list-filter />
-        </div>
+        <document-list-filter v-if="true" class="documents-list__filter" />
     </div>
 </template>
 
@@ -25,7 +27,7 @@ interface SomeTypeInterface {
 
 
 export default defineComponent({
-  name: '',
+  name: 'DocumentList',
   components: {
       DocumentCard, DocumentListFilter
   },
@@ -40,6 +42,8 @@ export default defineComponent({
 
 <style lang="scss">
 .documents-list {
+  height: 100%;
+  position: relative;
 
   &__list {
     & > div {
@@ -58,6 +62,14 @@ export default defineComponent({
     & > div + div {
       margin-top: 10px
     }
+  }
+
+  &__filter {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px #c8c7cc solid;
   }
 }
 </style>

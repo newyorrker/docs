@@ -79,7 +79,8 @@ export default defineComponent({
 <style lang="scss">
 .document-list-filter {
     background-color: #F0F0F0;
-    padding: 19px 14px 0 16px;
+    // background-color: red;
+    padding: 19px 14px 16px 16px;
 
     header {
         display: flex;

@@ -59,9 +59,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-body {
-  background-color: #f4f4f4 !important;
-}
 .document-card {
   background-color: #ffffff;
   padding-top: 9px;

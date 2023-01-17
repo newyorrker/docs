@@ -1,10 +1,16 @@
 @import "./variables";
 @import "../../common/styles/base";
 
-.app {
-  max-width: 375px;
-  margin: 0 auto;
-  padding: 0 8px;
+html {
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+}
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 #app {
@@ -12,10 +18,19 @@
   width: 100%;
   min-height: 100%;
   overflow: auto;
+  // padding: 0 16px;
 }
 
 body {
-  background: #fff;
-  margin: 0;
+  background-color: #f4f4f4;
   min-height: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.footer {
+  background-color: #F9F9F9;
+  padding: 10px 16px;
+  margin-left: -16px;
+  margin-right: -16px;
 }

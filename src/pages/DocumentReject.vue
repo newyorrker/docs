@@ -9,11 +9,11 @@
           <p>Укажите причину:</p>
           <textarea v-model="reason" placeholder="Введите сообщение" rows="11" ></textarea>
         </div>
-        <footer>
-            <button-1>Отказаться</button-1>
-        </footer>
-    </div>
 
+    </div>
+    <footer>
+        <button-1>Отказаться</button-1>
+    </footer>
 </template>
 
 <script lang="ts">
@@ -44,13 +44,6 @@ export default defineComponent({
 
 <style lang="scss">
 .document-reject {
-    footer {
-      background-color: #F9F9F9;
-      padding: 10px;
-      // margin-left: -8px;
-      // margin-right: -8px;
-    }
-
     &__title {
         p {
             font-weight: 600;
