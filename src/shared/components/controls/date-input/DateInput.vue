@@ -36,6 +36,7 @@ export default defineComponent({
     open(e: InputEvent) {
 
       const element = this.getElement()[0];
+      //@ts-ignore
       element.showPicker();
 
       console.dir("show");
