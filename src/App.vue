@@ -5,9 +5,7 @@
     <document-sign v-if="false" />
     <document-reject v-if="false" />
 
-    <button @click="showFilter = !showFilter">toggle</button>
-
-    <document-list-filter @close="showFilter = false" v-if="showFilter" class="documents-list__filter" />
+    <!-- <document-list-filter @close="showFilter = false" v-if="showFilter" class="documents-list__filter" /> -->
   </div>
 </template>
 

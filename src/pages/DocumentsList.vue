@@ -10,8 +10,10 @@
             <document-card />
         </div>
 
-        <!-- <document-list-filter v-if="true" class="documents-list__filter" /> -->
+
     </div>
+    <document-list-filter @close="showFilter = false" v-if="showFilter" class="documents-list__filter" />
+    <button @click="showFilter = !showFilter">toggle</button>
 </template>
 
 <script lang="ts">
@@ -33,6 +35,7 @@ export default defineComponent({
   },
   data() {
     return {
+      showFilter: true
     //   s,
     }
   }
