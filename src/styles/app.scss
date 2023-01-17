@@ -1,0 +1,21 @@
+@import "./variables";
+@import "../../common/styles/base";
+
+.app {
+  max-width: 375px;
+  margin: 0 auto;
+  padding: 0 8px;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+  min-height: 100%;
+  overflow: auto;
+}
+
+body {
+  background: #fff;
+  margin: 0;
+  min-height: 100%;
+}
