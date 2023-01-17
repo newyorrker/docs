@@ -10,7 +10,7 @@
             <document-card />
         </div>
 
-        <document-list-filter v-if="true" class="documents-list__filter" />
+        <!-- <document-list-filter v-if="true" class="documents-list__filter" /> -->
     </div>
 </template>
 
@@ -42,6 +42,7 @@ export default defineComponent({
 
 <style lang="scss">
 .documents-list {
+  overflow: auto;
   height: 100%;
   position: relative;
 
@@ -66,7 +67,7 @@ export default defineComponent({
 
   &__filter {
     width: 100%;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     border-top: 1px #c8c7cc solid;

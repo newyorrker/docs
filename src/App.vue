@@ -4,6 +4,10 @@
     <document-view v-if="false" />
     <document-sign v-if="false" />
     <document-reject v-if="false" />
+
+    <button @click="showFilter = !showFilter">toggle</button>
+
+    <document-list-filter @close="showFilter = false" v-if="showFilter" class="documents-list__filter" />
   </div>
 </template>
 
@@ -16,7 +20,7 @@ import DocumentsList from './pages/DocumentsList.vue';
 import DocumentView from './pages/DocumentView.vue';
 import DocumentSign from './pages/DocumentSign.vue';
 import DocumentReject from './pages/DocumentReject.vue';
-
+import DocumentListFilter from '@/shared/components/document-list-filter/DocumentListFilter.vue';
 
 export default defineComponent({
   name: 'App',
@@ -24,10 +28,12 @@ export default defineComponent({
     DocumentsList,
     DocumentView,
     DocumentSign,
-    DocumentReject
+    DocumentReject,
+    DocumentListFilter
   },
   data() {
     return {
+      showFilter: true
     //   s,
     }
   }

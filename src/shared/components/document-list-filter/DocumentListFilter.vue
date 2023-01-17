@@ -9,7 +9,7 @@
                 <span>Фильтр</span>
             </div>
             <div class="document-list-filter__close">
-                <button>
+                <button @click="$emit('close')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
                         <path fill="#373737" d="M7.05 5.636 18.364 16.95l-1.414 1.414L5.636 7.05z"/>
                         <path fill="#373737" d="m16.95 5.636 1.414 1.414L7.05 18.364 5.636 16.95z"/>
