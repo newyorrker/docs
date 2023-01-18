@@ -1,0 +1,18 @@
+{
+  "successButtonText": "Окей",
+  "errorButtonText": "Закрыть",
+  "yes": "Да",
+  "no": "Нет",
+  "createdAt": "Создана",
+  "struggling": "Затрудняюсь ответить",
+  "filterTitle": "Фильтр",
+  "filterResetButtonTitle": "Сбросить",
+  "filterApplyButtonTitle": "Применить",
+  "searchPlaceholder": "Поиск",
+  "pullToRefreshPrompt": "Потяните, чтобы обновить",
+  "releaseToRefreshPrompt": "Отпустите, чтобы обновить",
+  "refreshingText": "Обновление...",
+  "attachFiles": "Прикрепить файлы или фото",
+  "attachMoreFiles": "Добавить еще файлы или фото",
+  "plusMorePhotos": "+ {num} фото"
+}

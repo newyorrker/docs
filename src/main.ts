@@ -1,16 +1,93 @@
-import store from "./store";
-import "./styles/app.scss";
+import Vue from 'vue';
+import store from './store';
+//@ts-ignore
+import TextareaAutosize from 'vue-textarea-autosize';
+import EasyRefresh from '@/shared/components/EasyRefresh/vue-easyrefresh/src/index';
+// @ts-ignore
+import i18n from '@/locale/i18';
 
-import {getSessionFromNative, initApp} from "@/helpers/InitHelper";
-import App from "./App.vue";
+import App from './App.vue';
 
-const app = initApp(App);
+import Api from './service/network/api';
+import { HrLinkRepository, HrLinkRepositoryInterface } from './service/repositories/HrLinkRepository';
 
-window.sessionFromNative = getSessionFromNative(store);
+Vue.config.productionTip = false;
+Vue.use(TextareaAutosize);
+Vue.use(EasyRefresh);
+
+declare module "vue/types/vue" {
+  interface Vue {
+    $style: Record<string, string>;
+    $hrLinkRepository: HrLinkRepositoryInterface;
+  }
+}
+
+
+declare global {
+  interface Window {
+    sessionFromNative: (arg0: string) => void;
+    activateFromNative: () => void;
+    appercode: {
+      reloadPage: () => void;
+    };
+    actor: {
+      changeButtons: (arg0: any) => void;
+      postMessage: (arg0: any) => void;
+    };
+    clickButton: (arg0: any) => void;
+    // eslint-disable-next-line
+    webkit: any;
+    // eslint-disable-next-line
+    session: any;
+  }
+}
+
+const app = new Vue({
+  components: {
+    App,
+  },
+  template: "<app v-if='isSessionSet'></app>",
+  data(): {
+    isSessionSet: boolean;
+    activate: boolean;
+    api: Api | null;
+  } {
+    return {
+      isSessionSet: false,
+      activate: false,
+      api: null,
+    };
+  },
+  store,
+  i18n,
+  created() {
+    this.api = Api.getInstance();
+  },
+  methods: {
+    sessionFromNative(sessionData: string) {
+      const parsedSessionData = JSON.parse(sessionData);
+      this.api && this.api.setSession(parsedSessionData);
+      this.$store.commit('setSession', parsedSessionData);
+      store.dispatch("fetchProfile");
+      this.isSessionSet = true;
+
+      Vue.prototype.$hrLinkRepository = new HrLinkRepository();
+    },
+    activateFromNative() {
+      this.activate = !this.activate;
+    },
+  },
+});
+
+window.sessionFromNative = app.sessionFromNative;
+window.activateFromNative = app.activateFromNative;
+
+app.$mount('#app');
 
 
 if (process.env.NODE_ENV !== 'production') {
-    window.sessionFromNative(
-        '{"backendUrl":"https://api.test.appercode.com/ugmkrk", "sessionId":"e4318f7b-b194-4450-a51a-62d566750f6a", "userId": 139, "baseUrl":"https://api.test.appercode.com/","projectName":"ugmkrk","appPlatform":"Android","appVersion": "3.3.0","language": "ru", "userProfile": {"groupIds":["eadb87e0-538e-49d6-b985-40986f8e3e3b"]}}',
-    );
+  console.log(1);
+  window.sessionFromNative(
+    '{"backendUrl":"https://api.test.appercode.com/hrlink", "sessionId":"c5b37129-9196-4144-9b98-6ea3b22e20ab", "userId": 41323, "baseUrl":"https://api.test.appercode.com/","projectName":"hrlink","appPlatform":"Android","appVersion": "3.3.0","language": "ru", "userProfile": {"groupIds":["eadb87e0-538e-49d6-b985-40986f8e3e3b"]}}',
+  );
 }

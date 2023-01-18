@@ -4,7 +4,7 @@
             <user-icon :userProfile="userProfile" :size="30" />
         </div>
         <div class="user-profile__text">
-             <p class="user-profile__name">Петров Петр Петрович</p> <!--{{ userProfile.fullName }} -->
+             <p class="user-profile__name">{{ userProfile.fullName }}</p> <!--{{  }} -->
             <p class="user-profile__position">{{ userProfile.position }}</p>
         </div>
     </div>

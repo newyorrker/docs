@@ -6,12 +6,14 @@
         <document-info :userProfile="userProfile" />
 
         <sms-sign />
+
+        <footer>
+          <button-1>
+              Подтвердить
+          </button-1>
+      </footer>
     </div>
-    <footer>
-        <button-1>
-            Подтвердить
-        </button-1>
-    </footer>
+
 </template>
 
 <script lang="ts">
@@ -34,7 +36,7 @@ export default defineComponent({
   },
   computed: {
     userProfile() {
-      return this.$store.state.profile;
+      return this.$store.state.userProfile;
     }
   }
 })

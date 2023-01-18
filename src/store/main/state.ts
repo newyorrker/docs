@@ -1,9 +1,5 @@
-import { RootState } from "@/store/types/RootState";
+import RootState from '@/types/RootState';
 
-export const state: RootState = {
-  session: null,
-  client: undefined,
-  spinner: true,
-  isTokenUpdating: false,
-  profile: null
-};
+const state: RootState = {};
+
+export default state;

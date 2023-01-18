@@ -1,0 +1,13 @@
+{
+  "successTitle": "Запрос подан",
+  "successMessage": "Ваш запрос успешно отправлен. В ближайшее время мы рассмотрим вашу заявку.",
+  "errorTitle": "Ошибка",
+  "errorMessage": "При отправке возникла ошибка. Попробуйте позже или обратитесь в службу поддержки.",
+  "ticketTitle": "Название идеи",
+  "ticketCategory": "Документ для заказа",
+  "ticketCategoryPlaceholder": "Выберите документ",
+  "problemDescription": "Комментарий к заказу",
+  "problemDescriptionPlaceholder": "Напишите комментарий к заказу",
+  "filesOrPhoto": "Файлы или фото",
+  "materials": "Приложенные к заказу файлы и фото"
+}

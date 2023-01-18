@@ -1,38 +1,23 @@
 <template>
-    <button v-bind="$attrs" :style="styleObject" class="button-1"><slot/></button>
+  <button v-bind="$attrs" :style="styleObject" class="button-1"><slot/></button>
 </template>
 
 <script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-import { defineComponent } from 'vue';
+@Component({ components: {  }})
 
-export default defineComponent({
-  name: '',
-  components: {
+export default class Button1 extends Vue {
+  @Prop({ default: "#F39420" }) color!: string;
 
-  },
-  props: {
-    color: {
-      type: String,
-      default: "#F39420"
-    }
-  },
-  data() {
-    return {
-    //   s,
-    }
-  },
-  computed: {
-    styleObject() {
-        return {
-            '--bg-color' : this.color
-        }
-    }
+  get styleObject() {
+      return {
+          '--bg-color' : this.color
+      }
   }
-})
+}
 
 </script>
-
 <style lang="scss">
 .button-1 {
     width: 100%;

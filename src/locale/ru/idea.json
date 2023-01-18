@@ -1,0 +1,19 @@
+{
+  "successTitle": "Идея подана",
+  "successMessage": "Ваша идея успешно подана. В ближайшее время мы рассмотрим ваше предложение.",
+  "errorTitle": "Ошибка",
+  "errorMessage": "При отправке возникла ошибка. Попробуйте позже или обратитесь в службу поддержки.",
+  "ticketTitle": "Название идеи",
+  "ticketCategory": "Категория идеи",
+  "ticketCategoryPlaceholder": "Выберите категорию идеи",
+  "сosts": "Планируются затраты?",
+  "сostsView": "Затраты",
+  "problemDescription": "Описание проблемы",
+  "problemDescriptionPlaceholder": "Напишите описание проблемы",
+  "solution": "Предлагаемое решение",
+  "hasBigEffect": "Ожидаемый эффект больше 200 000 рублей?",
+  "effectFormation": "Пояснение формирования эффекта",
+  "images": "Изображения",
+  "materials": "Материалы",
+  "statusAndComments": "Статус и комментарии"
+}

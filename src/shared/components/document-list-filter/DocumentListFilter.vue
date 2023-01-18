@@ -22,7 +22,6 @@
         <main>
             <section class="document-list-filter__date">
                 <p>Период публикации</p>
-                {{ date1 }}
                 <div class="document-list-filter__date-container">
                     <date-input v-model="date1" :value="date1"/>
                     —

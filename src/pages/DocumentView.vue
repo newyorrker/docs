@@ -28,7 +28,7 @@ export default defineComponent({
   },
   computed: {
     userProfile() {
-      return this.$store.state.profile;
+      return this.$store.state.userProfile;
     }
   }
 })

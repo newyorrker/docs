@@ -3,14 +3,14 @@
         <user-profile v-if="userProfile" :userProfile="userProfile" />
 
         <div class="document-card__title">
-          <p>Служебная записка об использовании личного транспорта</p>
+          <p>{{ source.name }}</p>
         </div>
 
-        <document-status v-if="true" class="document-card__status" />
+        <document-status v-if="true" :source="source" class="document-card__status" />
 
-        <div v-if="true" class="document-card__comment">
+        <div v-if="false || source.rejected" class="document-card__comment">
           <p>Комментарий</p>
-          <p>Неудовлетворили условия Неудовлетворили условия Неудовлетворили условия Неудовлет Неудовлетворили условия Неудовлет</p>
+          <p>{{ source.rejectionComment }}</p>
         </div>
 
         <div class="document-card__footer">
@@ -26,35 +26,24 @@
 </template>
 
 <script lang="ts">
+import { HrLinkDocumentInterface } from "@/types/HrLinkDocument/HrLinkDocumentInterface";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-import { defineComponent } from 'vue'
 import UserProfile from '../user-profile/UserProfile.vue';
 import DocumentStatus from './status/DocumentStatus.vue';
 
-
-export default defineComponent({
-  name: '',
-  components: {
+@Component({ components: {
     UserProfile,
     DocumentStatus
-  },
-//   props: {
-//     simplePror: {
-//       required: true,
-//       type: Array as () => SomeTypeInterface[]
-//     }
-//   },
-  data() {
-    return {
-      // userProfile: this.$store.state.profile
-    }
-  },
-  computed: {
-    userProfile() {
-      return this.$store.state.profile;
-    }
+}})
+
+export default class ClassName extends Vue {
+  @Prop() source: HrLinkDocumentInterface;
+
+  get userProfile() {
+    return this.$store.state.userProfile;
   }
-})
+}
 
 </script>
 
@@ -111,6 +100,10 @@ export default defineComponent({
   }
 
   &__comment + &__footer {
+    margin-top: 16px;
+  }
+
+  &__status + &__footer {
     margin-top: 16px;
   }
 

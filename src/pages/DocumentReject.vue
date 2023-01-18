@@ -10,10 +10,11 @@
           <textarea v-model="reason" placeholder="Введите сообщение" rows="11" ></textarea>
         </div>
 
+        <footer>
+            <button-1>Отказаться</button-1>
+        </footer>
+
     </div>
-    <footer>
-        <button-1>Отказаться</button-1>
-    </footer>
 </template>
 
 <script lang="ts">
@@ -35,7 +36,7 @@ export default defineComponent({
   },
   computed: {
     userProfile() {
-      return this.$store.state.profile;
+      return this.$store.state.userProfile;
     }
   }
 })

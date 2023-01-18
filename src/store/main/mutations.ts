@@ -1,22 +1,18 @@
-import { MutationTree } from "vuex";
-import { RootState } from "@/store/types/RootState";
-import { Session } from "@/types/Session";
-import { AxiosInstance } from "axios";
+import { MutationTree } from 'vuex';
+import RootState from '@/types/RootState';
+import Session from '@/models/Session';
+import Vue from 'vue';
 
-export const mutations: MutationTree<RootState> = {
-  setSession(state, data: Session) {
-    state.session = data;
+const mutations: MutationTree<RootState> = {
+  setSession(state, session: Session) {
+    Vue.set(state, 'session', session);
   },
-  setClient(state, client: AxiosInstance) {
-    state.client = client;
+  setUrlParams(state, urlParams: { [k: string]: string }) {
+    state.urlParams = urlParams;
   },
-  setSpinner(state, value) {
-    state.spinner = value;
-  },
-  setIsTokenUpdating(state, value: boolean) {
-    state.isTokenUpdating = value;
-  },
-  setProfile(state, profile) {
-    state.profile = profile;
+  setProfile(state, payload) {
+    Vue.set(state, "userProfile", payload);
   }
 };
+
+export default mutations;
