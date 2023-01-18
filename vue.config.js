@@ -4,7 +4,7 @@ module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
   productionSourceMap: false,
-  publicPath: isDevelop ? '/' : '/pdf-view-app/dist',
+  publicPath: isDevelop ? '/' : '/docs/dist',
   chainWebpack: config => {
     const svgRule = config.module.rule("svg");
 
