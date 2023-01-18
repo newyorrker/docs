@@ -1,8 +1,10 @@
+const isDevelop = process.env.NODE_ENV === 'development';
+
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
   productionSourceMap: false,
-  // publicPath: "",
+  publicPath: isDevelop ? '/' : '/pdf-view-app/dist',
   chainWebpack: config => {
     const svgRule = config.module.rule("svg");
 
