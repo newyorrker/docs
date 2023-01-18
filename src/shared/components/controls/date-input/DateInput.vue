@@ -67,7 +67,7 @@ export default class ClassName extends Vue {
 
     input {
       width: 100%;
-      min-height: 24px;
+      min-height: 38px;
       border: 0;
       background-color: transparent;
       font-size: 14px;
