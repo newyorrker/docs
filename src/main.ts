@@ -85,7 +85,7 @@ window.activateFromNative = app.activateFromNative;
 app.$mount('#app');
 
 
-if (process.env.NODE_ENV !== 'production') {
+if (true|| process.env.NODE_ENV !== 'production') {
   console.log(1);
   window.sessionFromNative(
     '{"backendUrl":"https://api.test.appercode.com/hrlink", "sessionId":"c5b37129-9196-4144-9b98-6ea3b22e20ab", "userId": 41323, "baseUrl":"https://api.test.appercode.com/","projectName":"hrlink","appPlatform":"Android","appVersion": "3.3.0","language": "ru", "userProfile": {"groupIds":["eadb87e0-538e-49d6-b985-40986f8e3e3b"]}}',
