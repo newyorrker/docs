@@ -1,5 +1,5 @@
-export interface DocumentQuery {
-    where: any;
+export interface THRLinkDocumentRequest {
+    where?: THRLinkDocumentRequestWhere;
     take?: number;
     skip?: number;
     order?: QueryOrder;
@@ -10,9 +10,17 @@ export interface QueryOrder {
     direction: "asc" | "desc";
 }
 
-export interface QueryWhere {
+enum Statuses {
+    draft = "DRAFT",
+    inProcess = "IN_PROCESS",
+    completed = "COMPLETED",
+    rejected = "REJECTED",
+    deleted = "DELETED"
+}
+
+export interface THRLinkDocumentRequestWhere {
     ids?: string[];
-    statuses?: "DRAFT" | "IN_PROCESS" | "COMPLETED" | "REJECTED" | "DELETED";
+    statuses?: Statuses[];
 
     /**
      * Левая граница даты документа

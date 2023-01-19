@@ -1,8 +1,5 @@
 import { DocumentCreator } from "./DocumentCreator";
 
-/**
- * this is dto
- */
 export interface HrLinkDocumentDto {
     /**
      * Datestring

@@ -1,20 +1,20 @@
 <template>
     <div class="document-card">
-        <user-profile v-if="userProfile" :userProfile="userProfile" />
+        <user-profile :userProfile="userProfile" />
 
         <div class="document-card__title">
           <p>{{ source.name }}</p>
         </div>
 
-        <document-status v-if="true" :source="source" class="document-card__status" />
+        <document-status v-if="showStatus" :source="source" class="document-card__status" />
 
-        <div v-if="false || source.rejected" class="document-card__comment">
+        <div v-if="source.rejected" class="document-card__comment">
           <p>Комментарий</p>
           <p>{{ source.rejectionComment }}</p>
         </div>
 
         <div class="document-card__footer">
-            <p>5 декабря 14:03</p>
+            <p>{{ creationDate }}</p>
             <button v-if="false">
               Подписать
               <svg xmlns="http://www.w3.org/2000/svg" width="5" height="9" fill="none">
@@ -37,11 +37,19 @@ import DocumentStatus from './status/DocumentStatus.vue';
     DocumentStatus
 }})
 
-export default class ClassName extends Vue {
+export default class DocumentCard extends Vue {
   @Prop() source: HrLinkDocumentInterface;
 
   get userProfile() {
-    return this.$store.state.userProfile;
+    return this.source.creator;
+  }
+
+  get showStatus() {
+    return this.source.rejected || this.source.signed;
+  }
+
+  get creationDate() {
+    return this.source.createdAt.toFormat("d LLLL HH:mm");
   }
 }
 

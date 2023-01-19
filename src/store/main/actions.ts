@@ -8,6 +8,9 @@ const actions: ActionTree<RootState, RootState> = {
         const api = Api.getInstance();
         const profile = await api.ownProfile();
         commit("setProfile", profile);
+    },
+    reportError({}, e) {
+        console.error(e);
     }
 };
 

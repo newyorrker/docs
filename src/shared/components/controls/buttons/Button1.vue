@@ -1,5 +1,5 @@
 <template>
-  <button v-bind="$attrs" :style="styleObject" class="button-1"><slot/></button>
+  <button @click="$emit('click', $event)" v-bind="$listeners" :style="styleObject" class="button-1"><slot/></button>
 </template>
 
 <script lang="ts">

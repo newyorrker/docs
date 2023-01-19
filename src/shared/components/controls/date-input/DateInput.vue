@@ -1,9 +1,6 @@
 <template>
   <div :class="s.input">
     <input @click="open" v-model="model" :placeholder="placeholder" type="date">
-    <button @click="open">
-
-    </button>
 
     <svg :class="s.inputIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
       <path stroke="#C8C8C8" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.8 5.6H7.2A3.2 3.2 0 0 0 4 8.8v8A3.2 3.2 0 0 0 7.2 20h9.6a3.2 3.2 0 0 0 3.2-3.2v-8a3.2 3.2 0 0 0-3.2-3.2ZM4 10.4h16M8.8 4v3.2V4Zm6.4 0v3.2V4Z"/>
@@ -63,8 +60,6 @@ export default class ClassName extends Vue {
     border: 1px #C8C8C8 solid;
     border-radius: 4px;
 
-    // padding: 10px 7px;
-
     input {
       width: 100%;
       min-height: 38px;
@@ -106,6 +101,7 @@ export default class ClassName extends Vue {
   right: 11px;
   top: calc(50% + 1px);
   transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .close {

@@ -1,14 +1,14 @@
+import { UserProfile }from "../../../../../common/api/models/UserProfile";
 import { DateTime } from "luxon";
-import { DocumentCreator } from "./DocumentCreator";
 
 export interface HrLinkDocumentInterface {
     createdAt: DateTime;
-    creator: DocumentCreator;
+    creator: UserProfile;
     id: string;
     name: string;
     number?: number | null;
     rejected: boolean;
-    rejectedAt?: string | null;
+    rejectedAt?: DateTime | null;
     rejectionComment: string | null;
 
     /**

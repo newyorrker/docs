@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { refreshSession } from '../../helpers/interopHelper';
-import { UserProfile } from '../../models/UserProfile';
+import { UserProfile } from '../../../../../common/api/models/UserProfile';
 
 export default class Api {
   client: AxiosInstance;

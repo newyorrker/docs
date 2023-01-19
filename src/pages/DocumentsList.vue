@@ -6,13 +6,16 @@
         :autoLoad="true"
         userSelect="false"
         :showScrollBar="true"
-        class="tickets"
+        class="documents-list__refresh"
         ref="easyRefresh"
       >
 
-        <div class="documents-list__list">
-          <document-card v-for="document in items" :source="document" :key="document.id" />
+        <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
+          <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
         </div>
+
+        <documents-list-skel v-show="showSkel" class="documents-list__skel" />
+
         <template v-slot:header>
           <ClassicsHeader
             :finishDuration="0"
@@ -36,9 +39,9 @@
       </template>
 
 
-      <document-list-filter @close="showFilter = false" v-if="showFilter" class="documents-list__filter" />
-
-
+      <document-list-filter v-if="showFilter" class="documents-list__filter"
+        @apply="applyFilter"
+        @close="showFilter = false"   />
 
     </div>
 </template>
@@ -47,17 +50,45 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import DocumentCard from '@/shared/components/document-card/DocumentCard.vue';
-import DocumentListFilter from '@/shared/components/document-list-filter/DocumentListFilter.vue';
+import DocumentsListFilter from '@/shared/components/documents-list-filter/DocumentsListFilter.vue';
+import DocumentsListSkel from '@/shared/components/documents-list-skel/DocumentsListSkel.vue';
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
-import { DocumentQuery } from "@/service/repositories/types";
+import { DocumentsListService } from "@/shared/services/documents-list/DocumentsListService";
+import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/services/documents-list/DocumentsListQueryFabric";
+import { PagingStateInterface } from "@/types/PagingStateInterface";
+import { getLink } from "@/helpers/linkHelper";
 
-@Component({ components: { DocumentCard, DocumentListFilter }})
+@Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel }})
 
 export default class DocumentsList extends Vue {
 
+  documentsListService: DocumentsListService;
+
   items: HrLinkDocumentModel[] = [];
 
-  take = 3;
+  pagingState: PagingStateInterface = {
+    skip: 0,
+    take: 3
+  }
+
+  isLoading = false;
+  isOnRefresh = false;
+  loaded = false;
+
+  showFilter = false;
+
+  filterState: DocumentListFilterState = {
+    documentDateFrom: "",
+    documentDateTo: "",
+    statuses: []
+  }
+
+  created() {
+    this.documentsListService = new DocumentsListService(
+      new DocumentsListQueryFabric(this.pagingState),
+      this.$hrLinkRepository
+    )
+  }
 
   mounted() {
     this.getList();
@@ -65,40 +96,43 @@ export default class DocumentsList extends Vue {
 
   async getList(loadMore = false) {
 
-    let where: Record<string, any> | null = null;
-    let skip = 0;
+    this.isLoading = true;
 
     if (loadMore) {
-      skip = this.items?.length || 0;
+      this.pagingState.skip = this.items?.length ?? 0;
+    }
+    else {
+      this.pagingState.skip = 0;
     }
 
-    const queryParams: DocumentQuery = {
-      take: this.take,
-      skip,
-      where: {
+    try {
+      const newDocuments = await this.documentsListService.load(this.filterState);
 
+      //need to be removed
+      // newDocuments[0].rejected = false;
+      // newDocuments[0].signed = true;
+      // newDocuments[0].signedAt = DateTime.local();
+      //need to be removed
+
+      if (!loadMore || !this.items) {
+        this.items = newDocuments;
+      } else {
+        this.items = [...this.items, ...newDocuments];
       }
-      // order: {
-      //   by: "",
-      //   direction: "asc"
-      // }
-    };
-
-    const newDocuments = await this.$hrLinkRepository.getDocuments(queryParams);
-
-    if (!loadMore || !this.items) {
-      this.items = newDocuments;
-    } else {
-      this.items = [...this.items, ...newDocuments];
+      if (newDocuments.length < this.pagingState.take) {
+        return true; // no more items
+      }
     }
-    if (newDocuments.length < this.take) {
-      return true; // no more items
+    catch(e) {
+      this.$store.dispatch('reportError', e);
     }
+    finally {
+      this.isLoading = false;
+      this.loaded = true;
+    }
+
     return false;
   }
-
-
-  showFilter = false;
 
   async loadMore(done: (noMore: boolean) => void) {
     const res = await this.getList(true);
@@ -106,8 +140,44 @@ export default class DocumentsList extends Vue {
   }
 
   async refresh(done: () => void) {
-    await this.getList();
-    done()
+    try {
+      this.isOnRefresh = true;
+
+      await this.getList();
+      done();
+    }
+    catch(e) {
+      this.$store.dispatch('reportError', e);
+    }
+    finally {
+      this.isOnRefresh = false;
+    }
+  }
+
+  openItem(item: HrLinkDocumentModel): void {
+    console.log(this.$store.getters['platform']);
+
+    const link = getLink(
+      this.$store.getters['platform'],
+      { id: item.id }
+    );
+
+    console.log(link);
+
+    document.location.href = link;
+  }
+
+  applyFilter(filterState: DocumentListFilterState) {
+    this.filterState = filterState;
+    this.getList();
+  }
+
+  get showList() {
+    return this.loaded;
+  }
+
+  get showSkel() {
+    return this.isLoading && !this.isOnRefresh;
   }
 
   get listIsEmpty() {
@@ -139,6 +209,18 @@ export default class DocumentsList extends Vue {
     & > div + div {
       margin-top: 10px
     }
+  }
+
+  &__list_bordered {
+    border-bottom: 1px #C8C7CC solid;
+  }
+
+  &__list + &__skel {
+    border-top: 1px #C8C7CC solid;
+  }
+
+  &__skel {
+    margin-top: 10px;
   }
 
   &__filter {

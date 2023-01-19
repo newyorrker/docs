@@ -1,13 +1,15 @@
+import { UserProfile } from "@/models/UserProfile";
+
 export interface DocumentCreator {
-    company:null
-    firstName:null
-    firstNameRaw:null
+    company: string;
+    firstName: string;
+    firstNameRaw: string;
     id:string;
-    imageFileId:null
-    lastName:null
-    lastNameRaw:null
-    middleName:null
-    middleNameRaw:null
-    position:null
-    positionRaw:null
+    imageFileId: string;
+    lastName: string;
+    lastNameRaw: string;
+    middleName: string;
+    middleNameRaw: string;
+    position: string;
+    positionRaw: string;
 }

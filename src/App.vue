@@ -1,32 +1,31 @@
 <template>
   <div id="app" class="app-root">
-    <documents-list />
-    <!-- <document-view v-if="false" />
-    <document-sign v-if="false" />
-    <document-reject v-if="false" /> -->
-
+    <documents-list v-if="!id" />
+    <document-detail v-else />
   </div>
 </template>
-
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
 import DocumentsList from './pages/DocumentsList.vue';
-import DocumentView from './pages/DocumentView.vue';
-import DocumentSign from './pages/DocumentSign.vue';
-import DocumentReject from './pages/DocumentReject.vue';
-import DocumentListFilter from '@/shared/components/document-list-filter/DocumentListFilter.vue';
+import DocumentDetail from './pages/DocumentDetail.vue';
 
 @Component({ components: {
     DocumentsList,
-    DocumentView,
-    DocumentSign,
-    DocumentReject,
-    DocumentListFilter
+    DocumentDetail
 }})
 
 export default class App extends Vue {
+
+  created(): void {
+    const urlParams = Object.fromEntries(new URL(window.location.toString()).searchParams.entries());
+    this.$store.commit('setUrlParams', urlParams);
+  }
+
+  get id(): string {
+    return this.$store.getters['urlParam']('id') ?? '';
+  }
 
 }
 
