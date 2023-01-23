@@ -174,6 +174,10 @@ export default class DocumentSign extends Vue {
   height: 100%;
   position: relative;
 
+  &__container {
+    padding: 0 16px;
+  }
+
   &__title {
     p {
       font-weight: 600;
