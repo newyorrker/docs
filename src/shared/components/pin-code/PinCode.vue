@@ -11,6 +11,7 @@
                 @keydown="filterKeyDown($event, index)"
                     :value="currentValue"
                     :key="index" type="number"
+                    inputmode="numeric"
                     ref="inputs" />
             </div>
         </div>
