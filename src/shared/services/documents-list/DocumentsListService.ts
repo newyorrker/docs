@@ -16,8 +16,6 @@ export class DocumentsListService {
     async load(filterState: any) {
         const queryParams = this.queryFabric.getQuery(filterState);
 
-        console.log(queryParams);
-
         if (this.cancelToken) {
             this.cancelToken.cancel();
         }

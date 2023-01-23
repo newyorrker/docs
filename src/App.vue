@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app-root">
     <documents-list v-if="!id" />
-    <document-detail v-else />
+    <document-detail :id="id" v-else />
   </div>
 </template>
 
@@ -26,7 +26,6 @@ export default class App extends Vue {
   get id(): string {
     return this.$store.getters['urlParam']('id') ?? '';
   }
-
 }
 
 </script>

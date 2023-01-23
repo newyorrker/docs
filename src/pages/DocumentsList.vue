@@ -7,14 +7,20 @@
         userSelect="false"
         :showScrollBar="true"
         class="documents-list__refresh"
+        :class="{'documents-list__refresh_error': isError}"
         ref="easyRefresh"
       >
 
-        <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
-          <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
-        </div>
+        <template v-if="!isError">
+          <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
+            <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
+          </div>
+          <documents-list-skel v-show="showSkel" class="documents-list__skel" />
+        </template>
+        <background-icon-error v-else>
+          <p>При загрузке списка документов произошла ошибка</p>
+        </background-icon-error>
 
-        <documents-list-skel v-show="showSkel" class="documents-list__skel" />
 
         <template v-slot:header>
           <ClassicsHeader
@@ -33,15 +39,12 @@
         </template>
       </easy-refresh>
 
-
-      <template v-if="true">
+      <template v-if="false">
         <button class="documents-list__web-filter-toggle-button" @click="showFilter = !showFilter">toggle</button>
       </template>
-
-
       <document-list-filter v-if="showFilter" class="documents-list__filter"
         @apply="applyFilter"
-        @close="showFilter = false"   />
+        @close="showFilter = false" />
 
     </div>
 </template>
@@ -57,8 +60,10 @@ import { DocumentsListService } from "@/shared/services/documents-list/Documents
 import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/services/documents-list/DocumentsListQueryFabric";
 import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { getLink } from "@/helpers/linkHelper";
+import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
+import { DateTime } from "luxon";
 
-@Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel }})
+@Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 
 export default class DocumentsList extends Vue {
 
@@ -75,6 +80,7 @@ export default class DocumentsList extends Vue {
   isOnRefresh = false;
   loaded = false;
 
+  isError = false;
   showFilter = false;
 
   filterState: DocumentListFilterState = {
@@ -108,11 +114,16 @@ export default class DocumentsList extends Vue {
     try {
       const newDocuments = await this.documentsListService.load(this.filterState);
 
+      // throw Error("")
+
       //need to be removed
-      // newDocuments[0].rejected = false;
-      // newDocuments[0].signed = true;
-      // newDocuments[0].signedAt = DateTime.local();
+      // newDocuments[0].rejected = true;
+      // newDocuments[0].signed = false;
+      // newDocuments[0].rejectedAt = DateTime.local();
+      // newDocuments[0].rejectionComment = "Здесь описывается причина отказа от подписи"
       //need to be removed
+
+      this.isError = false;
 
       if (!loadMore || !this.items) {
         this.items = newDocuments;
@@ -124,6 +135,7 @@ export default class DocumentsList extends Vue {
       }
     }
     catch(e) {
+      this.isError = true;
       this.$store.dispatch('reportError', e);
     }
     finally {
@@ -135,6 +147,10 @@ export default class DocumentsList extends Vue {
   }
 
   async loadMore(done: (noMore: boolean) => void) {
+    if(this.isError) {
+      done(true);
+      return;
+    }
     const res = await this.getList(true);
     done(res);
   }
@@ -155,14 +171,11 @@ export default class DocumentsList extends Vue {
   }
 
   openItem(item: HrLinkDocumentModel): void {
-    console.log(this.$store.getters['platform']);
 
     const link = getLink(
       this.$store.getters['platform'],
       { id: item.id }
     );
-
-    console.log(link);
 
     document.location.href = link;
   }
@@ -191,6 +204,12 @@ export default class DocumentsList extends Vue {
 .documents-list {
   height: 100%;
   position: relative;
+
+  &__refresh_error {
+    .v-easy-refresh-body > div {
+      height: 100%;
+    }
+  }
 
   &__list {
     & > div {

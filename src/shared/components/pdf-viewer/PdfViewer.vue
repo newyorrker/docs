@@ -1,70 +1,185 @@
 <template>
-  <div>
-    <br>
-    <div>
-      <a href="../../../../public/res.pdf" target="_blank" download>dowload</a>
+  <div class="pdf-viewer">
+
+    <div class="pdf-viewer__actions">
+      <button :id="idConfig.zoomIn" type="button" title="Zoom in">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+          <path fill="#FFB400" d="M11.435 10.063h-.723l-.256-.247a5.92 5.92 0 0 0 1.437-3.87 5.946 5.946 0 1 0-5.947 5.947 5.92 5.92 0 0 0 3.87-1.437l.247.256v.723L14.637 16 16 14.637l-4.565-4.574Zm-5.489 0A4.111 4.111 0 0 1 1.83 5.946 4.111 4.111 0 0 1 5.946 1.83a4.111 4.111 0 0 1 4.117 4.116 4.111 4.111 0 0 1-4.117 4.117Zm.458-6.404h-.915v1.83h-1.83v.915h1.83v1.83h.915v-1.83h1.83v-.915h-1.83v-1.83Z"/>
+        </svg>
+      </button>
+
+      <button :id="idConfig.zoomOut" type="button" title="Zoom out">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+          <path fill="#FFB400" d="M11.435 10.063h-.723l-.256-.247a5.92 5.92 0 0 0 1.437-3.87 5.946 5.946 0 1 0-5.947 5.947 5.92 5.92 0 0 0 3.87-1.437l.247.256v.723L14.637 16 16 14.637l-4.565-4.574Zm-5.489 0A4.111 4.111 0 0 1 1.83 5.946 4.111 4.111 0 0 1 5.946 1.83a4.111 4.111 0 0 1 4.117 4.116 4.111 4.111 0 0 1-4.117 4.117Zm.458-4.574H3.659v.915h4.575v-.915h-1.83Z"/>
+        </svg>
+      </button>
+
+      <button @click="download" type="button" title="Download">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" fill="none">
+          <path fill="#FFB400" d="M14 5.647h-4V0H4v5.647H0l7 6.588 7-6.588ZM6 7.53V1.882h2V7.53h1.17L7 9.572 4.83 7.529H6Zm-6 6.589h14V16H0v-1.882Z"/>
+        </svg>
+      </button>
+
+
     </div>
 
-    <br>
-    <br>
+    <!-- <div>
+      <a href="../../../../public/res.pdf" download target="_blank">downlaod local public file</a>
+      <br>
+      <a href="https://www.clickdimensions.com/links/TestPDFfile.pdf" target="_blank" download>dowload example from another host</a>
+      <br>
+      <a :href="blobUrl" target="_blank" download>dowload blob</a>
+      <br>
+      {{ blobUrl }}
+    </div>
 
-    <div class="container">
-      <div style="height: 90%">
-        <div class="action-bar">
-          <button :id="idConfig.zoomIn" type="button" class="action-btn" title="Zoom in">Zoom in</button>
-          <br>
-          <br>
-          <button :id="idConfig.zoomOut" type="button" class="action-btn" title="Zoom out">Zoom out</button>
-          <br>
-          <br>
-          <br>
+    <template v-if="ios && window.webkit && window.webkit.messageHandlers">
+      <pre v-if="window.webkit.messageHandlers.openFromDataUrl">{{ window.webkit.messageHandlers.openFromDataUrl }}</pre>
+      <div v-else>no openFromDataUrl</div>
+      <pre v-if="window.webkit.messageHandlers.openFromDataUrl">{{ window.webkit.messageHandlers.openFromDataUrl.postMessage }}</pre>
+    </template>
 
-          <button
-            :id="idConfig.download"
-            class="action-btn"
-            type="button"
-            title="Download"
-          >
-            dowload by the lib
-          </button>
-        </div>
-        <vue-pdf-app v-if="buffer"
-          :pdf="buffer"
+    <template v-else-if="!ios">
+
+    <pre>{{ appercode }}</pre>
+    <pre v-if="appercode">{{ appercode.openFromDataUrl }}</pre>
+    </template>
+    <div v-else>no mobile</div>
+
+
+    <pre>{{ error }}</pre>
+    <pre>done: {{ done }}</pre>
+    <pre>{{ data.slice(0, 100) }}</pre> -->
+
+
+    <div class="pdf-viewer__container">
+      <vue-pdf-app v-if="blobUrl" class="pdf-viewer__app"
+          :pdf="blobUrl"
           :config="{ toolbar: false, sidebar: false, presentationMode: true, }"
+          :page-scale="'page-width'"
           :id-config="idConfig"
           style="position: relative"
         >
 
         </vue-pdf-app>
-      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 import VuePdfApp from "vue-pdf-app";
-
-// import "@mdi/font/css/materialdesignicons.css";
+import { getLink } from "@/helpers/linkHelper";
 
 @Component({ components: { VuePdfApp }})
 
 export default class PadViewer extends Vue {
 
+  @Prop({required: true}) id: string;
+  @Prop({required: true}) name: string;
+
   idConfig = {
-    download: "vuePdfAppDownload",
     zoomIn: "vuePdfAppZoomIn",
     zoomOut: "vuePdfAppZoomOut",
   }
 
-  pdf = "./res.pdf";
+  blobUrl: string = "";
+  data: string = "";
+  error: any = null
+  done = false;
 
-  buffer = null;
+  ios = false;
+
+  window = window;
+
+
+  get appercode() {
+    // @ts-ignore
+    return appercode;
+  }
+
+
 
 
   async mounted() {
-    this.buffer = await this.$hrLinkRepository.getDocumentFile("7490d73b-e1d8-4c4a-8b9a-2f54e8c2aecd");
+
+    const data = await this.$hrLinkRepository.getDocumentFile(this.id);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+        // Use a regex to remove data url part
+        // const base64String = reader.result?.replace('data:', '').replace(/^.+,/, '');
+
+        // console.log(base64String);
+        // Logs wL2dvYWwgbW9yZ...
+        // @ts-ignore
+        this.data = reader.result;
+    };
+    reader.readAsDataURL(data);
+
+    // this.data = data;
+
+    let blob = new window.Blob([data], { type: 'application/pdf' });
+
+    this.blobUrl = window.URL.createObjectURL(blob);
+
+
+  }
+
+  download() {
+
+    const platform = this.$store.getters["platform"];
+    const isIOS = this.ios // platform === "iOS";
+
+    const name = this.name + ".pdf"
+// && this.$store.getters["platform"] !== "iOS"
+    if (!this.ios) {
+      // @ts-ignore
+      appercode.openFromDataUrl(this.data, name, "application/pdf");
+    } else {
+      try {
+        if(!window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage) {
+          this.error = "window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage is " + window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage
+          return;
+        }
+        window.webkit.messageHandlers.openFromDataUrl.postMessage?.({
+          fileName: name,
+          data: this.data
+        });
+
+        this.done = true;
+      }
+      catch(e) {
+        this.error = e;
+      }
+
+    }
+
+    return
+
+
+
+
+    // Create an anchor element
+    let a = document.createElement('a');
+
+    // Set the download attribute to the file name
+    a.download = this.name;
+    a.target = "_blank"
+
+    // Set the href attribute to the Blob object
+    a.href = this.blobUrl // "../../../../public/res.pdf"//getLink(this.blobUrl);
+
+    // Append the anchor element to the document
+    document.body.appendChild(a);
+
+    // Trigger the download
+    a.click();
+  }
+
+  beforeDestroy() {
+    window.URL.revokeObjectURL(this.blobUrl);
   }
 
 }
@@ -76,76 +191,53 @@ export default class PadViewer extends Vue {
   left: 0 !important;
 }
 
-.container {
-  height: 95vh;
+#vuePdfApp {
+  background-color: white;
+
+  .pdfViewer .page {
+    border-image: none;
+  }
 }
 
-.viewer-header {
-  margin-top: 10px;
+
+
+.pdf-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  z-index: 9999;
-}
 
-.viewer-prepend {
-  position: absolute;
-  z-index: 99999;
-  right: 20px;
-  bottom: 0;
-  top: 40px;
-  width: 80px;
-}
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 16px;
+    top: 17px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    // background-color: grey;
+    padding: 2px;
+    z-index: 1;
 
-.viewer-header .action-btn,
-.viewer-prepend .action-btn,
-.viewer-footer .action-btn {
-  background: white;
-  opacity: 0.8;
-}
+    button {
+      background-color: transparent;
+      line-height: 1;
+      border: 0;
+      padding: 6px;
+    }
 
-.viewer-footer {
-  position: absolute;
-  bottom: 3px;
-  right: 0;
-  left: 0;
-}
-
-.action-btn {
-  background: transparent;
-  padding: 0px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  color: black;
-  border: none;
-  outline: none;
-
-  &[disabled] {
-    cursor: default;
-    background: gray;
+    button + button {
+      margin-top: 6px;
+    }
   }
-  & > span {
-    font-size: 28px;
+
+  &__container {
+    flex: 1;
   }
 }
 
-.action-bar {
-  margin-bottom: 5px;
-}
+.container {
 
-.divider,
-.v-divider {
-  padding: 3px;
-}
-
-.v-divider {
-  display: block;
-}
-
-.vue-pdf-app-findbar {
-  display: inline-block;
-  background: white;
-  opacity: 0.8;
-  padding: 0 3px;
-  border-radius: 3px;
+  // height: 95vh;
 }
 </style>

@@ -5,66 +5,58 @@
             <p>Мы отправили код подтверждения на номер:</p>
 
             <div class="sms-sign__code">
-                <input v-for="(value, index) in Object.keys(input)"
-
+                <input v-for="(currentValue, index) in value"
 
                 @input="inputHandler($event, index)"
                 @keydown="filterKeyDown($event, index)"
-                    :value="input[value]"
-                    :key="value" type="number"
+                    :value="currentValue"
+                    :key="index" type="number"
                     ref="inputs" />
-            </div>
-
-            <div class="sms-sign__troubleshooting">
-                <p>Не пришло SMS? <a href="">Отправить повторно через 1:39</a></p>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-import { defineComponent } from 'vue';
+@Component({ components: {  }})
 
-export default defineComponent({
-  name: 'SmsSign',
-  components: {
+export default class PinCode extends Vue {
 
-  },
-//   props: {
-//     simplePror: {
-//       required: true,
-//       type: Array as () => SomeTypeInterface[]
-//     }
-//   },
-  data() {
-    return {
-        input: {
-            "0": "",
-            "1": "",
-            "2": "",
-            "3": "",
-        } as Record<string, string>
-    }
-  },
-  methods: {
+    @Prop() value: string[];
+
     inputHandler(e: Event, index: number) {
         let value = (e.target as HTMLInputElement | null)?.value;
-        const refs = this.$refs as Record<"inputs", HTMLElement[]>;
 
+        this.input(value, index);
+    }
+
+    input(value: string | undefined, index: number) {
+        const inputs = this.getInputRefs();
+
+        //paste
         if(value && value.length > 1) {
+
             this.paste(value, index);
             return;
         }
 
-        if(typeof refs === "object") {
+        if(typeof inputs === "object") {
             if(value) {
-                refs.inputs[index + 1]?.focus();
+                inputs[index + 1]?.focus();
             }
         }
 
-        this.input[index] = value ?? "";
-    },
+        const result = this.value.map((item, i) => i === index ? value : item);
+
+        this.$emit('input', result);
+    }
+
+    getInputRefs() {
+        return (this.$refs as Record<"inputs", HTMLElement[]> | undefined)?.inputs;
+    }
+
     filterKeyDown(e: KeyboardEvent, index: number) {
 
         const refs = this.$refs as Record<"inputs", HTMLElement[]>;
@@ -73,6 +65,7 @@ export default defineComponent({
             const isControlOrMEta = (e.ctrlKey || e.metaKey);
             const isPaste = e.key === 'v' && isControlOrMEta;
             const isSelectAll = e.key === 'a' && isControlOrMEta;
+
             if(isPaste || isSelectAll) {
                 return;
             }
@@ -80,35 +73,47 @@ export default defineComponent({
             const value = (e.target as HTMLInputElement | null)?.value;
             const key = e.key;
             const controlButtons = key === 'Backspace' || key === 'Delete' || key === "Meta" || key === "Control";
-            const moreThen1Char = value?.length ?? 0 > 0;
+            const moreThen1Char = (value?.length ?? 0) > 0;
+            const isE = key === "e";
 
             if(key === 'Backspace') {
-                if(!this.input[index]) {
+                if(!this.value[index]) {
                     refs.inputs[index - 1]?.focus();
                 }
             }
 
-            if(moreThen1Char && !controlButtons) {
-                refs.inputs[index + 1]?.focus();
+            console.log(moreThen1Char);
+
+            if((moreThen1Char || isE) && !controlButtons) {
+                if(!isE) {
+                    refs.inputs[index + 1]?.focus();
+                    this.input(key, index);
+                }
                 e.preventDefault();
             }
 
         } else if (e.which !== undefined || e.keyCode != undefined) {
             throw Error("event.key is not supported")
         }
-    },
-    paste(value: string, index: number) {
-        const splitedValue = value.split("");
-        const sclicedValues = splitedValue.slice(0, 4);
-
-        Object.keys(this.input)
-        .slice(index)
-        .forEach((item, index) => {
-            this.input[item] = sclicedValues[index]
-        });
     }
-  }
-})
+
+    paste(stringValue: string, index: number) {
+        const splitedValue = stringValue.split("");
+        const neededCharLength = this.value.length - index;
+        const sclicedValues = splitedValue.slice(0, neededCharLength);
+        const endItemIndex = sclicedValues.length + index - 1;
+
+        /**
+         * start change values after index
+         * and subtract from current index (i) index from arguments because length of sclicedValues less then length of this.value array
+         */
+        const result = this.value.map((item , i) => (i >= index) ? sclicedValues[i - index] : item);
+
+        this.getInputRefs()?.[endItemIndex].focus();
+        this.$emit('input', result);
+    }
+
+}
 
 </script>
 

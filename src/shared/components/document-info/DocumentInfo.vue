@@ -1,56 +1,52 @@
 <template>
     <div class="document-info">
-        <user-profile v-if="!!userProfile" :userProfile="userProfile" />
+        <user-profile v-if="!!source.creator" :userProfile="source.creator" />
 
         <div class="document-info__text">
+            <!-- move logic to base component -->
             <p>
-                <span>Сформировано:</span> 5 декабря 14:03
+                <span>Сформировано:</span> {{ creationDate }}
             </p>
-            <p>
-                <span>Ожидает подписи:</span> Вы, Архипов Андрей Петрович
-            </p>
+
+            <document-status v-if="showStatus" :source="source" class="document-info__status" />
+
+
+            <!-- <p><span>Ожидает подписи:</span> Вы, Архипов Андрей Петрович</p> -->
         </div>
     </div>
 
 </template>
 
 <script lang="ts">
-
-import { defineComponent } from 'vue'
-import { UserProfile as UserProfileModel } from '../../../../../../common/api/models/UserProfile';
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 import UserProfile from '@/shared/components/user-profile/UserProfile.vue';
-// import s from './style.module.scss'
+import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
+import DocumentStatus from '@/shared/components/document-card/status/DocumentStatus.vue';
 
-interface SomeTypeInterface {
+@Component({ components: { UserProfile, DocumentStatus }})
 
+export default class DocumentInfo extends Vue {
+    @Prop({required: true}) source: HrLinkDocumentModel;
+
+    //duplicated
+    get showStatus() {
+        return this.source.rejected || this.source.signed;
+    }
+
+    //duplicated
+    get creationDate() {
+        return this.source.createdAt.toFormat("d LLLL HH:mm");
+    }
 }
-
-
-export default defineComponent({
-  name: '',
-  components: {
-    UserProfile
-  },
-  props: {
-    userProfile: {
-        type: Object as () => UserProfileModel | null
-    }
-  },
-  data() {
-    return {
-    //   s,
-    }
-  }
-})
 
 </script>
 
 <style lang="scss">
 .document-info {
     &__text {
-        margin-top: 9px;
-        p {
+        margin-top: 15px;
+        & > p {
             font-size: 14px;
             line-height: 17px;
             color: #9E9E9E;
@@ -65,6 +61,10 @@ export default defineComponent({
         p + p {
             margin-top: 8px;
         }
+    }
+
+    &__status {
+        margin-top: 6px;
     }
 }
 </style>

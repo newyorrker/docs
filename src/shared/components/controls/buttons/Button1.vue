@@ -9,10 +9,14 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 export default class Button1 extends Vue {
   @Prop({ default: "#F39420" }) color!: string;
+  @Prop({ default: "#F39420" }) borderColor!: string;
+  @Prop({ default: "#ffffff" }) textColor!: string;
 
   get styleObject() {
       return {
-          '--bg-color' : this.color
+          '--bg-color' : this.color,
+          '--border-color' : this.borderColor,
+          '--text-color': this.textColor
       }
   }
 }
@@ -25,10 +29,11 @@ export default class Button1 extends Vue {
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
-    color: white;
+    color: var(--text-color);
     border: 0;
     border-radius: 4px;
     padding: 11px 0;
     cursor: pointer;
+    border: 1px var(--border-color) solid;
 }
 </style>

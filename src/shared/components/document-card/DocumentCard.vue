@@ -8,14 +8,12 @@
 
         <document-status v-if="showStatus" :source="source" class="document-card__status" />
 
-        <div v-if="source.rejected" class="document-card__comment">
-          <p>Комментарий</p>
-          <p>{{ source.rejectionComment }}</p>
-        </div>
+        <!-- wrap to component -->
+        <document-comment-view v-if="source.rejected && source.rejectionComment" class="document-card__comment" :rawText="source.rejectionComment" />
 
         <div class="document-card__footer">
             <p>{{ creationDate }}</p>
-            <button v-if="false">
+            <button v-if="showSignButton" @click.stop="sign">
               Подписать
               <svg xmlns="http://www.w3.org/2000/svg" width="5" height="9" fill="none">
                 <path fill="#fff" fill-rule="evenodd" d="M.793.5 5 4.5l-4.207 4L0 7.746 3.414 4.5 0 1.254.793.5Z" clip-rule="evenodd"/>
@@ -31,14 +29,26 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import UserProfile from '../user-profile/UserProfile.vue';
 import DocumentStatus from './status/DocumentStatus.vue';
+import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
+import { getLink } from "@/helpers/linkHelper";
 
 @Component({ components: {
     UserProfile,
-    DocumentStatus
+    DocumentStatus,
+    DocumentCommentView
 }})
 
 export default class DocumentCard extends Vue {
   @Prop() source: HrLinkDocumentInterface;
+
+  sign() {
+    const link = getLink(
+      this.$store.getters['platform'],
+      { id: this.source.id, isSign: "true" }
+    );
+
+    document.location.href = link;
+  }
 
   get userProfile() {
     return this.source.creator;
@@ -50,6 +60,11 @@ export default class DocumentCard extends Vue {
 
   get creationDate() {
     return this.source.createdAt.toFormat("d LLLL HH:mm");
+  }
+
+  get showSignButton() {
+    const { rejected, signed } = this.source;
+    return !rejected && !signed;
   }
 }
 
@@ -66,9 +81,6 @@ export default class DocumentCard extends Vue {
   &__title {
     margin-top: 17px;
 
-
-
-
     p {
       font-weight: 600;
       line-height: 19px;
@@ -79,24 +91,6 @@ export default class DocumentCard extends Vue {
 
   &__comment {
     margin-top: 13px;
-    p {
-      margin: 0;
-    }
-
-    p:first-child {
-      letter-spacing: -0.3px;
-    }
-
-    p:last-child {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 17px;
-      letter-spacing: -0.8px;
-      padding-right: 10px;
-      margin-top: 4px;
-    }
   }
 
   &__title + &__footer {
@@ -119,7 +113,6 @@ export default class DocumentCard extends Vue {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    // margin-top: 6px;
 
     p {
       color: #9E9E9E;
