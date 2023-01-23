@@ -89,7 +89,7 @@ export default class PadViewer extends Vue {
   error: any = null
   done = false;
 
-  ios = false;
+  ios = true;
 
   window = window;
 
