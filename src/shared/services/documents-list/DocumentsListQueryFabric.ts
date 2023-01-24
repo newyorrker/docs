@@ -5,7 +5,6 @@ export interface QueryFabricInterface<T = Record<string, any>> {
     getQuery(filterState: T): THRLinkDocumentRequest;
 }
 
-
 export interface DocumentListFilterState extends THRLinkDocumentRequestWhere {};
 
 
@@ -13,7 +12,6 @@ export class DocumentsListQueryFabric implements QueryFabricInterface {
     constructor(
         private pagingState: PagingStateInterface
     ) {
-
     }
 
     getQuery(filterState: DocumentListFilterState): THRLinkDocumentRequest {

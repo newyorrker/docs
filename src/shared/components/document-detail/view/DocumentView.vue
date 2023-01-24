@@ -35,7 +35,8 @@ export default class DocumentView extends Vue {
   sign() {
     const link = getLink(
       this.$store.getters['platform'],
-      { id: this.source.id, isSign: "true" }
+      { id: this.source.id, isSign: "true" },
+      this.source.type
     );
 
     document.location.href = link;
@@ -44,7 +45,8 @@ export default class DocumentView extends Vue {
   reject() {
     const link = getLink(
       this.$store.getters['platform'],
-      { id: this.source.id, isReject: "true" }
+      { id: this.source.id, isReject: "true" },
+      this.source.type
     );
 
     document.location.href = link;

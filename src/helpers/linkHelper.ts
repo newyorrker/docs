@@ -8,6 +8,7 @@ const isMobile = (platform: Platform) => {
 const getLink = (
   platform: Platform,
   searchParams: { [k: string]: string } = {},
+  title?: string,
   buttons: MobileAppChangeButtonMessage[] = [],
 ): string => {
   const queryString = new URLSearchParams(
@@ -15,14 +16,16 @@ const getLink = (
   ).toString();
 
   if (isMobile(platform)) {
-    return getDeeplink(queryString, buttons);
+    return getDeeplink(queryString, title, buttons);
   }
   return `${location.origin}${location.pathname}?${queryString}`;
 };
 
 const getDeeplink = (
   queryString: string,
-  buttons: MobileAppChangeButtonMessage[],
+  title?: string,
+  buttons: MobileAppChangeButtonMessage[] = [],
+
 ): string => {
   const location = document.location;
   const actorParams = {
@@ -30,6 +33,7 @@ const getDeeplink = (
     kioskMode: true,
     shareSessionInfo: true,
     buttons,
+    title
   };
 
   return (

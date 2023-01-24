@@ -20,6 +20,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { HrLinkDocumentInterface } from "@/types/HrLinkDocument/HrLinkDocumentInterface";
+import { formatDate } from "@/helpers/dateFormating";
 
 @Component({ components: {  }})
 
@@ -30,7 +31,8 @@ export default class ClassName extends Vue {
   get text() {
     const actionWord = this.isSigned ? "Подписано" : "Отклонено";
     const date = this.isSigned ? this.source.signedAt : this.source.rejectedAt;
-    let dateString = date?.toFormat("d LLLL, HH:mm") ?? "";
+
+    let dateString = date ? formatDate(date) : "";
 
     if(dateString) {
       dateString = " " + dateString;

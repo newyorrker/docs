@@ -1,6 +1,6 @@
 <template>
     <div class="sms-sign" :class="{'sms-sign_error': error}">
-        <p class="sms-sign__title">Введите код из SMS</p>
+        <p class="sms-sign__title">Введите код из SMS или E-mail</p>
         <div class="sms-sign__input">
             <p>Мы отправили код подтверждения на номер:</p>
 
@@ -84,8 +84,6 @@ export default class PinCode extends Vue {
                 }
             }
 
-            console.log(moreThen1Char);
-
             if((moreThen1Char || isE) && !controlButtons) {
                 if(!isE) {
                     refs.inputs[index + 1]?.focus();
@@ -163,7 +161,8 @@ export default class PinCode extends Vue {
         }
 
         input:focus, input:focus-visible {
-            outline-color: rgba(255,180,0, .65);
+            outline: none;
+            border-color: #FFB400;
         }
 
         input + input {
@@ -188,9 +187,8 @@ export default class PinCode extends Vue {
     .sms-sign {
         &__code {
             input {
-                outline-color: rgba(255,82,73, 0.65);
-                outline-width: 1px;
-                outline-style: auto;
+                outline: none;
+                border-color: #FF5249;
             }
         }
     }

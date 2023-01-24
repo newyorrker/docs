@@ -61,7 +61,6 @@ import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/serv
 import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { getLink } from "@/helpers/linkHelper";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
-import { DateTime } from "luxon";
 
 @Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 
@@ -73,7 +72,7 @@ export default class DocumentsList extends Vue {
 
   pagingState: PagingStateInterface = {
     skip: 0,
-    take: 3
+    take: 20
   }
 
   isLoading = false;
@@ -174,7 +173,8 @@ export default class DocumentsList extends Vue {
 
     const link = getLink(
       this.$store.getters['platform'],
-      { id: item.id }
+      { id: item.id },
+      item.type
     );
 
     document.location.href = link;

@@ -23,6 +23,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import UserProfile from '@/shared/components/user-profile/UserProfile.vue';
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import DocumentStatus from '@/shared/components/document-card/status/DocumentStatus.vue';
+import { formatDate } from "@/helpers/dateFormating";
 
 @Component({ components: { UserProfile, DocumentStatus }})
 
@@ -36,7 +37,7 @@ export default class DocumentInfo extends Vue {
 
     //duplicated
     get creationDate() {
-        return this.source.createdAt.toFormat("d LLLL HH:mm");
+        return formatDate(this.source.createdAt);
     }
 }
 

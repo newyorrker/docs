@@ -1,6 +1,5 @@
 <template>
   <div class="pdf-viewer">
-
     <div class="pdf-viewer__actions">
       <button :id="idConfig.zoomIn" type="button" title="Zoom in">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
@@ -19,39 +18,7 @@
           <path fill="#FFB400" d="M14 5.647h-4V0H4v5.647H0l7 6.588 7-6.588ZM6 7.53V1.882h2V7.53h1.17L7 9.572 4.83 7.529H6Zm-6 6.589h14V16H0v-1.882Z"/>
         </svg>
       </button>
-
-
     </div>
-
-    <!-- <div>
-      <a href="../../../../public/res.pdf" download target="_blank">downlaod local public file</a>
-      <br>
-      <a href="https://www.clickdimensions.com/links/TestPDFfile.pdf" target="_blank" download>dowload example from another host</a>
-      <br>
-      <a :href="blobUrl" target="_blank" download>dowload blob</a>
-      <br>
-      {{ blobUrl }}
-    </div>
-
-    <template v-if="ios && window.webkit && window.webkit.messageHandlers">
-      <pre v-if="window.webkit.messageHandlers.openFromDataUrl">{{ window.webkit.messageHandlers.openFromDataUrl }}</pre>
-      <div v-else>no openFromDataUrl</div>
-      <pre v-if="window.webkit.messageHandlers.openFromDataUrl">{{ window.webkit.messageHandlers.openFromDataUrl.postMessage }}</pre>
-    </template>
-
-    <template v-else-if="!ios">
-
-    <pre>{{ appercode }}</pre>
-    <pre v-if="appercode">{{ appercode.openFromDataUrl }}</pre>
-    </template>
-    <div v-else>no mobile</div>
-
-
-    <pre>{{ error }}</pre>
-    <pre>done: {{ done }}</pre>
-    <pre>{{ data.slice(0, 100) }}</pre> -->
-
-
     <div class="pdf-viewer__container">
       <vue-pdf-app v-if="blobUrl" class="pdf-viewer__app"
           :pdf="blobUrl"
@@ -70,7 +37,6 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import VuePdfApp from "vue-pdf-app";
-import { getLink } from "@/helpers/linkHelper";
 
 @Component({ components: { VuePdfApp }})
 
@@ -86,21 +52,7 @@ export default class PadViewer extends Vue {
 
   blobUrl: string = "";
   data: string = "";
-  error: any = null
-  done = false;
-
-  ios = true;
-
-  window = window;
-
-
-  get appercode() {
-    // @ts-ignore
-    return appercode;
-  }
-
-
-
+  error: any = null;
 
   async mounted() {
 
@@ -108,11 +60,6 @@ export default class PadViewer extends Vue {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-        // Use a regex to remove data url part
-        // const base64String = reader.result?.replace('data:', '').replace(/^.+,/, '');
-
-        // console.log(base64String);
-        // Logs wL2dvYWwgbW9yZ...
         // @ts-ignore
         this.data = reader.result;
     };
@@ -123,21 +70,17 @@ export default class PadViewer extends Vue {
     let blob = new window.Blob([data], { type: 'application/pdf' });
 
     this.blobUrl = window.URL.createObjectURL(blob);
-
-
   }
 
   download() {
 
     const platform = this.$store.getters["platform"];
-    const isIOS = this.ios // platform === "iOS";
+    const name = this.name + ".pdf";
 
-    const name = this.name + ".pdf"
-// && this.$store.getters["platform"] !== "iOS"
-    if (this.$store.getters["platform"] !== "iOS") {
+    if (platform !== "iOS") {
       // @ts-ignore
       appercode.openFromDataUrl(this.data, name, "application/pdf");
-    } else {
+    } else if(platform === "iOS") {
       try {
         if(!window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage) {
           this.error = "window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage is " + window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage
@@ -147,41 +90,33 @@ export default class PadViewer extends Vue {
           fileName: name,
           data: this.data
         });
-
-        this.done = true;
       }
       catch(e) {
         this.error = e;
       }
 
     }
+    else {
+      let a = document.createElement('a');
 
-    return
+      // Set the download attribute to the file name
+      a.download = this.name;
+      a.target = "_blank"
 
+      // Set the href attribute to the Blob object
+      a.href = this.blobUrl;
 
+      // Append the anchor element to the document
+      document.body.appendChild(a);
 
-
-    // Create an anchor element
-    let a = document.createElement('a');
-
-    // Set the download attribute to the file name
-    a.download = this.name;
-    a.target = "_blank"
-
-    // Set the href attribute to the Blob object
-    a.href = this.blobUrl // "../../../../public/res.pdf"//getLink(this.blobUrl);
-
-    // Append the anchor element to the document
-    document.body.appendChild(a);
-
-    // Trigger the download
-    a.click();
+      // Trigger the download
+      a.click();
+    }
   }
 
   beforeDestroy() {
     window.URL.revokeObjectURL(this.blobUrl);
   }
-
 }
 
 </script>
@@ -197,9 +132,11 @@ export default class PadViewer extends Vue {
   .pdfViewer .page {
     border-image: none;
   }
+
+  .pdfViewer .page .loadingIcon {
+    display: none;
+  }
 }
-
-
 
 .pdf-viewer {
   flex: 1;
@@ -234,10 +171,5 @@ export default class PadViewer extends Vue {
   &__container {
     flex: 1;
   }
-}
-
-.container {
-
-  // height: 95vh;
 }
 </style>

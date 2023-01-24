@@ -5,7 +5,7 @@ export enum Event {
   /* errors on sign start */
   success = "SUCCESS",
   startSignError = "START_SIGN_ERROR",
-  timeIsUp = "TIME_IS_UP",
+  // timeIsUp = "TIME_IS_UP",
 
   /* errors on confirm  */
   signatureError = "SIGNATURE_ERROR",
@@ -37,11 +37,6 @@ export enum State {
    * Ожидание ответа на запрос подтверждения подписи (подписываем документ)
    */
   onConfirmation = "onConfirmation",
-
-  /**
-   * Можно запросить код еще раз
-   */
-  canRestartSign = "canRestartSign",
 
   /**
    * Введенный код не валиден
@@ -89,11 +84,6 @@ export const stateMachine = createMachine({
         [Event.startSignError]: State.startSignError,
       }
     },
-    [State.canRestartSign]: {
-      on: {
-        [Event.startSign]: State.onSignStart
-      }
-    },
     [State.startSignError]: {
       on: {
         [Event.retryStart]: State.onSignStart
@@ -102,7 +92,6 @@ export const stateMachine = createMachine({
     [State.waitingCodeInput]: {
       on: {
         [Event.confirm]: State.onConfirmation,
-        [Event.timeIsUp]: State.canRestartSign,
       }
     },
     [State.onConfirmation]: {

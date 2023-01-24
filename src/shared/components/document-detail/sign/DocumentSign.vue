@@ -3,17 +3,17 @@
     <template v-if="!isError && !currentState.matches(State.signIsSucceed)">
       <div class="document-sign__container">
         <div class="document-sign__title">
-          <p>Вы подписываете документ “Служебная записка об использовании личного транспорта</p>
+          <p>Вы подписываете документ {{ source.type }}</p>
         </div>
         <document-info :source="source" />
 
         <!-- PINCODE: -->
         <pin-code v-model="pinCodeValue" :error="isPinCodeError" />
 
-        <div class="document-sign__troubleshooting" :class="{ 'document-sign__troubleshooting_can-restart': currentState.matches(State.canRestartSign), 'document-sign__troubleshooting_error': currentState.matches(State.wrongCode) }">
+        <div class="document-sign__troubleshooting" :class="{ 'document-sign__troubleshooting_can-restart': canRestartSign, 'document-sign__troubleshooting_error': currentState.matches(State.wrongCode) }">
           <p>
-            <span>{{currentState.matches(State.wrongCode) ? 'Неверный код!' : 'Не пришло SMS?'}} </span>
-            <a v-if="currentState.matches(State.canRestartSign)" @click="restart">Отправить повторно</a>
+            <span>{{currentState.matches(State.wrongCode) ? 'Неверный код!' : 'Не пришел код?'}} </span>
+            <a v-if="canRestartSign" @click="restart">Отправить повторно</a>
             <a v-else>Отправить повторно через {{ time }}</a>
           </p>
         </div>
@@ -107,10 +107,12 @@ export default class DocumentSign extends Vue {
   @Prop({required: true}) source: HrLinkDocumentModel;
 
   requestId: string | null = null;
-  pinCodeValue: string[] = ["", "", "", ""];
+  pinCodeValue: string[] = ["", "", "", "", "", ""];
 
   resendCounter: number | null = null;
   resendDuration: Duration | null = null;
+
+  canRestartSign = false;
 
   errorMessage = "";
 
@@ -140,12 +142,14 @@ export default class DocumentSign extends Vue {
       return;
     }
 
+    this.canRestartSign = false;
+
     this.stateService.send(Event.startSign);
 
     try {
       // await sleep(450);
       // throw Error("")
-      // this.requestId = "kek";
+      // this.requestId = "fake-id";
       this.requestId = await this.$hrLinkRepository.startSign(this.source.id);
 
       this.startTimer();
@@ -221,7 +225,7 @@ export default class DocumentSign extends Vue {
   protected validate() {
     let valid = true;
 
-    if(!this.code || this.code.length < 4) {
+    if(!this.code || this.code.length < 6) {
       valid = false;
     }
 
@@ -235,7 +239,7 @@ export default class DocumentSign extends Vue {
       this.resendDuration = this.getDiff(resendTime);
 
       if((this.resendDuration?.seconds ?? 0) <= 1) {
-        this.stateService.send(Event.timeIsUp);
+        this.canRestartSign = true;
         clearInterval(this.resendCounter || 0);
       }
     }

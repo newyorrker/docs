@@ -31,6 +31,7 @@ import UserProfile from '../user-profile/UserProfile.vue';
 import DocumentStatus from './status/DocumentStatus.vue';
 import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
 import { getLink } from "@/helpers/linkHelper";
+import { formatDate } from "@/helpers/dateFormating";
 
 @Component({ components: {
     UserProfile,
@@ -44,7 +45,8 @@ export default class DocumentCard extends Vue {
   sign() {
     const link = getLink(
       this.$store.getters['platform'],
-      { id: this.source.id, isSign: "true" }
+      { id: this.source.id, isSign: "true" },
+      this.source.type
     );
 
     document.location.href = link;
@@ -59,7 +61,7 @@ export default class DocumentCard extends Vue {
   }
 
   get creationDate() {
-    return this.source.createdAt.toFormat("d LLLL HH:mm");
+    return formatDate(this.source.createdAt);
   }
 
   get showSignButton() {
@@ -73,10 +75,10 @@ export default class DocumentCard extends Vue {
 <style lang="scss">
 .document-card {
   background-color: #ffffff;
-  padding-top: 9px;
+  padding-top: 12px;
   padding-left: 16px;
-  padding-bottom: 11px;
-  padding-right: 15px;
+  padding-bottom: 12px;
+  padding-right: 16px;
 
   &__title {
     margin-top: 17px;

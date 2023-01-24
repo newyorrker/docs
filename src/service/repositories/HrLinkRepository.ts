@@ -69,8 +69,8 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
                 return response.data.requestId;
             });
     }
-    confirmSign(id: string, requestId: string, code: string) {
-        this.api.client.put(`/hrlink/documents/${id}/sign`, { id, requestId, code });
+    async confirmSign(id: string, requestId: string, code: string) {
+        await this.api.client.put(`/hrlink/documents/${id}/sign`, { id, requestId, code });
     }
     rejectSign() {
         throw new Error("Method not implemented.");

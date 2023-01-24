@@ -1,7 +1,7 @@
 <template>
     <div class="skel documents-list__skel">
         <div class="skel__first-row">
-        <div v-for="imageId in [1,2,3]" class="skel__item" :key="imageId">
+        <div v-for="imageId in [1,2,3,4,5]" class="skel__item" :key="imageId">
             <div class="skel__profile">
             <div class="skel__circle &__bg" style="width: 38px; height: 38px; border-radius: 38px;"></div>
             <div class="skel__profile-text">
