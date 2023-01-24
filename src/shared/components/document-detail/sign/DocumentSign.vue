@@ -99,7 +99,7 @@ const sleep = (seconds: number) => {
   })
 }
 
-const COUNT_DOWN_MINUTES = 0.1;
+const COUNT_DOWN_MINUTES = 1;
 
 @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey }})
 
