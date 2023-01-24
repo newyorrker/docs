@@ -14,7 +14,7 @@
         <div class="document-card__footer">
             <p>{{ creationDate }}</p>
             <button v-if="showSignButton" @click.stop="sign">
-              Подписать
+              Открыть
               <svg xmlns="http://www.w3.org/2000/svg" width="5" height="9" fill="none">
                 <path fill="#fff" fill-rule="evenodd" d="M.793.5 5 4.5l-4.207 4L0 7.746 3.414 4.5 0 1.254.793.5Z" clip-rule="evenodd"/>
               </svg>
