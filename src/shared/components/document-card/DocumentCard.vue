@@ -3,7 +3,7 @@
         <user-profile :userProfile="userProfile" />
 
         <div class="document-card__title">
-          <p>{{ source.name }}</p>
+          <p>{{ source.type }}</p>
         </div>
 
         <document-status v-if="showStatus" :source="source" class="document-card__status" />

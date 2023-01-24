@@ -1,5 +1,5 @@
 <template>
-    <div class="sms-sign">
+    <div class="sms-sign" :class="{'sms-sign_error': error}">
         <p class="sms-sign__title">Введите код из SMS</p>
         <div class="sms-sign__input">
             <p>Мы отправили код подтверждения на номер:</p>
@@ -26,6 +26,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 export default class PinCode extends Vue {
 
     @Prop() value: string[];
+    @Prop({default: false}) error: boolean;
 
     inputHandler(e: Event, index: number) {
         let value = (e.target as HTMLInputElement | null)?.value;
@@ -113,7 +114,6 @@ export default class PinCode extends Vue {
         this.getInputRefs()?.[endItemIndex].focus();
         this.$emit('input', result);
     }
-
 }
 
 </script>
@@ -162,6 +162,10 @@ export default class PinCode extends Vue {
             padding: 12px 0;
         }
 
+        input:focus, input:focus-visible {
+            outline-color: rgba(255,180,0, .65);
+        }
+
         input + input {
             margin-left: 16px;
         }
@@ -176,6 +180,18 @@ export default class PinCode extends Vue {
         /* Firefox */
         input[type=number] {
             -moz-appearance: textfield;
+        }
+    }
+}
+
+.sms-sign_error {
+    .sms-sign {
+        &__code {
+            input {
+                outline-color: rgba(255,82,73, 0.65);
+                outline-width: 1px;
+                outline-style: auto;
+            }
         }
     }
 }
