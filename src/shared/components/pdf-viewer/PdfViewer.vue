@@ -134,7 +134,7 @@ export default class PadViewer extends Vue {
 
     const name = this.name + ".pdf"
 // && this.$store.getters["platform"] !== "iOS"
-    if (!this.ios) {
+    if (this.$store.getters["platform"] !== "iOS") {
       // @ts-ignore
       appercode.openFromDataUrl(this.data, name, "application/pdf");
     } else {

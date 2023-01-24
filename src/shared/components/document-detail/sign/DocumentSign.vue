@@ -271,9 +271,9 @@ export default class DocumentSign extends Vue {
     }
 
     try {
-      await sleep(450);
-      this.requestId = "kek";
-      // this.requestId = await this.$hrLinkRepository.startSign(this.source.id);
+      // await sleep(450);
+      // this.requestId = "kek";
+      this.requestId = await this.$hrLinkRepository.startSign(this.source.id);
 
       this.startTimer();
       this.startSignError = false;
@@ -311,10 +311,10 @@ export default class DocumentSign extends Vue {
 
       if(valid) {
         this.onConfirm = true;
-        await sleep(500);
+        // await sleep(500);
 
         this.signIsSucceed = true;
-        // this.$hrLinkRepository.confirmSign(this.source.id, this.requestId, this.code);
+        this.$hrLinkRepository.confirmSign(this.source.id, this.requestId, this.code);
       }
       else {
         this.pinCodeValidationError = true;
