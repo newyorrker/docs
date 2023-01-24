@@ -1,6 +1,6 @@
 <template>
   <div class="document-sign">
-    <template v-if="!isError && !signIsSucceed">
+    <template v-if="!isError && !currentState.matches(State.signIsSucceed)">
       <div class="document-sign__container">
         <div class="document-sign__title">
           <p>Вы подписываете документ “Служебная записка об использовании личного транспорта</p>
@@ -10,10 +10,10 @@
         <!-- PINCODE: -->
         <pin-code v-model="pinCodeValue" :error="isPinCodeError" />
 
-        <div class="document-sign__troubleshooting" :class="{ 'document-sign__troubleshooting_can-restart': canRestart, 'document-sign__troubleshooting_error': pinCodeIsWrongError }">
+        <div class="document-sign__troubleshooting" :class="{ 'document-sign__troubleshooting_can-restart': currentState.matches(State.canRestartSign), 'document-sign__troubleshooting_error': currentState.matches(State.wrongCode) }">
           <p>
-            <span>{{pinCodeIsWrongError ? 'Неверный код!' : 'Не пришло SMS?'}} </span>
-            <a v-if="canRestart" @click="restart">Отправить повторно</a>
+            <span>{{currentState.matches(State.wrongCode) ? 'Неверный код!' : 'Не пришло SMS?'}} </span>
+            <a v-if="currentState.matches(State.canRestartSign)" @click="restart">Отправить повторно</a>
             <a v-else>Отправить повторно через {{ time }}</a>
           </p>
         </div>
@@ -32,44 +32,44 @@
         <path stroke="#FFB400" stroke-width="6" d="M40.5 20.5A20 20 0 0 0 13.795 1.657l1.009 2.835A16.99 16.99 0 0 1 37.49 20.5H40.5Z" mask="url(#a)"/>
       </svg>
 
-      <div v-if="onConfirm">Подписываем документ</div>
+      <div v-if="currentState.matches(State.onConfirmation)">Подписываем документ</div>
     </div>
 
-    <template v-if="startSignError">
+    <template v-if="currentState.matches(State.startSignError)">
       <background-icon-error >
         <p>{{ errorMessage }}</p>
 
       </background-icon-error>
       <footer class="document-sign__footer">
-        <button-1 @click="confirm(false)">Повторить попытку</button-1>
+        <button-1 @click="confirm">Повторить попытку</button-1>
       </footer>
     </template>
 
-    <template v-if="confirmationError">
+    <template v-if="currentState.matches(State.confirmationError)">
       <background-icon-error >
-        <p>Ошибка! <br> Не удалось подписать договор</p>
+        <p>Ошибка! <br> Не удалось подписать документ</p>
       </background-icon-error>
 
       <footer class="document-sign__footer">
-        <button-1 @click="confirm(false)">Повторить попытку</button-1>
+        <button-1 @click="confirm">Повторить попытку</button-1>
       </footer>
     </template>
 
-    <template v-if="signIsSucceed">
+    <template v-if="currentState.matches(State.signatureError)">
+      <background-icon-key >
+        <p>У вас нет электронной подписи!</p>
+        <p>Обратитесь в отдел кадров для выпуска элетронной подписи</p>
+      </background-icon-key>
+    </template>
+
+    <template v-if="currentState.matches(State.signIsSucceed)">
       <background-icon-success >
-        <p>Вы подписали договор!</p>
+        <p>Вы подписали документ!</p>
       </background-icon-success>
 
       <footer class="document-sign__footer">
         <button-1 @click="goToList">К списку документов</button-1>
       </footer>
-    </template>
-
-    <template v-if="signatureError">
-      <background-icon-key >
-        <p>У вас нет электронной подписи!</p>
-        <p>Обратитесь в отдел кадров для выпуска элетронной подписи</p>
-      </background-icon-key>
     </template>
   </div>
 </template>
@@ -88,7 +88,8 @@ import { DateTime, Duration } from "luxon";
 import { AxiosError } from "axios";
 import { getLink } from "@/helpers/linkHelper";
 
-import { createMachine, MachineConfig } from "xstate"
+import { interpret } from "xstate";
+import { stateMachine, Event, State } from "./stateMachine";
 
 const sleep = (seconds: number) => {
   return new Promise((resolve) => {
@@ -98,136 +99,7 @@ const sleep = (seconds: number) => {
   })
 }
 
-enum Event {
-
-  /* errors on sign start */
-  success = "SUCCESS",
-  startSignError = "START_SIGN_ERROR",
-
-  /* errors on confirm  */
-  signatureError = "SIGNATURE_ERROR",
-  confirmationError = "CONFORMATION_ERROR",
-  wrongCodeError = "WRONG_CODE_ERROR",
-  invalidCode = "INVALID_CODE",
-  resetCodeValidation = "RESET_CODE_VALIDATION",
-
-  startSign = "START_SIGN",
-  confirm = "CONFIRM",
-  retryStart = "RETRY_START",
-  retryConfirm = "RETRY_CONFIRM",
-}
-
-enum State {
-  initial = "initial",
-
-  /**
-   * Код отправляется
-   */
-  onSignStart = "onSignStart",
-
-  /**
-   * Код запрошен, ожидание подтверждения
-   */
-  waitingCodeInput = "waitingCode",
-
-  /**
-   * Ожидание ответа на запрос подтверждения подписи (подписываем документ)
-   */
-  onConfirmation = "onConfirmation",
-
-  /**
-   * Можно запросить код еще раз
-   */
-  canRestartCode = "canRestartCode",
-
-  /**
-   * Введенный код не валиден
-   */
-  invalidCode = "invalidCode",
-
-  /**
-   * Ошибка неправильного кода
-   */
-  wrongCode = "wrongCode",
-
-  /**
-   * Неизвестаня ошибка начала подписи документа
-   */
-  startSignError = "startSignError",
-
-  /**
-   * Неизвестаня ошибка подтверждения подписи
-   */
-  confirmationError = "confirmationError",
-
-  /**
-   * Отсутствие подписи
-   */
-  signatureError = "signatureError",
-
-  /**
-   * Подписан успешно
-   */
-  signIsSucceed = "signIsSucceed"
-}
-
-
-const stateMachine = createMachine({
-  initial: State.initial,
-  states: {
-    [State.initial]: {
-      on: {
-        [Event.startSign]: State.onSignStart,
-      }
-    },
-    [State.onSignStart]: {
-      on: {
-        [Event.success]: State.waitingCodeInput,
-        [Event.startSignError]: State.startSignError,
-      }
-    },
-    [State.startSignError]: {
-      on: {
-        [Event.retryStart]: State.onSignStart
-      }
-    },
-    [State.waitingCodeInput]: {
-      on: {
-        [Event.confirm]: State.onConfirmation
-      }
-    },
-    [State.onConfirmation]: {
-      on: {
-        [Event.invalidCode]: State.invalidCode,
-        [Event.success]: State.signIsSucceed,
-        [Event.wrongCodeError]: State.wrongCode,
-        [Event.confirmationError]: State.confirmationError,
-        [Event.signatureError]: State.signatureError,
-      }
-    },
-    [State.invalidCode]: {
-      on: {
-        [Event.resetCodeValidation]: State.onConfirmation
-      }
-    },
-    [State.wrongCode]: {
-      on: {
-        [Event.resetCodeValidation]: State.onConfirmation
-      }
-    },
-    [State.confirmationError]: {
-      on: {
-        [Event.retryConfirm]: State.onConfirmation
-      }
-    },
-    [State.signatureError]: {
-    },
-    [State.signIsSucceed]: {
-    }
-  }
-})
-
-const COUNT_DOWN_MINUTES = 0.5;
+const COUNT_DOWN_MINUTES = 0.1;
 
 @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey }})
 
@@ -241,20 +113,20 @@ export default class DocumentSign extends Vue {
   resendDuration: Duration | null = null;
 
   errorMessage = "";
-  onSignStart = false;
-  onConfirm = false;
 
-  canRestart = false;
+  stateService = interpret(stateMachine);
+  currentState = stateMachine.initialState;
+  State = State;
 
-  startSignError = false;
-  confirmationError = false;
-  signatureError = false
-
-
-  pinCodeValidationError = false;
-  pinCodeIsWrongError = false;
-
-  signIsSucceed = false;
+  created() {
+    // Start service on component creation
+    this.stateService
+        .onTransition((state) => {
+            // Update the current state component data property with the next state
+            this.currentState = state;
+        })
+        .start();
+  }
 
   mounted() {
     this.startSign();
@@ -264,79 +136,67 @@ export default class DocumentSign extends Vue {
    * START SIGN
    */
   async startSign() {
-    this.onSignStart = true;
-
     if(this.source.rejected || this.source.signed) {
       return;
     }
 
+    this.stateService.send(Event.startSign);
+
     try {
       // await sleep(450);
+      // throw Error("")
       // this.requestId = "kek";
       this.requestId = await this.$hrLinkRepository.startSign(this.source.id);
 
       this.startTimer();
-      this.startSignError = false;
+      this.stateService.send(Event.success);
     }
     catch(e) {
       this.errorMessage = (e as AxiosError).response?.data?.message || "При попытке подписании документа произошла ошибка";
 
       //show error
-      this.startSignError = true;
+      this.stateService.send(Event.startSignError);
       this.$store.dispatch('reportError', e);
-    }
-    finally {
-      this.onSignStart = false;
     }
   }
 
   /**
    * CONFIRM
    */
-  async confirm(dd = true) {
-    this.confirmationError = false;
-    this.signatureError = false;
-
+  async confirm() {
     try {
       if(!this.requestId) {
         throw Error("requestId must be set before confirmation");
       }
 
-      if(dd) {
-        console.log(1);
-        throw Error()
-      }
+      this.stateService.send(Event.confirm);
 
       const valid = this.validate();
 
       if(valid) {
-        this.onConfirm = true;
         // await sleep(500);
 
-        this.signIsSucceed = true;
-        this.$hrLinkRepository.confirmSign(this.source.id, this.requestId, this.code);
+        await this.$hrLinkRepository.confirmSign(this.source.id, this.requestId, this.code);
+        this.stateService.send(Event.success);
+
       }
       else {
-        this.pinCodeValidationError = true;
+        this.stateService.send(Event.invalidCode);
       }
     }
     catch(e) {
       //catch the wrong pincode
       if(false) {
-        this.pinCodeIsWrongError = true;
+        this.stateService.send(Event.wrongCodeError);
       }
-      else if(true) {
-        this.signatureError = true;
+      else if(false) {
+        this.stateService.send(Event.signatureError);
       }
       else {
-        this.confirmationError = true;
-        // this.errorMessage = (e as AxiosError).response?.data?.message || "При попытке подписании документа произошла ошибка";
+        this.stateService.send(Event.confirmationError);
+        this.errorMessage = (e as AxiosError).response?.data?.message || "При попытке подписании документа произошла ошибка";
+        this.$store.dispatch('reportError', e);
       }
-
-      this.$store.dispatch('reportError', e);
-    }
-    finally {
-      this.onConfirm = false;
     }
   }
 
@@ -346,12 +206,10 @@ export default class DocumentSign extends Vue {
 
   @Watch("pinCodeValue")
   resetPinCodeError() {
-    this.pinCodeValidationError = false;
-    this.pinCodeIsWrongError = false;
+    this.stateService.send(Event.resetCodeValidation)
   }
 
   goToList() {
-
     const link = getLink(
       this.$store.getters['platform'],
       {}
@@ -367,7 +225,7 @@ export default class DocumentSign extends Vue {
       valid = false;
     }
 
-    return valid
+    return valid;
   }
 
   protected startTimer() {
@@ -377,7 +235,7 @@ export default class DocumentSign extends Vue {
       this.resendDuration = this.getDiff(resendTime);
 
       if((this.resendDuration?.seconds ?? 0) <= 1) {
-        this.canRestart = true;
+        this.stateService.send(Event.timeIsUp);
         clearInterval(this.resendCounter || 0);
       }
     }
@@ -385,8 +243,6 @@ export default class DocumentSign extends Vue {
     this.resendCounter = setInterval(handler, 1000);
 
     handler();
-
-    this.canRestart = false;
   }
 
   protected getDiff(resendTime: DateTime) {
@@ -402,15 +258,15 @@ export default class DocumentSign extends Vue {
   }
 
   get isBusy() {
-    return this.onConfirm || this.onSignStart;
+    return this.currentState.matches(State.onConfirmation) || this.currentState.matches(State.onSignStart);
   }
 
   get isPinCodeError() {
-    return this.pinCodeIsWrongError || this.pinCodeValidationError;
+    return this.currentState.matches(State.wrongCode) || this.currentState.matches(State.invalidCode);
   }
 
   get isError() {
-    return this.startSignError || this.confirmationError || this.signatureError;
+    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.confirmationError) || this.currentState.matches(State.signatureError);
   }
 }
 
