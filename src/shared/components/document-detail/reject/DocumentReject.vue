@@ -3,7 +3,7 @@
     <template v-if="!rejected && !error">
       <div class="document-reject__container">
         <div class="document-reject__title">
-          <p>Вы действительно хотите отказаться подписывать документ: "{{ source.type }}"</p>
+          <p>Вы действительно хотите отказаться подписывать документ: "{{ source.type }}"?</p>
         </div>
         <document-info :source="source" />
         <div class="document-reject__reason">
