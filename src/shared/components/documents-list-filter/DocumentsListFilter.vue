@@ -72,7 +72,6 @@ export default defineComponent({
   },
   methods: {
     apply() {
-        console.log(1);
         this.$emit('apply', this.filterState);
     },
     reset() {

@@ -45,7 +45,6 @@ export default class ClassName extends Vue {
   }
 
   set model(value: string) {
-    console.log(value);
     this.$emit('input', value);
   }
 }

@@ -91,14 +91,6 @@ import { getLink } from "@/helpers/linkHelper";
 import { interpret } from "xstate";
 import { stateMachine, Event, State } from "./stateMachine";
 
-const sleep = (seconds: number) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(null);
-    }, seconds);
-  })
-}
-
 const COUNT_DOWN_MINUTES = 1;
 
 @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey }})

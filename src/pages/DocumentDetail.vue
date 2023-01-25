@@ -21,12 +21,13 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import DocumentSign from "@/shared/components/document-detail/sign/DocumentSign.vue";
 import DocumentView from "@/shared/components/document-detail/view/DocumentView.vue";
+import DocumentReject from "@/shared/components/document-detail/reject/DocumentReject.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { DateTime } from "luxon";
 
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 
-@Component({ components: { DocumentView, BackgroundIconError, DocumentSign }})
+@Component({ components: { DocumentView, BackgroundIconError, DocumentSign, DocumentReject }})
 
 export default class DocumentDetail extends Vue {
 

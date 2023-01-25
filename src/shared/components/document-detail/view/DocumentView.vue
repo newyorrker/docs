@@ -54,10 +54,8 @@ export default class DocumentView extends Vue {
 
   get showFooter() {
     const { rejected, signed } = this.source;
-    console.log(rejected, signed);
     return !rejected && !signed;
   }
-
 }
 
 </script>

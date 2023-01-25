@@ -10,13 +10,11 @@ export interface HrLinkRepositoryInterface {
     getDocumentFile(documentId: string) : any;
     startSign(id: string): any;
     confirmSign(id: string, requestId: string, code: string): any;
-    rejectSign(): any
+    rejectSign(id: string, reason: string): any
 }
 
 const stringToArrayBuffer = (str: string) => {
     const fileReader = new FileReader();
-
-    console.log(str);
 
     fileReader.readAsArrayBuffer(new Blob([str]));
 
@@ -44,7 +42,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
                 return response.data.map((item) => new HrLinkDocumentModel(item))
             });
     }
-    getDocument(id: string) {
+    async getDocument(id: string) {
         return this.api.client.get(`/hrlink/documents/${id}`)
             .then((response) => {
                 return new HrLinkDocumentModel(response.data);
@@ -72,8 +70,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
     async confirmSign(id: string, requestId: string, code: string) {
         await this.api.client.put(`/hrlink/documents/${id}/sign`, { id, requestId, code });
     }
-    rejectSign() {
-        throw new Error("Method not implemented.");
+    async rejectSign(id: string, reason: string) {
+        await this.api.client.post(`/hrlink/documents/${id}/sign/reject`, { reason });
     }
-
 }
