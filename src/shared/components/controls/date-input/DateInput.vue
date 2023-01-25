@@ -71,6 +71,8 @@ export default class ClassName extends Vue {
       text-align: left;
       padding: 10px;
       padding-right: 32px;
+
+      appearance: none;
     }
 
     input::-webkit-inner-spin-button,
