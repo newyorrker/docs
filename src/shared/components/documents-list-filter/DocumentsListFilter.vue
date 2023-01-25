@@ -208,7 +208,7 @@ export default class DocumentsListFilter extends Vue {
     }
 
     & > footer {
-        margin-top: 20px;
+        padding: 16px;
 
         button {
             width: 100%;
