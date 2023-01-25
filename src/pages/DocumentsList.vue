@@ -12,6 +12,7 @@
       >
 
         <template v-if="!isError">
+          <button v-if="showFilterButton" @click="showFilter = true">Show filter</button>
           <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
             <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
           </div>
@@ -42,7 +43,7 @@
       <template v-if="false">
         <button class="documents-list__web-filter-toggle-button" @click="showFilter = !showFilter">toggle</button>
       </template>
-      <document-list-filter v-if="showFilter" class="documents-list__filter"
+      <documents-list-filter v-if="showFilter" class="documents-list__filter"
         @apply="applyFilter"
         @close="showFilter = false" />
 
@@ -61,6 +62,7 @@ import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/serv
 import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { getLink } from "@/helpers/linkHelper";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
+import MobileAppButtonType from "@/types/MobileAppButtonType";
 
 @Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 
@@ -169,6 +171,12 @@ export default class DocumentsList extends Vue {
     }
   }
 
+  buttonClicked(button: MobileAppButtonType): void {
+    if (button === MobileAppButtonType.filter) {
+      this.showFilter = true;
+    }
+  }
+
   openItem(item: HrLinkDocumentModel): void {
 
     const link = getLink(
@@ -195,6 +203,10 @@ export default class DocumentsList extends Vue {
 
   get listIsEmpty() {
     return false;
+  }
+
+  get showFilterButton() {
+    return this.$store.getters["platform"] === "Web";
   }
 }
 
