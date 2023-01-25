@@ -34,7 +34,7 @@
 
                 <!-- STATUS -->
                 <documents-listFilter-section>
-                    <template #header>Статус документа:</template>
+                    <template #header>Статус документа</template>
 
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in statuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
@@ -45,7 +45,7 @@
 
                 <!-- STATUS: user -->
                 <documents-listFilter-section>
-                    <template #header>Статус документа для пользователя:</template>
+                    <template #header>Статус документа для пользователя</template>
 
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in employeeSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
@@ -56,7 +56,7 @@
 
                 <!-- STATUS: head -->
                 <documents-listFilter-section>
-                    <template #header>Статус документа для руководителя:</template>
+                    <template #header>Статус документа для руководителя</template>
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in headSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
                             {{ status.title }}

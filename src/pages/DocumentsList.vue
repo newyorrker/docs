@@ -260,10 +260,6 @@ export default class DocumentsList extends Vue {
     border-top: 1px #C8C7CC solid;
   }
 
-  &__skel {
-    margin-top: 10px;
-  }
-
   &__filter {
     width: 100%;
     height: 100%;
