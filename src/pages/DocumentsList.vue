@@ -98,6 +98,8 @@ export default class DocumentsList extends Vue {
   }
 
   mounted() {
+    window.clickButton = this.buttonClicked;
+
     this.getList();
   }
 
