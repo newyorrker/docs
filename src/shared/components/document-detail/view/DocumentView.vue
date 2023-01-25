@@ -3,7 +3,7 @@
       <div class="document-view__padding">
         <document-info :source="source" />
         <!-- wrap to component -->
-        <document-comment-view v-if="source.rejected && source.rejectionComment" class="document-view__comment" :rawText="source.rejectionComment" />
+        <document-comment-view v-if="source.rejected && source.rejectionComment" class="document-view__comment" :rawText="source.rejectionComment" :mayBeExpanded="true" />
       </div>
 
       <pdf-viewer class="document-view__pdf" :id="source.id" :name="source.name" />
@@ -67,11 +67,11 @@ export default class DocumentView extends Vue {
   height: 100%;
 
   &__comment {
-    margin-top: 10px;
+    margin-top: 6px;
   }
 
   &__pdf {
-    margin-top: 15px;
+    margin-top: 16px;
   }
 
   &__padding {

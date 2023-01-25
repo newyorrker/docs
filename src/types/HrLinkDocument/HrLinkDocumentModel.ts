@@ -46,6 +46,10 @@ export class HrLinkDocumentModel implements HrLinkDocumentInterface {
             this.signedAt = DateTime.fromISO(data.signedAt);
         }
 
+        if(data.rejectedAt) {
+            this.rejectedAt = DateTime.fromISO(data.rejectedAt);
+        }
+
         this.creator = Object.freeze(new UserProfileAdapter(data.creator));
     }
 }

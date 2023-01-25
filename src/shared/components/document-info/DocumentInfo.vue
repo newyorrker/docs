@@ -48,15 +48,11 @@ export default class DocumentInfo extends Vue {
     &__text {
         margin-top: 15px;
         & > p {
-            font-size: 14px;
+            font-size: 15px;
             line-height: 17px;
-            color: #9E9E9E;
+            color: #6D6D72;
             margin: 0;
             letter-spacing: 0.1px;
-
-            span {
-                color: #6D6D72;
-            }
         }
 
         p + p {

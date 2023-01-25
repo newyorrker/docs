@@ -1,5 +1,5 @@
 <template>
-    <div class="skel documents-list__skel">
+    <div class="skel">
         <div class="skel__first-row">
         <div v-for="imageId in [1,2,3,4,5]" class="skel__item" :key="imageId">
             <div class="skel__profile">

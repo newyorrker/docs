@@ -75,10 +75,7 @@ export default class DocumentCard extends Vue {
 <style lang="scss">
 .document-card {
   background-color: #ffffff;
-  padding-top: 12px;
-  padding-left: 16px;
-  padding-bottom: 12px;
-  padding-right: 16px;
+  padding: 16px;
 
   &__title {
     margin-top: 17px;
@@ -92,7 +89,7 @@ export default class DocumentCard extends Vue {
   }
 
   &__comment {
-    margin-top: 13px;
+    margin-top: 12px;
   }
 
   &__title + &__footer {

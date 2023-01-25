@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { HrLinkDocumentInterface } from "@/types/HrLinkDocument/HrLinkDocumentInterface";
-import { formatDate } from "@/helpers/dateFormating";
+import { formatDateWithComa } from "@/helpers/dateFormating";
 
 @Component({ components: {  }})
 
@@ -32,7 +32,9 @@ export default class ClassName extends Vue {
     const actionWord = this.isSigned ? "Подписано" : "Отклонено";
     const date = this.isSigned ? this.source.signedAt : this.source.rejectedAt;
 
-    let dateString = date ? formatDate(date) : "";
+    let dateString = date ? formatDateWithComa(date) : "";
+
+    console.log(dateString, "dateString");
 
     if(dateString) {
       dateString = " " + dateString;
@@ -65,15 +67,14 @@ export default class ClassName extends Vue {
       margin: 0;
 
       & > span {
-
-        margin-left: 8px;
+        margin-left: 6px;
       }
     }
 
     p {
       span {
         display: inline-block;
-        font-size: 14px;
+        font-size: 15px;
         line-height: 17px;
         letter-spacing: 0.18px;
       }

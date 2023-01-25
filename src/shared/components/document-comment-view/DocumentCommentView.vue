@@ -1,7 +1,6 @@
 <template>
-     <div class="document-comment-view">
-        <p>Комментарий</p>
-        <p>{{ text }}</p>
+     <div class="document-comment-view" :class="{'document-comment-view_may-be-exapanded': mayBeExpanded, 'document-comment-view_cut': !expanded}">
+        <p @click="expanded = true">Комментарий: {{ text }}</p>
     </div>
 </template>
 
@@ -14,6 +13,9 @@ import { process } from "@/helpers/MessageProcessor";
 
 export default class DocumentCommentView extends Vue {
     @Prop() rawText: string;
+    @Prop({ default: false }) mayBeExpanded: boolean;
+
+    expanded = false;
 
     get text() {
         return process(this.rawText);
@@ -25,23 +27,25 @@ export default class DocumentCommentView extends Vue {
     .document-comment-view {
         p {
             margin: 0;
-        }
-
-        p:first-child {
             font-size: 15px;
-            letter-spacing: -0.3px;
+            letter-spacing: 0.1px;
+            line-height: 17px;
+            color: #6D6D72;
         }
+    }
 
-        p:last-child {
+    .document-comment-view_cut {
+        p {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            font-size: 14px;
-            line-height: 17px;
-            letter-spacing: -0.8px;
-            padding-right: 10px;
-            margin-top: 4px;
+        }
+    }
+
+    .document-comment-view_may-be-exapanded {
+        p {
+            -webkit-line-clamp: 3;
         }
     }
 </style>
