@@ -1,6 +1,5 @@
 <template>
     <div class="documents-list">
-      {{ filterHasValue }}
       <easy-refresh
         :on-refresh="refresh"
         :loadMore="loadMore"
@@ -124,15 +123,6 @@ export default class DocumentsList extends Vue {
     try {
       const newDocuments = await this.documentsListService.load(this.filterState);
 
-      // throw Error("")
-
-      //need to be removed
-      // newDocuments[0].rejected = true;
-      // newDocuments[0].signed = false;
-      // newDocuments[0].rejectedAt = DateTime.local();
-      // newDocuments[0].rejectionComment = "Здесь описывается причина отказа от подписи"
-      //need to be removed
-
       this.isError = false;
 
       if (!loadMore || !this.items) {
@@ -201,6 +191,8 @@ export default class DocumentsList extends Vue {
     this.filterState = filterState;
 
     changeButtons([{ type: MobileAppButtonType.filter, params: { filtered: this.filterHasValue } }]);
+
+    this.items = [];
 
     this.getList();
   }

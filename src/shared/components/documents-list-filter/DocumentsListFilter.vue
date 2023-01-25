@@ -113,6 +113,8 @@ export default class DocumentsListFilter extends Vue {
         this.statuses = getStatuses();
         this.employeeSignerStatuses = getOtherStatuses();
         this.headSignerStatuses = getOtherStatuses();
+
+        this.apply();
     }
 
     get filterState(): DocumentListFilterState {
