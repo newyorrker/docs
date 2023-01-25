@@ -21,6 +21,8 @@ export default class StatusTag extends Vue {
     align-items: flex-start;
     height: 32px;
 
+    line-height: 1.2;
+
     background-color: #FFFFFF;
     border: 1px solid #C8C8C8;
     border-radius: 4px;
