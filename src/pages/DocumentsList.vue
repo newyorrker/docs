@@ -1,5 +1,6 @@
 <template>
     <div class="documents-list">
+      {{ filterHasValue }}
       <easy-refresh
         :on-refresh="refresh"
         :loadMore="loadMore"
@@ -66,6 +67,7 @@ import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { getLink } from "@/helpers/linkHelper";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
+import { changeButtons } from "@/helpers/interopHelper";
 
 @Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 
@@ -197,7 +199,16 @@ export default class DocumentsList extends Vue {
 
   applyFilter(filterState: DocumentListFilterState) {
     this.filterState = filterState;
+
+    changeButtons([{ type: MobileAppButtonType.filter, params: { filtered: this.filterHasValue } }]);
+
     this.getList();
+  }
+
+  get filterHasValue() {
+    const { documentDateFrom, documentDateTo, statuses, employeeSignerStatuses, headSignerStatuses } = this.filterState;
+
+    return !!documentDateFrom || !!documentDateTo || !!statuses?.length || !!employeeSignerStatuses?.length || !!headSignerStatuses?.length;
   }
 
   get showList() {
