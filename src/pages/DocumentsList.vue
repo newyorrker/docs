@@ -43,9 +43,12 @@
       <template v-if="false">
         <button class="documents-list__web-filter-toggle-button" @click="showFilter = !showFilter">toggle</button>
       </template>
-      <documents-list-filter v-if="showFilter" class="documents-list__filter"
-        @apply="applyFilter"
-        @close="showFilter = false" />
+      <keep-alive>
+        <documents-list-filter v-if="showFilter" class="documents-list__filter"
+          @apply="applyFilter"
+          @close="showFilter = false" />
+      </keep-alive>
+
 
     </div>
 </template>
@@ -87,7 +90,9 @@ export default class DocumentsList extends Vue {
   filterState: DocumentListFilterState = {
     documentDateFrom: "",
     documentDateTo: "",
-    statuses: []
+    statuses: [],
+    employeeSignerStatuses: [],
+    headSignerStatuses: []
   }
 
   created() {
@@ -258,10 +263,10 @@ export default class DocumentsList extends Vue {
 
   &__filter {
     width: 100%;
-    position: absolute;
-    bottom: 0;
+    height: 100%;
+    top: 0;
     left: 0;
-    border-top: 1px #c8c7cc solid;
+    position: absolute;
   }
 
   &__web-filter-toggle-button {

@@ -10,17 +10,24 @@ export interface QueryOrder {
     direction: "asc" | "desc";
 }
 
-enum Statuses {
+export enum Statuses {
     draft = "DRAFT",
     inProcess = "IN_PROCESS",
     completed = "COMPLETED",
     rejected = "REJECTED",
-    deleted = "DELETED"
+    deleted = "DELETED",
+    notSeen = "NOT_SEEN",
+    seen = "SEEN",
+    signed = "SIGNED"
 }
+
+export type OtherStatuses = Statuses.notSeen | Statuses.seen | Statuses.signed | Statuses.rejected
 
 export interface THRLinkDocumentRequestWhere {
     ids?: string[];
     statuses?: Statuses[];
+    employeeSignerStatuses?: OtherStatuses[];
+    headSignerStatuses?: OtherStatuses[]
 
     /**
      * Левая граница даты документа

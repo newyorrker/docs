@@ -36,8 +36,8 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
         this.api = Api.getInstance();
     }
 
-    async getDocuments(query?: THRLinkDocumentRequest): Promise<HrLinkDocumentModel[]> {
-        return this.api.client.post<HrLinkDocumentDto[]>("/hrlink/documents/query", query)
+    async getDocuments(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkDocumentModel[]> {
+        return this.api.client.post<HrLinkDocumentDto[]>("/hrlink/documents/query", query, config)
             .then((response) => {
                 return response.data.map((item) => new HrLinkDocumentModel(item))
             });
