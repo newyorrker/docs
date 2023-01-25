@@ -3,7 +3,7 @@
     <template v-if="!isError && !currentState.matches(State.signIsSucceed)">
       <div class="document-sign__container">
         <div class="document-sign__title">
-          <p>Вы подписываете документ {{ source.type }}</p>
+          <p>Вы подписываете документ "{{ source.type }}"</p>
         </div>
         <document-info :source="source" />
 
@@ -174,7 +174,7 @@ export default class DocumentSign extends Vue {
 
         await this.$hrLinkRepository.confirmSign(this.source.id, this.requestId, this.code);
         this.stateService.send(Event.success);
-
+        this.$emit("signed");
       }
       else {
         this.stateService.send(Event.invalidCode);
@@ -295,6 +295,7 @@ export default class DocumentSign extends Vue {
     a {
       font-variant-numeric: tabular-nums;
       text-decoration: underline;
+      line-height: 1.4;
     }
   }
 

@@ -28,6 +28,11 @@ export default class PinCode extends Vue {
     @Prop() value: string[];
     @Prop({default: false}) error: boolean;
 
+    mounted() {
+        const inputs = this.getInputRefs();
+        inputs?.[0]?.focus();
+    }
+
     inputHandler(e: Event, index: number) {
         let value = (e.target as HTMLInputElement | null)?.value;
 
@@ -166,7 +171,7 @@ export default class PinCode extends Vue {
         }
 
         input + input {
-            margin-left: 16px;
+            margin-left: 8px;
         }
 
         /* Chrome, Safari, Edge, Opera */
