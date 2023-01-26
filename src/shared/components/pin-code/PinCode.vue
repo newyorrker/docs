@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({ components: {  }})
 
@@ -27,6 +27,9 @@ export default class PinCode extends Vue {
 
     @Prop() value: string[];
     @Prop({default: false}) error: boolean;
+    @Prop({}) isBusy: boolean;
+
+    makeInit = true;
 
     mounted() {
         const inputs = this.getInputRefs();
@@ -36,6 +39,17 @@ export default class PinCode extends Vue {
         setTimeout(() => {
             inputs?.[0]?.click();
         }, 20)
+    }
+
+    @Watch('isBusy')
+    watchIsBusy() {
+        if(this.makeInit) {
+            const inputs = this.getInputRefs();
+            inputs?.[0]?.focus();
+            inputs?.[0]?.click();
+        }
+
+        this.makeInit = false;
     }
 
     inputHandler(e: Event, index: number) {
