@@ -45,8 +45,12 @@ export default class PinCode extends Vue {
     watchIsBusy() {
         if(this.makeInit) {
             const inputs = this.getInputRefs();
-            inputs?.[0]?.focus();
-            inputs?.[0]?.click();
+            console.dir(inputs?.[0]);
+            console.log(inputs?.[0]?.focus);
+            setTimeout(() => {
+                inputs?.[0]?.focus();
+                inputs?.[0]?.click();
+            }, 2000)
         }
 
         this.makeInit = false;
