@@ -31,6 +31,7 @@ export default class PinCode extends Vue {
     mounted() {
         const inputs = this.getInputRefs();
         console.dir(inputs?.[0]);
+        console.log(inputs?.[0]?.focus);
         inputs?.[0]?.focus();
         inputs?.[0]?.click();
     }
