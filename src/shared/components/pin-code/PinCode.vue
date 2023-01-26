@@ -7,7 +7,7 @@
             <div class="sms-sign__code">
                 <input v-for="(currentValue, index) in value"
 
-                :autofocus="true"
+                :autofocus="index === 0 ? true : false"
 
                 @input="inputHandler($event, index)"
                 @keydown="filterKeyDown($event, index)"
