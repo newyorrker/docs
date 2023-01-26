@@ -52,10 +52,6 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
 
         return this.api.client.get(`/hrlink/documents/${documentId}/file`, {
             responseType: 'blob',
-            // transformResponse: [function (data) {
-            //     let blob = new window.Blob([data], { type: 'application/pdf' })
-            //     return window.URL.createObjectURL(blob);
-            // }]
         })
         .then(async (response) => {
             return response.data;

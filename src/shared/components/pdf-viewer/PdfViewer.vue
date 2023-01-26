@@ -51,66 +51,51 @@ export default class PadViewer extends Vue {
   }
 
   blobUrl: string = "";
-  data: string = "";
-  error: any = null;
+  filebase64String: string = "";
 
   async mounted() {
 
     const data = await this.$hrLinkRepository.getDocumentFile(this.id);
-
     const reader = new FileReader();
+
     reader.onloadend = () => {
         // @ts-ignore
-        this.data = reader.result;
+        this.filebase64String = reader.result;
     };
+
     reader.readAsDataURL(data);
 
-    // this.data = data;
-
-    let blob = new window.Blob([data], { type: 'application/pdf' });
-
+    const blob = new window.Blob([data], { type: 'application/pdf' });
     this.blobUrl = window.URL.createObjectURL(blob);
   }
 
   download() {
-
     const platform = this.$store.getters["platform"];
     const name = this.name + ".pdf";
 
-    if (platform !== "iOS") {
-      // @ts-ignore
-      appercode.openFromDataUrl(this.data, name, "application/pdf");
-    } else if(platform === "iOS") {
+    if (platform === "Web") {
+      let a = document.createElement('a');
+      a.download = name;
+      a.target = "_blank"
+      a.href = this.blobUrl;
+      document.body.appendChild(a);
+
+      a.click();
+    }
+    else if(platform === "iOS") {
       try {
-        if(!window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage) {
-          this.error = "window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage is " + window?.webkit?.messageHandlers?.openFromDataUrl?.postMessage
-          return;
-        }
         window.webkit.messageHandlers.openFromDataUrl.postMessage?.({
           fileName: name,
-          data: this.data
+          data: this.filebase64String
         });
       }
       catch(e) {
-        this.error = e;
+        this.$store.dispatch('reportError', e);
       }
-
     }
     else {
-      let a = document.createElement('a');
-
-      // Set the download attribute to the file name
-      a.download = this.name;
-      a.target = "_blank"
-
-      // Set the href attribute to the Blob object
-      a.href = this.blobUrl;
-
-      // Append the anchor element to the document
-      document.body.appendChild(a);
-
-      // Trigger the download
-      a.click();
+      // @ts-ignore
+      appercode.openFromDataUrl(this.data, name, "application/pdf");
     }
   }
 
@@ -152,7 +137,6 @@ export default class PadViewer extends Vue {
     top: 17px;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 4px;
-    // background-color: grey;
     padding: 2px;
     z-index: 1;
 
