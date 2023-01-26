@@ -48,8 +48,6 @@
           @apply="applyFilter"
           @close="showFilter = false" />
       </keep-alive>
-
-
     </div>
 </template>
 

@@ -1,32 +1,25 @@
 import { OtherStatuses, Statuses } from "@/service/repositories/types";
 import { Status } from "./types";
 
-export const getStatuses = () => {
+export const getStatuses = (): Status<Statuses>[] => {
     return [
         {
             id: Statuses.completed,
             title: "Завершен",
-            isActive: false
-        },
-        {
-            id: Statuses.deleted,
-            title: "Удален",
-            isActive: false
-        },
-        {
-            id: Statuses.draft,
-            title: "Черновик",
-            isActive: false
+            isActive: false,
+            iconName: "document-check-icon"
         },
         {
             id: Statuses.rejected,
             title: "Отменен",
-            isActive: false
+            isActive: false,
+            iconName: "cross-icon"
         },
         {
             id: Statuses.inProcess,
             title: "В процессе",
-            isActive: false
+            isActive: false,
+            iconName: "document-progress-icon"
         }
 
     ]
@@ -37,22 +30,26 @@ export const getOtherStatuses = (): Status<OtherStatuses>[] => {
         {
             id: Statuses.notSeen,
             title: "Не просмотрен",
-            isActive: false
+            isActive: false,
+            iconName: "eye-strikethrough-icon"
         },
         {
             id: Statuses.seen,
             title: "Просмотрен",
-            isActive: false
+            isActive: false,
+            iconName: "eye-icon"
         },
         {
             id: Statuses.rejected,
             title: "Отклонен",
-            isActive: false
+            isActive: false,
+            iconName: "cross-icon"
         },
         {
             id: Statuses.signed,
             title: "Подписан",
-            isActive: false
+            isActive: false,
+            iconName: "apply-icon"
         }
     ];
 }

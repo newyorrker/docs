@@ -1,5 +1,8 @@
 <template>
   <div @click="$emit('toggle')" class="status-tag" :class="{'status-tag_active': active}">
+    <div class="status-tag__icon">
+      <slot name="icon"></slot>
+    </div>
     <span><slot/></span>
   </div>
 </template>
@@ -17,8 +20,6 @@ export default class StatusTag extends Vue {
 <style lang="scss">
   .status-tag {
     display: inline-flex;
-    flex-direction: row;
-    align-items: flex-start;
     height: 32px;
 
     line-height: 1.2;
@@ -28,6 +29,12 @@ export default class StatusTag extends Vue {
     border-radius: 4px;
 
     padding: 6px 6px;
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+    }
   }
 
   .status-tag_active {

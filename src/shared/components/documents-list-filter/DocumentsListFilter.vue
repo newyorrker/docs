@@ -38,6 +38,9 @@
 
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in statuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
+                            <template #icon>
+                                <component :is="status.iconName" />
+                            </template>
                             {{ status.title }}
                         </status-tag>
                     </div>
@@ -49,6 +52,9 @@
 
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in employeeSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
+                            <template #icon>
+                                <component :is="status.iconName" />
+                            </template>
                             {{ status.title }}
                         </status-tag>
                     </div>
@@ -59,6 +65,9 @@
                     <template #header>Статус документа для руководителя</template>
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in headSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
+                            <template #icon>
+                                <component :is="status.iconName" />
+                            </template>
                             {{ status.title }}
                         </status-tag>
                     </div>
@@ -84,14 +93,26 @@ import { OtherStatuses, Statuses } from "@/service/repositories/types";
 import { getOtherStatuses, getStatuses } from "./data";
 import { Status } from "./types";
 
+import EyeIcon from "./icons/eye-icon.vue";
+import EyeStrikethroughIcon from "./icons/eye-strikethrough-icon.vue";
+import CrossIcon from "./icons/cross-icon.vue";
+import ApplyIcon from "./icons/apply-icon.vue";
 
+import DocumentCheckIcon from "./icons/document-check-icon.vue";
+import DocumentProgressIcon from "./icons/document-progress-icon.vue";
 
 @Component({ components: {
     DateInput,
     Button1,
     DocumentListFilterSection,
     DocumentsListFilterSection,
-    StatusTag
+    StatusTag,
+    EyeIcon,
+    EyeStrikethroughIcon,
+    CrossIcon,
+    ApplyIcon,
+    DocumentCheckIcon,
+    DocumentProgressIcon
 }})
 
 export default class DocumentsListFilter extends Vue {
@@ -197,6 +218,9 @@ export default class DocumentsListFilter extends Vue {
     }
 
     &__status {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         margin-left: -8px;
         margin-bottom: -8px;
 
