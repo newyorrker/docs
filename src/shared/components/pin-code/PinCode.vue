@@ -7,6 +7,8 @@
             <div class="sms-sign__code">
                 <input v-for="(currentValue, index) in value"
 
+                :autofocus="true"
+
                 @input="inputHandler($event, index)"
                 @keydown="filterKeyDown($event, index)"
                     :value="currentValue"
@@ -14,6 +16,8 @@
                     inputmode="numeric"
                     ref="inputs" />
             </div>
+
+
         </div>
     </div>
 </template>
@@ -28,33 +32,6 @@ export default class PinCode extends Vue {
     @Prop() value: string[];
     @Prop({default: false}) error: boolean;
     @Prop({}) isBusy: boolean;
-
-    makeInit = true;
-
-    mounted() {
-        const inputs = this.getInputRefs();
-        console.dir(inputs?.[0]);
-        console.log(inputs?.[0]?.focus);
-        inputs?.[0]?.focus();
-        setTimeout(() => {
-            inputs?.[0]?.click();
-        }, 20)
-    }
-
-    @Watch('isBusy')
-    watchIsBusy() {
-        if(this.makeInit) {
-            const inputs = this.getInputRefs();
-            console.dir(inputs?.[0]);
-            console.log(inputs?.[0]?.focus);
-            setTimeout(() => {
-                inputs?.[0]?.focus();
-                inputs?.[0]?.click();
-            }, 2000)
-        }
-
-        this.makeInit = false;
-    }
 
     inputHandler(e: Event, index: number) {
         let value = (e.target as HTMLInputElement | null)?.value;
