@@ -142,7 +142,7 @@ export default class DocumentSign extends Vue {
       // await sleep(450);
       // throw Error("")
       // this.requestId = "fake-id";
-      // this.requestId = await this.$hrLinkRepository.startSign(this.source.id);
+      this.requestId = await this.$hrLinkRepository.startSign(this.source.id);
 
       this.startTimer();
       this.stateService.send(Event.success);
