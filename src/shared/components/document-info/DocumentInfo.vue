@@ -8,10 +8,7 @@
                 <span>Сформировано:</span> {{ creationDate }}
             </p>
 
-            <document-status v-if="showStatus" :source="source" class="document-info__status" />
-
-
-            <!-- <p><span>Ожидает подписи:</span> Вы, Архипов Андрей Петрович</p> -->
+            <document-status v-if="showStatus" class="document-info__status" :source="source" :extended="true" />
         </div>
     </div>
 
@@ -22,7 +19,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import UserProfile from '@/shared/components/user-profile/UserProfile.vue';
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
-import DocumentStatus from '@/shared/components/document-card/status/DocumentStatus.vue';
+import DocumentStatus from '@/shared/components/document-status/DocumentStatus.vue';
 import { formatDate } from "@/helpers/dateFormating";
 
 @Component({ components: { UserProfile, DocumentStatus }})
@@ -32,7 +29,7 @@ export default class DocumentInfo extends Vue {
 
     //duplicated
     get showStatus() {
-        return this.source.rejected || this.source.signed;
+        return !this.source.rejected;
     }
 
     //duplicated

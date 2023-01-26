@@ -1,6 +1,6 @@
 <template>
   <div class="document-status" :style="{color: color}">
-    <p class="document-status__main" >
+    <p v-if="isSigned || isRejected" class="document-status__main" >
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="13" fill="none">
         <template v-if="false">
           <path :fill="color" d="M1.687 4.816c-.251 0-.455.187-.455.418 0 .23.204.417.455.417H6c.25 0 .454-.187.454-.417 0-.231-.203-.418-.454-.418H1.687ZM1.687 6.532c-.251 0-.455.187-.455.418 0 .23.204.418.455.418h3.805c.251 0 .455-.187.455-.418 0-.23-.204-.418-.455-.418H1.687ZM1.687 9.965c-.251 0-.455.187-.455.418 0 .23.204.417.455.417h6.288c.25 0 .454-.187.454-.418 0-.23-.203-.417-.454-.417H1.687ZM10.426 5.973a.316.316 0 0 0-.04-.472.386.386 0 0 0-.512.037l-.989 1.06-.356-.382a.386.386 0 0 0-.513-.036.316.316 0 0 0-.04.471l.564.604a.48.48 0 0 0 .69 0l1.196-1.282Z"/>
@@ -13,7 +13,10 @@
       </svg>
       <span>{{ text }}</span>
     </p>
-    <p v-if="extended" class="document-status__extra"><span>Подписал Архипов Андрей Петрович - fake data</span></p>
+
+    <document-signers v-if="showSigners && extended" class="document-status__signers" :source="source" />
+
+    <!-- <p v-if="extended" class="document-status__extra"><span>Подписал Архипов Андрей Петрович - fake data</span></p> -->
   </div>
 </template>
 
@@ -21,8 +24,9 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { HrLinkDocumentInterface } from "@/types/HrLinkDocument/HrLinkDocumentInterface";
 import { formatDateWithComa } from "@/helpers/dateFormating";
+import DocumentSigners from "./DocumentSigners.vue";
 
-@Component({ components: {  }})
+@Component({ components: { DocumentSigners }})
 
 export default class ClassName extends Vue {
   @Prop() source: HrLinkDocumentInterface;
@@ -33,8 +37,6 @@ export default class ClassName extends Vue {
     const date = this.isSigned ? this.source.signedAt : this.source.rejectedAt;
 
     let dateString = date ? formatDateWithComa(date) : "";
-
-    console.log(dateString, "dateString");
 
     if(dateString) {
       dateString = " " + dateString;
@@ -54,6 +56,18 @@ export default class ClassName extends Vue {
   get isRejected() {
     return this.source.rejected;
   }
+
+  get showSigners() {
+    // const waitingTheHead = !this.source.headManager?.signedAt && !this.source.headManager?.rejectedAt;
+    //только хэд
+    //показывать:
+    //когда есть хоть кто-то кроме текущего пользователя, не подписавший документ
+    //когда кто-то кроме текущего пользователя подписал (показывать отдельным списком)
+    //когда кто-то отклонил (показывать отдельным списком)
+    //
+    //не показывать когда текущий пользователь отклонил (всегда)
+    return !this.source.rejected;
+  }
 }
 </script>
 
@@ -69,6 +83,10 @@ export default class ClassName extends Vue {
       & > span {
         margin-left: 6px;
       }
+    }
+
+    &__main + &__signers {
+      margin-top: 4px;
     }
 
     p {

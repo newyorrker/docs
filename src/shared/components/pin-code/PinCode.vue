@@ -16,14 +16,12 @@
                     inputmode="numeric"
                     ref="inputs" />
             </div>
-
-
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({ components: {  }})
 
@@ -31,7 +29,6 @@ export default class PinCode extends Vue {
 
     @Prop() value: string[];
     @Prop({default: false}) error: boolean;
-    @Prop({}) isBusy: boolean;
 
     inputHandler(e: Event, index: number) {
         let value = (e.target as HTMLInputElement | null)?.value;

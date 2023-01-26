@@ -8,7 +8,7 @@
         <document-info :source="source" />
 
         <!-- PINCODE: -->
-        <pin-code v-model="pinCodeValue" :error="isPinCodeError" :isBusy="isBusy" />
+        <pin-code v-model="pinCodeValue" :error="isPinCodeError" />
 
         <div class="document-sign__troubleshooting" :class="{ 'document-sign__troubleshooting_can-restart': canRestartSign, 'document-sign__troubleshooting_error': currentState.matches(State.wrongCode) }">
           <p>

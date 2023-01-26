@@ -29,7 +29,7 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import UserProfile from '../user-profile/UserProfile.vue';
-import DocumentStatus from './status/DocumentStatus.vue';
+import DocumentStatus from '../document-status/DocumentStatus.vue';
 
 @Component({ components: {
   UserProfile,

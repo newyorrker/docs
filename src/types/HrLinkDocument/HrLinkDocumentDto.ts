@@ -1,15 +1,19 @@
-import { DocumentCreator } from "./DocumentCreator";
+import { DocumentUserProfile } from "./DocumentUserProfile";
 
 export interface HrLinkDocumentDto {
     /**
      * Datestring
      */
     createdAt: string;
-    creator: DocumentCreator;
+
+    creator: DocumentUserProfile;
+    headManager: DocumentUserProfile | null;
+    employees: DocumentUserProfile[];
+
     id: string;
     name: string;
     number: number | null;
-    rejected: boolean;
+    rejected?: boolean;
     rejectedAt: string | null;
     rejectionComment:string | null;
 
@@ -17,7 +21,7 @@ export interface HrLinkDocumentDto {
      * Datestring
      */
     sentAt: string;
-    signed: boolean;
+    signed?: boolean;
 
     /**
      * Datestring

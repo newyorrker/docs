@@ -1,43 +1,42 @@
 
 import { DateTime } from "luxon";
-import { DocumentCreator } from "./DocumentCreator";
+import { DocumentUserProfileModel } from "./DocumentUserProfileModel";
 import { HrLinkDocumentDto } from "./HrLinkDocumentDto";
 import { HrLinkDocumentInterface } from "./HrLinkDocumentInterface";
-import { UserProfile }from "../../../../../common/api/models/UserProfile";
-import { UserProfileInterface } from "../../../../../common/api/models/interfaces/UserProfileInterface";
-
-class UserProfileAdapter extends UserProfile {
-    constructor(data: DocumentCreator) {
-
-        const rightData: UserProfileInterface = {
-            ...data,
-            firstName: data.firstName || data.firstNameRaw,
-            lastName: data.lastName || data.lastNameRaw,
-            middleName: data.middleName || data.middleNameRaw,
-            position: data.position || data.positionRaw,
-            photoFileId: data.imageFileId
-        }
-
-        super(rightData);
-    }
-}
 
 export class HrLinkDocumentModel implements HrLinkDocumentInterface {
     createdAt: DateTime;
-    creator: UserProfile;
+    creator: DocumentUserProfileModel;
+    headManager: DocumentUserProfileModel | null;
+    employees: DocumentUserProfileModel[] = [];
     id: string;
     name: string;
     number: number | null;
-    rejected: boolean;
+
+    /**
+     * all participants of singing have rejected a document
+     */
+    completelyRejected: boolean;
     rejectedAt?: DateTime | null;
     rejectionComment: string | null;
     sentAt: DateTime;
-    signed: boolean;
+
+    /**
+     * all participants of singing have signed a document
+     */
+    completelySigned: boolean;
     signedAt: DateTime | null;
     type: string;
 
     constructor(data: HrLinkDocumentDto) {
-        Object.assign(this, data);
+
+        const sourceData = Object.assign<HrLinkDocumentDto, {completelyRejected?: boolean; completelySigned?: boolean}>(data, { completelyRejected: data.rejected, completelySigned: data.signed });
+
+        delete sourceData.signed;
+        delete sourceData.rejected;
+
+        // const
+        Object.assign(this, sourceData);
 
         this.createdAt = DateTime.fromISO(data.createdAt);
         this.sentAt = DateTime.fromISO(data.sentAt);
@@ -50,6 +49,26 @@ export class HrLinkDocumentModel implements HrLinkDocumentInterface {
             this.rejectedAt = DateTime.fromISO(data.rejectedAt);
         }
 
-        this.creator = Object.freeze(new UserProfileAdapter(data.creator));
+        this.creator = Object.freeze(new DocumentUserProfileModel(data.creator));
+
+        if(data.headManager) {
+            this.headManager = Object.freeze(new DocumentUserProfileModel(data.headManager));
+        }
+
+        this.employees = data.employees.map((employer) => Object.freeze(new DocumentUserProfileModel(employer)))
+    }
+
+    /**
+     * current user signed a document
+     */
+    get signed() {
+        return !!this.signedAt;
+    }
+
+    /**
+     * current user rejected a document
+     */
+    get rejected() {
+        return !!this.rejectedAt;
     }
 }
