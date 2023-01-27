@@ -1,23 +1,18 @@
 <template>
   <div class="document-signers">
-    <div class="document-signers__list">
-      <template v-if="waitingList.length">
-        <span>Ожидает подписи:</span>
-        <div class="document-signers__list-item" v-for="signer in waitingList" >
-          <signer-profile :source="signer" />
-        </div>
-      </template>
+    <div v-if="waitingList.length" class="document-signers__list">
+      <span>Ожидает подписи:</span>
+      <div class="document-signers__list-item" v-for="signer in waitingList" >
+        <signer-profile :source="signer" />
+      </div>
     </div>
 
-    <div class="document-signers__list">
-      <template v-if="signedList.length">
-        <span>Подписа{{ signedList.length > 1 ? 'ли' : 'л' }}</span>
-        <div class="document-signers__list-item" v-for="signer in signedList" >
-          <signer-profile :source="signer" />
-        </div>
-      </template>
+    <div v-if="signedList.length" class="document-signers__list">
+      <span>Подписа{{ signedList.length > 1 ? 'ли' : 'л' }}</span>
+      <div class="document-signers__list-item" v-for="signer in signedList" >
+        <signer-profile :source="signer" />
+      </div>
     </div>
-
   </div>
 </template>
 
@@ -27,9 +22,7 @@ import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel"
 import SignerProfile from "./SignerProfile.vue";
 import { Signer } from "./types";
 
-
 @Component({ components: { SignerProfile }})
-
 export default class DocumentSigners extends Vue {
   @Prop({ required: true }) source: HrLinkDocumentModel;
 
@@ -42,7 +35,7 @@ export default class DocumentSigners extends Vue {
       })
     }
 
-    if(this.waitingForHead && this.headProfile) {
+    if(this.waitingForHead && this.headProfile && !this.currentUserIsHeadManager) {
       result.push({
         name: this.headProfile.fullName || "",
         profile: this.headProfile
@@ -93,6 +86,12 @@ export default class DocumentSigners extends Vue {
     return result;
   }
 
+  get currentUserIsHeadManager() {
+    //текущий пользователь может быть руководителем
+    //если текущий пользователь явяляется руководителем то не показываем
+    return this.$store.state.userProfile.id === this.headProfile?.id
+  }
+
   get waitingForCurrentUser() {
     return !this.source.signed;
   }
@@ -131,6 +130,12 @@ export default class DocumentSigners extends Vue {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin-left: -8px;
+    line-height: 1.35;
+
+    & > span {
+      margin-left: 8px;
+    }
   }
 
   &__list-item {

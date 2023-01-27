@@ -8,7 +8,7 @@
                 <span>Сформировано:</span> {{ creationDate }}
             </p>
 
-            <document-status v-if="showStatus" class="document-info__status" :source="source" :extended="true" />
+            <document-status class="document-info__status" :source="source" :extended="true" />
         </div>
     </div>
 
