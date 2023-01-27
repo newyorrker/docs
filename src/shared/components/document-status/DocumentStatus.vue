@@ -26,7 +26,7 @@ import DocumentSigners from "./DocumentSigners.vue";
 
 @Component({ components: { DocumentSigners }})
 
-export default class ClassName extends Vue {
+export default class DocumentStatus extends Vue {
   @Prop() source: HrLinkDocumentInterface;
   @Prop({default: false}) extended: boolean;
 

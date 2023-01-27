@@ -1,5 +1,5 @@
 <template>
-  <div @click="openTheProfile" class="signer-profile">
+  <div class="signer-profile">
     <user-icon v-if="!!source.profile" class="signer-profile__icon" :userProfile="source.profile" :size="25" />
     <span>{{ source.name }}</span>
   </div>
@@ -15,29 +15,6 @@ import { Signer } from "./types";
 
 export default class SignerProfile extends Vue {
     @Prop() source: Signer;
-
-    openTheProfile() {
-      if(this.$store.state.userProfile.id !== this.sourceProfileId) {
-        document.location.href = this.link;
-      }
-    }
-
-    get sourceProfileId() {
-      return this.source.profile?.id;
-    }
-
-    get link() {
-      const profileId = this.sourceProfileId;
-      if (profileId) {
-        let params = {
-          schemaId: 'UserProfiles',
-          objectId: profileId
-        };
-
-        return 'actor:ContactsPageActor?params=' + encodeURIComponent(JSON.stringify(params));
-      }
-      return '';
-    }
 }
 
 </script>
