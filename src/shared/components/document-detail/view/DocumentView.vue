@@ -6,6 +6,16 @@
         <document-comment-view v-if="source.rejected && source.rejectionComment" class="document-view__comment" :rawText="source.rejectionComment" :mayBeExpanded="true" />
       </div>
 
+
+
+      backend - {{ backend }}
+      <br>
+      baseUrl - {{ baseUrl }}
+      <br>
+      backendUrl - {{backendUrl}}
+      <br>
+      backendUrlRaw - {{ backendUrlRaw }}
+
       <pdf-viewer class="document-view__pdf" :id="source.id" :name="source.name" />
 
       <footer v-if="showFooter" class="document-view__footer">
@@ -50,6 +60,20 @@ export default class DocumentView extends Vue {
     );
 
     document.location.href = link;
+  }
+
+  get backend() {
+    return this.$store.state.session?.projectName;
+  }
+  get baseUrl() {
+    return this.$store.state.session?.baseUrl;
+  }
+  get backendUrl() {
+    return this.$store.state.session?.backendUrl || (this.baseUrl || "" + this.backend || "");
+  }
+
+  get backendUrlRaw() {
+    return this.$store.state.session?.backendUrl;
   }
 
   get showFooter() {

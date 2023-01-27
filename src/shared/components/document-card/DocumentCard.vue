@@ -57,7 +57,7 @@ export default class DocumentCard extends Vue {
   }
 
   get showStatus() {
-    return this.source.rejected || this.source.signed;
+    return !this.source.rejected;
   }
 
   get creationDate() {

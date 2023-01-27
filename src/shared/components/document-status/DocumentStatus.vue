@@ -15,8 +15,6 @@
     </p>
 
     <document-signers v-if="showSigners && extended" class="document-status__signers" :source="source" />
-
-    <!-- <p v-if="extended" class="document-status__extra"><span>Подписал Архипов Андрей Петрович - fake data</span></p> -->
   </div>
 </template>
 
