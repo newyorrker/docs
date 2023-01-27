@@ -13,7 +13,7 @@
 
         <div class="document-card__footer">
             <p>{{ creationDate }}</p>
-            <button v-if="showSignButton" @click.stop="sign">
+            <button @click.stop="openItem">
               Открыть
               <svg xmlns="http://www.w3.org/2000/svg" width="5" height="9" fill="none">
                 <path fill="#fff" fill-rule="evenodd" d="M.793.5 5 4.5l-4.207 4L0 7.746 3.414 4.5 0 1.254.793.5Z" clip-rule="evenodd"/>
@@ -42,11 +42,14 @@ import { formatDate } from "@/helpers/dateFormating";
 export default class DocumentCard extends Vue {
   @Prop() source: HrLinkDocumentInterface;
 
-  sign() {
+  openItem(): void {
+
+    const item = this.source;
+
     const link = getLink(
       this.$store.getters['platform'],
-      { id: this.source.id, isSign: "true" },
-      this.source.type
+      { id: item.id },
+      item.type
     );
 
     document.location.href = link;
@@ -62,11 +65,6 @@ export default class DocumentCard extends Vue {
 
   get creationDate() {
     return formatDate(this.source.createdAt);
-  }
-
-  get showSignButton() {
-    const { rejected, signed } = this.source;
-    return !rejected && !signed;
   }
 }
 
