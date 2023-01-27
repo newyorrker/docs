@@ -17,7 +17,20 @@ export default class SignerProfile extends Vue {
     @Prop() source: Signer;
 
     openTheProfile() {
+      document.location.href = this.link;
+    }
 
+    get link() {
+      const profileId = this.source.profile?.id;
+      if (profileId) {
+        let params = {
+          schemaId: 'UserProfiles',
+          objectId: profileId
+        };
+
+        return 'actor:ContactsPageActor?params=' + encodeURIComponent(JSON.stringify(params));
+      }
+      return '';
     }
 }
 

@@ -56,14 +56,6 @@ export default class ClassName extends Vue {
   }
 
   get showSigners() {
-    // const waitingTheHead = !this.source.headManager?.signedAt && !this.source.headManager?.rejectedAt;
-    //только хэд
-    //показывать:
-    //когда есть хоть кто-то кроме текущего пользователя, не подписавший документ
-    //когда кто-то кроме текущего пользователя подписал (показывать отдельным списком)
-    //когда кто-то отклонил (показывать отдельным списком)
-    //
-    //не показывать когда текущий пользователь отклонил (всегда)
     return !this.source.rejected;
   }
 }

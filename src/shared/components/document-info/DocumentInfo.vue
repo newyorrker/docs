@@ -28,11 +28,6 @@ export default class DocumentInfo extends Vue {
     @Prop({required: true}) source: HrLinkDocumentModel;
 
     //duplicated
-    get showStatus() {
-        return !this.source.rejected;
-    }
-
-    //duplicated
     get creationDate() {
         return formatDate(this.source.createdAt);
     }
