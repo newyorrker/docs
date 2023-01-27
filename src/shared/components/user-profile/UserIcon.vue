@@ -61,7 +61,7 @@ export default class UserIcon extends Vue {
   get profilePhotoLink(): string {
     const backend = this.$store.state.session?.projectName;
     const baseUrl = this.$store.state.session?.baseUrl;
-    const backendUrl = this.$store.state.session?.backendUrl || (baseUrl || "" + backend || "");
+    const backendUrl = this.$store.state.session?.backendUrl || ((baseUrl || "") + (backend || ""));
 
     if(!backendUrl) {
       return "";
