@@ -181,8 +181,6 @@ export default class DocumentSign extends Vue {
       }
     }
     catch(e) {
-
-      console.dir(e);
       //catch the wrong pincode
       if(false) {
         this.stateService.send(Event.wrongCodeError);

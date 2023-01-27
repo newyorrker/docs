@@ -20,7 +20,7 @@
       </button>
     </div>
     <div class="pdf-viewer__container">
-      <vue-pdf-app v-if="blobUrl" class="pdf-viewer__app"
+      <vue-pdf-app v-if="blobUrl" :class="containerClass" @pages-rendered="subscribe"
           :pdf="blobUrl"
           :config="{ toolbar: false, sidebar: false, presentationMode: true, }"
           :page-scale="'page-width'"
@@ -38,6 +38,10 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import VuePdfApp from "vue-pdf-app";
 
+
+
+import Hammer from "hammerjs"
+
 @Component({ components: { VuePdfApp }})
 
 export default class PadViewer extends Vue {
@@ -50,23 +54,47 @@ export default class PadViewer extends Vue {
     zoomOut: "vuePdfAppZoomOut",
   }
 
+  readonly containerClass = "pdf-viewer__app";
+
   blobUrl: string = "";
   filebase64String: string = "";
 
+
+  subscribe() {
+    /* hammer */
+    const element = document.getElementsByClassName(this.containerClass)[0] as HTMLElement;
+
+    console.log(element);
+
+    const hammer = new Hammer(element);
+
+    hammer.on("pinch", (data) => {
+      console.log("pinch", data);
+    })
+  }
+
   async mounted() {
 
-    const data = await this.$hrLinkRepository.getDocumentFile(this.id);
-    const reader = new FileReader();
+    try {
+      const data = await this.$hrLinkRepository.getDocumentFile(this.id);
+      const reader = new FileReader();
 
-    reader.onloadend = () => {
-        // @ts-ignore
-        this.filebase64String = reader.result;
-    };
+      reader.onloadend = () => {
+          // @ts-ignore
+          this.filebase64String = reader.result;
+      };
 
-    reader.readAsDataURL(data);
+      reader.readAsDataURL(data);
 
-    const blob = new window.Blob([data], { type: 'application/pdf' });
-    this.blobUrl = window.URL.createObjectURL(blob);
+      const blob = new window.Blob([data], { type: 'application/pdf' });
+      this.blobUrl = window.URL.createObjectURL(blob);
+    }
+    catch(e) {
+      this.$store.dispatch('reportError', e);
+    }
+    finally {
+      this.$emit("done");
+    }
   }
 
   download() {
