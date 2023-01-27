@@ -41,7 +41,7 @@
 
       </background-icon-error>
       <footer class="document-sign__footer">
-        <button-1 @click="confirm">Повторить попытку</button-1>
+        <button-1 @click="startSign">Повторить попытку</button-1>
       </footer>
     </template>
 
@@ -55,12 +55,12 @@
       </footer>
     </template>
 
-    <template v-if="currentState.matches(State.signatureError)">
+    <!-- <template v-if="currentState.matches(State.signatureError)">
       <background-icon-key >
         <p>У вас нет электронной подписи!</p>
         <p>Обратитесь в отдел кадров для выпуска элетронной подписи</p>
       </background-icon-key>
-    </template>
+    </template> -->
 
     <template v-if="currentState.matches(State.signIsSucceed)">
       <background-icon-success >
@@ -181,12 +181,11 @@ export default class DocumentSign extends Vue {
       }
     }
     catch(e) {
+
+      console.dir(e);
       //catch the wrong pincode
       if(false) {
         this.stateService.send(Event.wrongCodeError);
-      }
-      else if(false) {
-        this.stateService.send(Event.signatureError);
       }
       else {
         this.stateService.send(Event.confirmationError);
@@ -262,7 +261,7 @@ export default class DocumentSign extends Vue {
   }
 
   get isError() {
-    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.confirmationError) || this.currentState.matches(State.signatureError);
+    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.confirmationError);
   }
 }
 

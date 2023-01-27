@@ -8,7 +8,6 @@ export enum Event {
   // timeIsUp = "TIME_IS_UP",
 
   /* errors on confirm  */
-  signatureError = "SIGNATURE_ERROR",
   confirmationError = "CONFORMATION_ERROR",
   wrongCodeError = "WRONG_CODE_ERROR",
   invalidCode = "INVALID_CODE",
@@ -59,11 +58,6 @@ export enum State {
   confirmationError = "confirmationError",
 
   /**
-   * Отсутствие подписи
-   */
-  signatureError = "signatureError",
-
-  /**
    * Подписан успешно
    */
   signIsSucceed = "signIsSucceed"
@@ -100,8 +94,7 @@ export const stateMachine = createMachine({
         [Event.invalidCode]: State.invalidCode,
         [Event.success]: State.signIsSucceed,
         [Event.wrongCodeError]: State.wrongCode,
-        [Event.confirmationError]: State.confirmationError,
-        [Event.signatureError]: State.signatureError,
+        [Event.confirmationError]: State.confirmationError
       }
     },
     [State.invalidCode]: {
@@ -118,8 +111,6 @@ export const stateMachine = createMachine({
       on: {
         [Event.retryConfirm]: State.onConfirmation
       }
-    },
-    [State.signatureError]: {
     },
     [State.signIsSucceed]: {
     }

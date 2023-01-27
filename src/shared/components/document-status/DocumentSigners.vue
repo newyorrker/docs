@@ -28,8 +28,9 @@ export default class DocumentSigners extends Vue {
   @Prop({ required: true }) source: HrLinkDocumentModel;
 
   openProfile(userProfile?: DocumentUserProfileModel) {
-    if(userProfile) {
-      document.location.href = this.getLink(userProfile.id);
+    const link = this.getLink(userProfile?.id);
+    if(link) {
+      document.location.href = link;
     }
   }
 
