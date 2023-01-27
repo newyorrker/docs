@@ -19,9 +19,10 @@
         </svg>
       </button>
     </div>
-    <pre style="height: 200px; overflow: auto">
-      {{ data }}
-      {{ kek || "null123" }}
+    <pre v-if="data" style="height: 200px; overflow: auto">
+      scale - {{data.scale}}
+      rotation - {{data.rotation}}
+      additionalEvent - {{data.additionalEvent}}
     </pre>
     <div class="pdf-viewer__container">
       <vue-pdf-app v-if="blobUrl" :class="containerClass" @pages-rendered="subscribe"
@@ -64,7 +65,7 @@ export default class PadViewer extends Vue {
   blobUrl: string = "";
   filebase64String: string = "";
 
-  data: any | null = null;
+  data: HammerInput & { additionalEvent: string } | null = null;
 
   subscribe() {
     /* hammer */
@@ -77,6 +78,7 @@ export default class PadViewer extends Vue {
     hammer.get('pinch').set({ enable: true });
 
     hammer.on("pinch", (data) => {
+      //@ts-ignore
       this.data = data
       this.kek = data.deltaX;
       console.log("pinch", data);
