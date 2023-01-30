@@ -65,7 +65,7 @@ export default class PadViewer extends Vue {
   blobUrl: string = "";
   filebase64String: string = "";
 
-  data: HammerInput & { additionalEvent: string } | null = null;
+  data: HammerInput & { additionalEvent: "pinchout" | "pinchin" } | null = null;
 
   subscribe(pdfViewer: { zoomIn: (ticks?: number) => {}, zoomOut: (ticks?: number) => {}}) {
 
@@ -93,6 +93,18 @@ export default class PadViewer extends Vue {
     hammer.on("pinch", (data) => {
       //@ts-ignore
       this.data = data
+      if(this.data?.additionalEvent === "pinchin") {
+        pdfViewer.zoomIn()
+      }
+
+      if(this.data?.additionalEvent === "pinchout") {
+
+        pdfViewer.zoomOut()
+
+      }
+
+
+
       this.kek = data.deltaX;
       console.log("pinch", data);
     })
