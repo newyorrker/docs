@@ -67,7 +67,20 @@ export default class PadViewer extends Vue {
 
   data: HammerInput & { additionalEvent: string } | null = null;
 
-  subscribe() {
+  subscribe(pdfViewer: { zoomIn: (ticks?: number) => {}, zoomOut: (ticks?: number) => {}}) {
+
+    // console.dir(pdfViewer);
+
+    const timer = setInterval(() => {
+      console.log("ZOOM IN");
+      pdfViewer.zoomIn()
+    }, 2000)
+
+    setTimeout(() => {
+      clearInterval(timer)
+    }, 10000);
+
+
     /* hammer */
     const element = document.getElementsByClassName(this.containerClass)[0] as HTMLElement;
 
