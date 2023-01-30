@@ -19,11 +19,11 @@
         </svg>
       </button>
     </div>
-    <!-- <pre v-if="data" style="height: 200px; overflow: auto">
+    <pre v-if="data" style="height: 200px; overflow: auto">
       scale - {{data.scale}}
       rotation - {{data.rotation}}
       additionalEvent - {{data.additionalEvent}}
-    </pre> -->
+    </pre>
     <div class="pdf-viewer__container">
       <vue-pdf-app v-if="blobUrl" :class="containerClass" @pages-rendered="subscribe"
           :pdf="blobUrl"
@@ -47,19 +47,30 @@ import VuePdfApp from "vue-pdf-app";
 
 import Hammer from "hammerjs"
 
-function throttle(func: any, limit: any) {
-  let inThrottle  = false;;
-  return function() {
-    const args = arguments;
-    //@ts-ignore
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+const throttleFunction=(func: any, delay: any)=>{
+
+    // Previously called time of the function
+    let prev = 0;
+    return (...args: any) => {
+      // Current called time of the function
+      let now = new Date().getTime();
+
+      // Logging the difference between previously
+      // called and current called timings
+      console.log(now-prev, delay);
+
+      // If difference is greater than delay call
+      // the function again.
+      if(now - prev> delay){
+        prev = now;
+
+        // "..." is the spread operator here
+        // returning the function with the
+        // array of arguments
+        return func(...args);
+      }
     }
   }
-}
 
 @Component({ components: { VuePdfApp }})
 
@@ -93,16 +104,7 @@ export default class PadViewer extends Vue {
 
     const h = (data: HammerInput) => {
       //@ts-ignore
-      this.data = data
-      // if(this.data?.additionalEvent === "pinchin") {
-      //   pdfViewer.zoomOut()
-      // }
-
-      // if(this.data?.additionalEvent === "pinchout") {
-
-      //   pdfViewer.zoomIn()
-
-      // }
+      this.data = data;
 
       const scale = data.scale;
 
@@ -113,7 +115,7 @@ export default class PadViewer extends Vue {
       }
     }
 
-    const handler = throttle(h, 30)
+    const handler = throttleFunction(h, 30)
 
     hammer.on("pinch", handler);
   }
