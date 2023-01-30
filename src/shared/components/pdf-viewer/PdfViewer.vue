@@ -94,25 +94,39 @@ export default class PadViewer extends Vue {
 
   subscribe(pdfViewer: { zoomIn: (ticks?: number) => {}, zoomOut: (ticks?: number) => {}}) {
 
-    const element = document.getElementById("mainContainer") as HTMLElement;
+    const element = document.getElementById("viewerContainer") as HTMLElement;
+
 
     console.log(element);
 
-    const hammer = new Hammer(element);
+    const hammer = new Hammer(element, {touchAction: "auto"});
 
-    hammer.get('pinch').set({ enable: true,  });
+    hammer.get('pinch').set({ enable: true });
+
+    element.addEventListener("touchstart", function(event) {
+      console.log(event.touches.length);
+      if (event.touches.length >= 2) {
+        hammer.get("pinch").set({ enable: true });
+      }
+    });
+    element.addEventListener("touchend", function(event) {
+      if (event.touches.length < 2) {
+        hammer.get("pinch").set({ enable: false });
+      }
+    });
 
     const h = (data: HammerInput) => {
       //@ts-ignore
       this.data = data;
 
+
       const scale = data.scale;
 
-      if (scale > 1){
-        pdfViewer.zoomIn();
-      } else {
-        pdfViewer.zoomOut();
-      }
+      // if (scale > 1){
+      //   pdfViewer.zoomIn();
+      // } else {
+      //   pdfViewer.zoomOut();
+      // }
     }
 
     const handler = throttleFunction(h, 30)
