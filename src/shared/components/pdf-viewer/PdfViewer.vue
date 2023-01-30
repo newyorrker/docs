@@ -71,18 +71,18 @@ export default class PadViewer extends Vue {
 
     // console.dir(pdfViewer);
 
-    const timer = setInterval(() => {
-      console.log("ZOOM IN");
-      pdfViewer.zoomIn()
-    }, 2000)
+    // const timer = setInterval(() => {
+    //   console.log("ZOOM IN");
+    //   pdfViewer.zoomIn()
+    // }, 2000)
 
-    setTimeout(() => {
-      clearInterval(timer)
-    }, 10000);
+    // setTimeout(() => {
+    //   clearInterval(timer)
+    // }, 10000);
 
 
     /* hammer */
-    const element = document.getElementsByClassName(this.containerClass)[0] as HTMLElement;
+    const element = document.getElementsByClassName("pdfViewer")[0] as HTMLElement;
 
     console.log(element);
 
