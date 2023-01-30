@@ -96,42 +96,104 @@ export default class PadViewer extends Vue {
 
     const element = document.getElementById("viewerContainer") as HTMLElement;
 
+    let pinchZoomEnabled = false;
+    function enablePinchZoom(pdfViewer: any) {
+        let startX = 0, startY = 0;
+        let initialPinchDistance = 0;
+        let pinchScale = 1;
+        const viewer = document.getElementById("viewer");
+        const container = document.getElementById("viewerContainer");
+        const reset = () => { startX = startY = initialPinchDistance = 0; pinchScale = 1; };
+        // Prevent native iOS page zoom
+        //document.addEventListener("touchmove", (e) => { if (e.scale !== 1) { e.preventDefault(); } }, { passive: false });
+        document.addEventListener("touchstart", (e) => {
+            if (e.touches.length > 1) {
+                startX = (e.touches[0].pageX + e.touches[1].pageX) / 2;
+                startY = (e.touches[0].pageY + e.touches[1].pageY) / 2;
+                initialPinchDistance = Math.hypot((e.touches[1].pageX - e.touches[0].pageX), (e.touches[1].pageY - e.touches[0].pageY));
+            } else {
+                initialPinchDistance = 0;
+            }
+        });
+        document.addEventListener("touchmove", (e) => {
+            if (initialPinchDistance <= 0 || e.touches.length < 2) { return; }
+            //@ts-ignore
+            if (e.scale !== 1) { e.preventDefault(); }
+            const pinchDistance = Math.hypot((e.touches[1].pageX - e.touches[0].pageX), (e.touches[1].pageY - e.touches[0].pageY));
+            //@ts-ignore
+            const originX = startX + container.scrollLeft;
+            //@ts-ignore
+            const originY = startY + container.scrollTop;
+            pinchScale = pinchDistance / initialPinchDistance;
+            //@ts-ignore
+            viewer.style.transform = `scale(${pinchScale})`;
+            //@ts-ignore
+            viewer.style.transformOrigin = `${originX}px ${originY}px`;
+        }, { passive: false });
+        document.addEventListener("touchend", (e) => {
+            if (initialPinchDistance <= 0) { return; }
+            //@ts-ignore
+            viewer.style.transform = `none`;
+            //@ts-ignore
+            viewer.style.transformOrigin = `unset`;
+            //@ts-ignore
+            pdfViewer.currentScale *= pinchScale;
+            //@ts-ignore
+            const rect = container.getBoundingClientRect();
+            const dx = startX - rect.left;
+            const dy = startY - rect.top;
+            //@ts-ignore
+            container.scrollLeft += dx * (pinchScale - 1);
+            //@ts-ignore
+            container.scrollTop += dy * (pinchScale - 1);
+
+            reset();
+        });
+    }
+    document.addEventListener('webviewerloaded', () => {
+        if (!pinchZoomEnabled) {
+            pinchZoomEnabled = true;
+            //@ts-ignore
+            enablePinchZoom();
+        }
+    });
+
 
     console.log(element);
 
-    const hammer = new Hammer(element, {touchAction: "auto"});
+    // const hammer = new Hammer(element, {touchAction: "auto"});
 
-    hammer.get('pinch').set({ enable: true });
+    // hammer.get('pinch').set({ enable: true });
 
-    element.addEventListener("touchstart", function(event) {
-      console.log(event.touches.length);
-      if (event.touches.length >= 2) {
-        hammer.get("pinch").set({ enable: true });
-      }
-    });
-    element.addEventListener("touchend", function(event) {
-      if (event.touches.length < 2) {
-        hammer.get("pinch").set({ enable: false });
-      }
-    });
+    // element.addEventListener("touchstart", function(event) {
+    //   console.log(event.touches.length);
+    //   if (event.touches.length >= 2) {
+    //     hammer.get("pinch").set({ enable: true });
+    //   }
+    // });
+    // element.addEventListener("touchend", function(event) {
+    //   if (event.touches.length < 2) {
+    //     hammer.get("pinch").set({ enable: false });
+    //   }
+    // });
 
-    const h = (data: HammerInput) => {
-      //@ts-ignore
-      this.data = data;
+    // const h = (data: HammerInput) => {
+    //   //@ts-ignore
+    //   this.data = data;
 
 
-      const scale = data.scale;
+    //   const scale = data.scale;
 
-      // if (scale > 1){
-      //   pdfViewer.zoomIn();
-      // } else {
-      //   pdfViewer.zoomOut();
-      // }
-    }
+    //   // if (scale > 1){
+    //   //   pdfViewer.zoomIn();
+    //   // } else {
+    //   //   pdfViewer.zoomOut();
+    //   // }
+    // }
 
-    const handler = throttleFunction(h, 30)
+    // const handler = throttleFunction(h, 30)
 
-    hammer.on("pinch", handler);
+    // hammer.on("pinch", handler);
   }
 
   async mounted() {
