@@ -177,12 +177,8 @@ export default class PadViewer extends Vue {
             reset();
         });
     }
-    document.addEventListener("DOMContentLoaded", () => {
-        if (!pinchZoomEnabled) {
-            pinchZoomEnabled = true;
-            enablePinchZoom(pdfViewer);
-        }
-    });
+    pinchZoomEnabled = true;
+    enablePinchZoom(pdfViewer);
 
 
     console.log(element);
