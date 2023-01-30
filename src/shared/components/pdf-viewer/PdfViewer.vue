@@ -83,7 +83,7 @@ export default class PadViewer extends Vue {
 
   subscribe(pdfViewer: { zoomIn: (ticks?: number) => {}, zoomOut: (ticks?: number) => {}}) {
 
-    const element = document.getElementsByClassName("pdfViewer")[0] as HTMLElement;
+    const element = document.getElementById("mainContainer") as HTMLElement;
 
     console.log(element);
 
