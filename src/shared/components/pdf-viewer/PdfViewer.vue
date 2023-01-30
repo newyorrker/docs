@@ -47,6 +47,20 @@ import VuePdfApp from "vue-pdf-app";
 
 import Hammer from "hammerjs"
 
+function throttle(func: any, limit: any) {
+  let inThrottle  = false;;
+  return function() {
+    const args = arguments;
+    //@ts-ignore
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  }
+}
+
 @Component({ components: { VuePdfApp }})
 
 export default class PadViewer extends Vue {
@@ -69,19 +83,6 @@ export default class PadViewer extends Vue {
 
   subscribe(pdfViewer: { zoomIn: (ticks?: number) => {}, zoomOut: (ticks?: number) => {}}) {
 
-    // console.dir(pdfViewer);
-
-    // const timer = setInterval(() => {
-    //   console.log("ZOOM IN");
-    //   pdfViewer.zoomIn()
-    // }, 2000)
-
-    // setTimeout(() => {
-    //   clearInterval(timer)
-    // }, 10000);
-
-
-    /* hammer */
     const element = document.getElementsByClassName("pdfViewer")[0] as HTMLElement;
 
     console.log(element);
@@ -90,7 +91,7 @@ export default class PadViewer extends Vue {
 
     hammer.get('pinch').set({ enable: true });
 
-    hammer.on("pinch", (data) => {
+    const handler = throttle((data: HammerInput) => {
       //@ts-ignore
       this.data = data
       if(this.data?.additionalEvent === "pinchin") {
@@ -107,7 +108,9 @@ export default class PadViewer extends Vue {
 
       this.kek = data.deltaX;
       console.log("pinch", data);
-    })
+    }, 150)
+
+    hammer.on("pinch", handler);
   }
 
   async mounted() {
