@@ -19,11 +19,11 @@
         </svg>
       </button>
     </div>
-    <pre v-if="data" style="height: 200px; overflow: auto">
+    <!-- <pre v-if="data" style="height: 200px; overflow: auto">
       scale - {{data.scale}}
       rotation - {{data.rotation}}
       additionalEvent - {{data.additionalEvent}}
-    </pre>
+    </pre> -->
     <div class="pdf-viewer__container">
       <vue-pdf-app v-if="blobUrl" :class="containerClass" @pages-rendered="subscribe"
           :pdf="blobUrl"
@@ -89,26 +89,31 @@ export default class PadViewer extends Vue {
 
     const hammer = new Hammer(element);
 
-    hammer.get('pinch').set({ enable: true });
+    hammer.get('pinch').set({ enable: true,  });
 
-    const handler = throttle((data: HammerInput) => {
+    const h = (data: HammerInput) => {
       //@ts-ignore
       this.data = data
-      if(this.data?.additionalEvent === "pinchin") {
-        pdfViewer.zoomIn()
+      // if(this.data?.additionalEvent === "pinchin") {
+      //   pdfViewer.zoomOut()
+      // }
+
+      // if(this.data?.additionalEvent === "pinchout") {
+
+      //   pdfViewer.zoomIn()
+
+      // }
+
+      const scale = data.scale;
+
+      if (scale > 1){
+        pdfViewer.zoomIn();
+      } else {
+        pdfViewer.zoomOut();
       }
+    }
 
-      if(this.data?.additionalEvent === "pinchout") {
-
-        pdfViewer.zoomOut()
-
-      }
-
-
-
-      this.kek = data.deltaX;
-      console.log("pinch", data);
-    }, 150)
+    const handler = throttle(h, 30)
 
     hammer.on("pinch", handler);
   }
