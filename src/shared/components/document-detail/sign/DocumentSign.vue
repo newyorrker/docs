@@ -86,7 +86,7 @@ import BackgroundIconKey from "@/shared/components/background-icon/BackgroundIco
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { DateTime, Duration } from "luxon";
 import { AxiosError } from "axios";
-import { getLink } from "@/helpers/linkHelper";
+import { getLink } from "@/shared/helpers/linkHelper";
 
 import { interpret } from "xstate";
 import { stateMachine, Event, State } from "./stateMachine";

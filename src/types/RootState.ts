@@ -1,5 +1,5 @@
 import Session from '@/models/Session';
-import { UserProfile } from '@/models/UserProfile';
+import { UserProfile } from '../../../../common/api/models/UserProfile';
 
 export default interface RootState {
   session?: Session;

@@ -19,13 +19,8 @@
         </svg>
       </button>
     </div>
-    <pre v-if="data" style="height: 200px; overflow: auto">
-      scale - {{data.scale}}
-      rotation - {{data.rotation}}
-      additionalEvent - {{data.additionalEvent}}
-    </pre>
     <div class="pdf-viewer__container">
-      <vue-pdf-app v-if="blobUrl" :class="containerClass" @pages-rendered="subscribe"
+      <vue-pdf-app v-if="blobUrl" class="pdf-viewer__app"
           :pdf="blobUrl"
           :config="{ toolbar: false, sidebar: false, presentationMode: true, }"
           :page-scale="'page-width'"
@@ -43,35 +38,6 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import VuePdfApp from "vue-pdf-app";
 
-
-
-import Hammer from "hammerjs"
-
-const throttleFunction=(func: any, delay: any)=>{
-
-    // Previously called time of the function
-    let prev = 0;
-    return (...args: any) => {
-      // Current called time of the function
-      let now = new Date().getTime();
-
-      // Logging the difference between previously
-      // called and current called timings
-      console.log(now-prev, delay);
-
-      // If difference is greater than delay call
-      // the function again.
-      if(now - prev> delay){
-        prev = now;
-
-        // "..." is the spread operator here
-        // returning the function with the
-        // array of arguments
-        return func(...args);
-      }
-    }
-  }
-
 @Component({ components: { VuePdfApp }})
 
 export default class PadViewer extends Vue {
@@ -83,140 +49,9 @@ export default class PadViewer extends Vue {
     zoomIn: "vuePdfAppZoomIn",
     zoomOut: "vuePdfAppZoomOut",
   }
-  kek = 0
-
-  readonly containerClass = "pdf-viewer__app";
 
   blobUrl: string = "";
   filebase64String: string = "";
-
-  data: HammerInput & { additionalEvent: "pinchout" | "pinchin" } | null = null;
-
-  subscribe(pdfViewer: { zoomIn: (ticks?: number) => {}, zoomOut: (ticks?: number) => {}}) {
-
-    const element = document.getElementById("viewerContainer") as HTMLElement;
-
-    let pinchZoomEnabled = false;
-    function enablePinchZoom(pdfViewer: any) {
-        let startX = 0,
-            startY = 0;
-        let initialPinchDistance = 0;
-        let pinchScale = 1;
-        const viewer = document.getElementById("viewer");
-        const container = document.getElementById("viewerContainer");
-        const reset = () => {
-            startX = startY = initialPinchDistance = 0;
-            pinchScale = 1;
-        };
-        // Prevent native iOS page zoom
-        //document.addEventListener("touchmove", (e) => { if (e.scale !== 1) { e.preventDefault(); } }, { passive: false });
-        document.addEventListener("touchstart", (e) => {
-            if (e.touches.length > 1) {
-                startX = (e.touches[0].pageX + e.touches[1].pageX) / 2;
-                startY = (e.touches[0].pageY + e.touches[1].pageY) / 2;
-                initialPinchDistance = Math.hypot(
-                    e.touches[1].pageX - e.touches[0].pageX,
-                    e.touches[1].pageY - e.touches[0].pageY
-                );
-            } else {
-                initialPinchDistance = 0;
-            }
-        });
-        document.addEventListener(
-            "touchmove",
-            (e) => {
-                if (initialPinchDistance <= 0 || e.touches.length < 2) {
-                    return;
-                }
-                //@ts-ignore
-                if (e.scale !== 1) {
-                    e.preventDefault();
-                }
-                const pinchDistance = Math.hypot(
-                    e.touches[1].pageX - e.touches[0].pageX,
-                    e.touches[1].pageY - e.touches[0].pageY
-                );
-                //@ts-ignore
-                const originX = startX + container.scrollLeft;
-                //@ts-ignore
-                const originY = startY + container.scrollTop;
-                pinchScale = pinchDistance / initialPinchDistance;
-                //@ts-ignore
-                viewer.style.transform = `scale(${pinchScale})`;
-                //@ts-ignore
-                viewer.style.transformOrigin = `${originX}px ${originY}px`;
-            },
-            { passive: false }
-        );
-        document.addEventListener("touchend", (e) => {
-            if (initialPinchDistance <= 0) {
-                return;
-            }
-            //@ts-ignore
-            viewer.style.transform = `none`;
-            //@ts-ignore
-            viewer.style.transformOrigin = `unset`;
-            pdfViewer.currentScale *= pinchScale;
-
-            const scaleFactor = pdfViewer.currentScale;
-
-            if (scaleFactor < 1) {
-              pdfViewer.zoomOut(null, scaleFactor);
-            } else if (scaleFactor > 1) {
-              pdfViewer.zoomIn(null, scaleFactor);
-            }
-
-            //@ts-ignore
-            const rect = container.getBoundingClientRect();
-            const dx = startX - rect.left;
-            const dy = startY - rect.top;
-            //@ts-ignore
-            container.scrollLeft += dx * (pinchScale - 1);
-            //@ts-ignore
-            container.scrollTop += dy * (pinchScale - 1);
-            reset();
-        });
-    }
-    pinchZoomEnabled = true;
-    enablePinchZoom(pdfViewer);
-
-
-    console.log(element);
-
-    // const hammer = new Hammer(element, {touchAction: "auto"});
-
-    // hammer.get('pinch').set({ enable: true });
-
-    // element.addEventListener("touchstart", function(event) {
-    //   console.log(event.touches.length);
-    //   if (event.touches.length >= 2) {
-    //     hammer.get("pinch").set({ enable: true });
-    //   }
-    // });
-    // element.addEventListener("touchend", function(event) {
-    //   if (event.touches.length < 2) {
-    //     hammer.get("pinch").set({ enable: false });
-    //   }
-    // });
-
-    // const h = (data: HammerInput) => {
-    //   //@ts-ignore
-    //   this.data = data;
-
-
-    //   const scale = data.scale;
-
-    //   // if (scale > 1){
-    //   //   pdfViewer.zoomIn();
-    //   // } else {
-    //   //   pdfViewer.zoomOut();
-    //   // }
-    // }
-
-    // const handler = throttleFunction(h, 30)
-
-    // hammer.on("pinch", handler);
-  }
 
   async mounted() {
 

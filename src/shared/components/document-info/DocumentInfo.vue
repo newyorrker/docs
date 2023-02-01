@@ -20,7 +20,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import UserProfile from '@/shared/components/user-profile/UserProfile.vue';
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import DocumentStatus from '@/shared/components/document-status/DocumentStatus.vue';
-import { formatDate } from "@/helpers/dateFormating";
+import { formatDate } from "@/shared/helpers/dateFormating";
 
 @Component({ components: { UserProfile, DocumentStatus }})
 

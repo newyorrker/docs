@@ -26,6 +26,6 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-, "src/shared/components/pdf-viewer/emilator.js"  ],
+  ],
   "exclude": ["node_modules"]
 }

@@ -1,8 +1,11 @@
+import { ApplicationsTypesResponse, HRLinkApplication, HRLinkApplicationRequest } from "@/types/HRLinkApplication";
 import { HrLinkDocumentDto } from "@/types/HrLinkDocument/HrLinkDocumentDto";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import Api from "../network/api";
 import { THRLinkDocumentRequest } from "./types";
+
+
 
 export interface HrLinkRepositoryInterface {
     getDocuments(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkDocumentModel[]>
@@ -11,22 +14,24 @@ export interface HrLinkRepositoryInterface {
     startSign(id: string): any;
     confirmSign(id: string, requestId: string, code: string): any;
     rejectSign(id: string, reason: string): any
+    getApplicationsTypes(): Promise<ApplicationsTypesResponse>;
+    createApplication(query: HRLinkApplicationRequest): Promise<HRLinkApplication>
 }
 
-const stringToArrayBuffer = (str: string) => {
-    const fileReader = new FileReader();
+// const stringToArrayBuffer = (str: string) => {
+//     const fileReader = new FileReader();
 
-    fileReader.readAsArrayBuffer(new Blob([str]));
+//     fileReader.readAsArrayBuffer(new Blob([str]));
 
-    return new Promise((resolve, reject) => {
-        fileReader.onload = () => {
-            resolve(fileReader.result);
-        };
-        fileReader.onerror = (err) => {
-            reject(err);
-        };
-    });
-};
+//     return new Promise((resolve, reject) => {
+//         fileReader.onload = () => {
+//             resolve(fileReader.result);
+//         };
+//         fileReader.onerror = (err) => {
+//             reject(err);
+//         };
+//     });
+// };
 
 export class HrLinkRepository implements HrLinkRepositoryInterface {
 
@@ -68,5 +73,15 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
     }
     async rejectSign(id: string, reason: string) {
         await this.api.client.post(`/hrlink/documents/${id}/sign/reject`, { reason });
+    }
+    async getApplicationsTypes() {
+        return await this.api.client.get('/hrlink/applications/types')
+            .then((response) => response.data)
+    }
+    async createApplication(query: HRLinkApplicationRequest) {
+        return await this.api.client.post<HRLinkApplication>('/hrlink/applications', query)
+            .then((response) => {
+                return response.data;
+            })
     }
 }

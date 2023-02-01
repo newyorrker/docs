@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-import { process } from "@/helpers/MessageProcessor";
+import { process } from "@/shared/helpers/MessageProcessor";
 
 @Component({ components: {  }})
 
