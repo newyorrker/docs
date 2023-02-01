@@ -112,7 +112,8 @@ export default class ApplicationsCreate extends Vue {
   .applications-create {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100%;
+    overflow: auto;
 
     padding-top: 16px;
 
