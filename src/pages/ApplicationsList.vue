@@ -1,6 +1,7 @@
 <template template>
  <div class="applications-list">
-    <button @click="goToApplicationsCreate">+</button>
+    <button v-if="showNewApplicationButton" @click="goToApplicationsCreate">Show filter</button>
+    Applications list
  </div>
 </template>
 
@@ -8,6 +9,7 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import { getLink } from "@/shared/helpers/linkHelper";
+import MobileAppButtonType from "@/types/MobileAppButtonType";
 
 @Component({ components: {  }})
 
@@ -20,6 +22,16 @@ export default class ApplicationsList extends Vue {
     );
 
     document.location.href = link;
+  }
+
+  buttonClicked(button: MobileAppButtonType): void {
+    if (button === MobileAppButtonType.new) {
+      this.goToApplicationsCreate();
+    }
+  }
+
+  get showNewApplicationButton() {
+    return this.$store.getters["platform"] === "Web";
   }
 }
 
