@@ -1,4 +1,7 @@
 import Vue, { VNode } from "vue";
+import { HrLinkRepositoryInterface } from "@/service/repositories/HrLinkRepository";
+import { ObjectRepository } from "../../../common/api/repositories/ObjectRepository";
+import { UserRepository } from "../../../common/api/repositories/UserRepository";
 
 declare global {
   namespace JSX {
@@ -9,5 +12,34 @@ declare global {
     interface IntrinsicElements {
       [elem: string]: any;
     }
+  }
+}
+
+declare module "vue/types/vue" {
+  interface Vue {
+    $style: Record<string, string>;
+    $hrLinkRepository: HrLinkRepositoryInterface;
+    $objectRepository: ObjectRepository;
+    $userRepository: UserRepository;
+  }
+}
+
+
+declare global {
+  interface Window {
+    sessionFromNative: (arg0: string) => void;
+    activateFromNative: () => void;
+    appercode: {
+      reloadPage: () => void;
+    };
+    actor: {
+      changeButtons: (arg0: any) => void;
+      postMessage: (arg0: any) => void;
+    };
+    clickButton: (arg0: any) => void;
+    // eslint-disable-next-line
+    webkit: any;
+    // eslint-disable-next-line
+    session: any;
   }
 }

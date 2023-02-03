@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { HrLinkDocumentInterface } from "@/types/HrLinkDocument/HrLinkDocumentInterface";
-import { formatDateWithComa } from "@/helpers/dateFormating";
+import { formatDateWithComa } from "@/shared/helpers/dateFormating";
 import DocumentSigners from "./DocumentSigners.vue";
 
 @Component({ components: { DocumentSigners }})

@@ -13,15 +13,7 @@
         <button-1 @click="reject" :color="'#ffffff'" :textColor="'#F39420'">Отклонить</button-1>
       </footer>
 
-      <div v-if="loading" class="document-view__loading">
-        <svg xmlns="http://www.w3.org/2000/svg" width="41" height="41" fill="none">
-          <circle cx="20.5" cy="20.5" r="18.5" stroke="#373737" stroke-width="3"/>
-          <mask id="a" fill="#fff">
-            <path d="M40.5 20.5A20 20 0 0 0 13.795 1.657l1.009 2.835A16.99 16.99 0 0 1 37.49 20.5H40.5Z"/>
-          </mask>
-          <path stroke="#FFB400" stroke-width="6" d="M40.5 20.5A20 20 0 0 0 13.795 1.657l1.009 2.835A16.99 16.99 0 0 1 37.49 20.5H40.5Z" mask="url(#a)"/>
-        </svg>
-      </div>
+      <background-spinner v-if="loading" />
     </div>
 </template>
 
@@ -29,14 +21,15 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import DocumentInfo from '@/shared/components/document-info/DocumentInfo.vue';
+import BackgroundSpinner from "@/shared/components/background-spinner/BackgroundSpinner.vue";
 import PdfViewer from "@/shared/components/pdf-viewer/PdfViewer.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 
 import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
-import { getLink } from "@/helpers/linkHelper";
+import { getLink } from "@/shared/helpers/linkHelper";
 
-@Component({ components: { DocumentInfo, PdfViewer, DocumentCommentView, Button1 }})
+@Component({ components: { DocumentInfo, PdfViewer, DocumentCommentView, Button1, BackgroundSpinner }})
 
 export default class DocumentView extends Vue {
 
@@ -100,37 +93,6 @@ export default class DocumentView extends Vue {
     button + button {
       margin-left: 16px;
     }
-  }
-
-  &__loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,255,255, .8);
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-
-    svg {
-      animation:animate .3s linear infinite;
-    }
-
-    @keyframes animate
-    {
-      0%
-      {
-        transform:rotate(0deg);
-      }
-      100%
-      {
-        transform:rotate(360deg);
-      }
-    }
-
   }
 }
 </style>

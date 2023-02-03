@@ -45,15 +45,6 @@ export default class DocumentDetail extends Vue {
     try {
       const data = await this.$hrLinkRepository.getDocument(this.id);
 
-      // throw Error("Kekus only");
-
-      // data.signed = false;
-      // data.signedAt = DateTime.local();
-
-      // data.rejected = false;
-      // data.rejectedAt = DateTime.local();
-      // data.rejectionComment = "Supper comment for reject reason"
-
       this.item = data;
 
       this.isError = false;

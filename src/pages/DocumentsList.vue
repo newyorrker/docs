@@ -63,10 +63,10 @@ import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel"
 import { DocumentsListService } from "@/shared/services/documents-list/DocumentsListService";
 import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/services/documents-list/DocumentsListQueryFabric";
 import { PagingStateInterface } from "@/types/PagingStateInterface";
-import { getLink } from "@/helpers/linkHelper";
+import { getLink } from "@/shared/helpers/linkHelper";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
-import { changeButtons } from "@/helpers/interopHelper";
+import { changeButtons } from "@/shared/helpers/interopHelper";
 
 @Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 

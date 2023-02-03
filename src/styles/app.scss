@@ -68,3 +68,9 @@ button {
 ::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.15);
 }
+
+.form-error {
+  display: inline-block;
+  color: var(--red);
+  margin-top: 4px;
+}

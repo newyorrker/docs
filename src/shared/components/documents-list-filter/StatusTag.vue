@@ -38,8 +38,8 @@ export default class StatusTag extends Vue {
   }
 
   .status-tag_active {
-    background-color: #F39420;
-    border-color: #F39420;
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
     color: #ffffff;
   }
 </style>

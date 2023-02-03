@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
-import { refreshSession } from '../../helpers/interopHelper';
-import { UserProfile } from '../../../../../common/api/models/UserProfile';
+import { refreshSession } from '@/shared/helpers/interopHelper';
+import { UgmkUserProfile } from '@/models/UgmkUserProfile';
 
 export default class Api {
   client: AxiosInstance;
@@ -57,7 +57,7 @@ export default class Api {
   public ownProfile() {
     return this.client.get(`/users/me/profile`)
       .then(({data}) => {
-          return data ? new UserProfile(data) : null;
+          return data ? new UgmkUserProfile(data) : null;
       });
   }
 

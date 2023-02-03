@@ -44,7 +44,7 @@ import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 import DocumentInfo from "@/shared/components/document-info/DocumentInfo.vue";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
-import { getLink } from "@/helpers/linkHelper";
+import { getLink } from "@/shared/helpers/linkHelper";
 import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
 

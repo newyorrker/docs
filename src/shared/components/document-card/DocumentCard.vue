@@ -30,8 +30,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import UserProfile from '../user-profile/UserProfile.vue';
 import DocumentStatus from '../document-status/DocumentStatus.vue';
 import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
-import { getLink } from "@/helpers/linkHelper";
-import { formatDate } from "@/helpers/dateFormating";
+import { getLink } from "@/shared/helpers/linkHelper";
+import { formatDate } from "@/shared/helpers/dateFormating";
 
 @Component({ components: {
     UserProfile,
@@ -123,7 +123,7 @@ export default class DocumentCard extends Vue {
     }
 
     button {
-      background-color: #F39420;
+      background-color: var(--accent-color);
       border-radius: 4px;
       font-size: 12px;
       color: #FFFFFF;

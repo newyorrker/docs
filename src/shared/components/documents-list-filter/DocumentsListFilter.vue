@@ -237,7 +237,7 @@ export default class DocumentsListFilter extends Vue {
 
         button {
             width: 100%;
-            background-color: #F39420;
+            background-color: var(--accent-color);
             font-weight: 600;
             font-size: 14px;
             line-height: 17px;
