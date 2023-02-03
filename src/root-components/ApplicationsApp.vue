@@ -9,7 +9,7 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import ApplicationsList from "@/pages/ApplicationsList.vue";
-import ApplicationCreate from "@/pages/ApplicationsCreate.vue";
+import ApplicationCreate from "@/pages/ApplicationCreate.vue";
 
 @Component({components: {ApplicationsList, ApplicationCreate }})
 

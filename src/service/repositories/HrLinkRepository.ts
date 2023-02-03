@@ -1,4 +1,4 @@
-import { ApplicationsTypesResponse, HRLinkApplication, HRLinkApplicationRequest } from "@/types/HRLinkApplication";
+import { ApplicationsTypesResponse, HRLinkApplicationInterface, HRLinkApplicationRequest } from "@/types/HRLinkApplication";
 import { HrLinkDocumentDto } from "@/types/HrLinkDocument/HrLinkDocumentDto";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
@@ -13,7 +13,7 @@ export interface HrLinkRepositoryInterface {
     confirmSign(id: string, requestId: string, code: string): any;
     rejectSign(id: string, reason: string): any
     getApplicationsTypes(): Promise<ApplicationsTypesResponse>;
-    createApplication(query: HRLinkApplicationRequest): Promise<HRLinkApplication>
+    createApplication(query: HRLinkApplicationRequest): Promise<HRLinkApplicationInterface>
 }
 
 export class HrLinkRepository implements HrLinkRepositoryInterface {
@@ -62,7 +62,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
             .then((response) => response.data)
     }
     async createApplication(query: HRLinkApplicationRequest) {
-        return await this.api.client.post<HRLinkApplication>('/hrlink/applications', query)
+        return await this.api.client.post<HRLinkApplicationInterface>('/hrlink/applications', query)
             .then((response) => {
                 return response.data;
             })

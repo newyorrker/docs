@@ -6,7 +6,7 @@ export enum FieldType {
     date = "DATE"
 }
 
-export interface HRLinkApplication {
+export interface HRLinkApplicationInterface {
     /**
      * Идентификатор
      */

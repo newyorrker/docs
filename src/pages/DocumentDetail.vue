@@ -1,18 +1,18 @@
 <template>
     <div class="document-detail">
-        <template v-if="!isError && item">
+      <template v-if="!isError && item">
 
-          <template v-if="isSign || isReject">
-            <document-sign v-if="isSign" @signed="load" :source="item" />
-            <document-reject v-if="isReject" :source="item" />
-          </template>
-          <document-view v-else :source="item" />
-
+        <template v-if="isSign || isReject">
+          <document-sign v-if="isSign" @signed="load" :source="item" />
+          <document-reject v-if="isReject" :source="item" />
         </template>
+        <document-view v-else :source="item" />
 
-        <background-icon-error v-else-if="isError">
-          <p>При загрузке документа произошла ошибка</p>
-        </background-icon-error>
+      </template>
+
+      <background-icon-error v-else-if="isError">
+        <p>При загрузке документа произошла ошибка</p>
+      </background-icon-error>
     </div>
 </template>
 
@@ -23,7 +23,6 @@ import DocumentSign from "@/shared/components/document-detail/sign/DocumentSign.
 import DocumentView from "@/shared/components/document-detail/view/DocumentView.vue";
 import DocumentReject from "@/shared/components/document-detail/reject/DocumentReject.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
-import { DateTime } from "luxon";
 
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 
