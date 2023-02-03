@@ -91,7 +91,6 @@ export default class UserIcon extends Vue {
   color: #ffffff;
   flex-shrink: 0;
   position: relative;
-  user-select: none;
 }
 
 .user__icon img {

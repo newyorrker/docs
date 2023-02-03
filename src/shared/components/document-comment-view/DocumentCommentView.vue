@@ -1,13 +1,13 @@
 <template>
      <div class="document-comment-view" :class="{'document-comment-view_may-be-exapanded': mayBeExpanded, 'document-comment-view_cut': !expanded}">
-        <p @click="expanded = true">Комментарий: {{ text }}</p>
+        <p @click="toggle">Комментарий: {{ text }}</p>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-import { process } from "@/shared/helpers/MessageProcessor";
+import { process } from "@/helpers/MessageProcessor";
 
 @Component({ components: {  }})
 
@@ -16,6 +16,12 @@ export default class DocumentCommentView extends Vue {
     @Prop({ default: false }) mayBeExpanded: boolean;
 
     expanded = false;
+
+    toggle() {
+        if(this.mayBeExpanded) {
+            this.expanded = !this.expanded;
+        }
+    }
 
     get text() {
         return process(this.rawText);

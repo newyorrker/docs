@@ -39,7 +39,7 @@
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in statuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
                             <template #icon>
-                                <component :is="status.iconName" />
+                                <component :inverted="status.isActive" :is="status.iconName" />
                             </template>
                             {{ status.title }}
                         </status-tag>
@@ -53,7 +53,7 @@
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in employeeSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
                             <template #icon>
-                                <component :is="status.iconName" />
+                                <component :inverted="status.isActive" :is="status.iconName" />
                             </template>
                             {{ status.title }}
                         </status-tag>
@@ -66,7 +66,7 @@
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in headSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
                             <template #icon>
-                                <component :is="status.iconName" />
+                                <component :inverted="status.isActive" :is="status.iconName" />
                             </template>
                             {{ status.title }}
                         </status-tag>
@@ -97,7 +97,6 @@ import EyeIcon from "./icons/eye-icon.vue";
 import EyeStrikethroughIcon from "./icons/eye-strikethrough-icon.vue";
 import CrossIcon from "./icons/cross-icon.vue";
 import ApplyIcon from "./icons/apply-icon.vue";
-
 import DocumentCheckIcon from "./icons/document-check-icon.vue";
 import DocumentProgressIcon from "./icons/document-progress-icon.vue";
 

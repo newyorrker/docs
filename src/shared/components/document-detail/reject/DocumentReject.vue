@@ -44,7 +44,9 @@ import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 import DocumentInfo from "@/shared/components/document-info/DocumentInfo.vue";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
-import { getLink } from "@/shared/helpers/linkHelper";
+import { getLink } from "@/helpers/linkHelper";
+import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
+import MobileAppButtonType from "@/types/MobileAppButtonType";
 
 @Component({ components: { Button1, DocumentInfo, BackgroundIconError }})
 
@@ -80,9 +82,20 @@ export default class ClassName extends Vue {
   }
 
   goToList() {
+    const buttons: MobileAppChangeButtonMessage[] = [
+      {
+        type: MobileAppButtonType.filter,
+        params: {
+          visible: true
+        }
+      }
+    ]
+
     const link = getLink(
       this.$store.getters['platform'],
-      {}
+      {},
+      "Мои документы",
+      buttons
     );
 
     document.location.href = link;

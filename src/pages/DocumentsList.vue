@@ -1,54 +1,56 @@
 <template>
-    <div class="documents-list">
-      <easy-refresh
-        :on-refresh="refresh"
-        :loadMore="loadMore"
-        :autoLoad="true"
-        userSelect="false"
-        :showScrollBar="true"
-        class="documents-list__refresh"
-        :class="{'documents-list__refresh_error': isError}"
-        ref="easyRefresh"
-      >
+  <div class="documents-list">
+    <button v-if="showFilterButton" @click="showFilter = true">Show filter</button>
+    <easy-refresh
+      :on-refresh="refresh"
+      :loadMore="loadMore"
+      :autoLoad="true"
+      userSelect="false"
+      :showScrollBar="true"
+      class="documents-list__refresh"
+      :class="{'documents-list__refresh_error': isError}"
+      ref="easyRefresh"
+    >
 
-        <template v-if="!isError">
-          <button v-if="showFilterButton" @click="showFilter = true">Show filter</button>
-          <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
-            <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
-          </div>
-          <documents-list-skel v-show="showSkel" class="documents-list__skel" />
-        </template>
-        <background-icon-error v-else>
-          <p>При загрузке списка документов произошла ошибка</p>
-        </background-icon-error>
+      <template v-if="!isError">
 
-
-        <template v-slot:header>
-          <ClassicsHeader
-            :finishDuration="0"
-            refreshedText=""
-            :refreshingText="$t('common.refreshingText')"
-            :refreshText="$t('common.pullToRefreshPrompt')"
-            :refreshReadyText="$t('common.releaseToRefreshPrompt')"
-          />
-        </template>
-        <template v-slot:footer>
-          <EmptyFooter />
-        </template>
-        <template v-slot:scrollbar>
-          <ClassicsScrollBar color="rgba(0, 0, 0, 0.3)" bgColor="transparent" width="3" radius="2" />
-        </template>
-      </easy-refresh>
-
-      <template v-if="false">
-        <button class="documents-list__web-filter-toggle-button" @click="showFilter = !showFilter">toggle</button>
+        <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
+          <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
+        </div>
+        <documents-list-skel v-show="showSkel" class="documents-list__skel" />
       </template>
-      <keep-alive>
-        <documents-list-filter v-if="showFilter" class="documents-list__filter"
-          @apply="applyFilter"
-          @close="showFilter = false" />
-      </keep-alive>
+      <background-icon-error v-else>
+        <p>При загрузке списка документов произошла ошибка</p>
+      </background-icon-error>
+
+
+      <template v-slot:header>
+        <ClassicsHeader
+          :finishDuration="0"
+          refreshedText=""
+          :refreshingText="$t('common.refreshingText')"
+          :refreshText="$t('common.pullToRefreshPrompt')"
+          :refreshReadyText="$t('common.releaseToRefreshPrompt')"
+        />
+      </template>
+      <template v-slot:footer>
+        <EmptyFooter />
+      </template>
+      <template v-slot:scrollbar>
+        <ClassicsScrollBar color="rgba(0, 0, 0, 0.3)" bgColor="transparent" width="3" radius="2" />
+      </template>
+    </easy-refresh>
+
+    <div class="documents-list__empty" v-if="showList && !items.length && !showSkel && !isError">
+      Список документов пуст
     </div>
+
+    <keep-alive>
+      <documents-list-filter v-if="showFilter" class="documents-list__filter"
+        @apply="applyFilter"
+        @close="showFilter = false" />
+    </keep-alive>
+  </div>
 </template>
 
 <script lang="ts">
@@ -61,10 +63,10 @@ import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel"
 import { DocumentsListService } from "@/shared/services/documents-list/DocumentsListService";
 import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/services/documents-list/DocumentsListQueryFabric";
 import { PagingStateInterface } from "@/types/PagingStateInterface";
-import { getLink } from "@/shared/helpers/linkHelper";
+import { getLink } from "@/helpers/linkHelper";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
-import { changeButtons } from "@/shared/helpers/interopHelper";
+import { changeButtons } from "@/helpers/interopHelper";
 
 @Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 
@@ -111,6 +113,8 @@ export default class DocumentsList extends Vue {
 
     this.isLoading = true;
 
+    this.resetEasyRefreshScroll();
+
     if (loadMore) {
       this.pagingState.skip = this.items?.length ?? 0;
     }
@@ -142,6 +146,16 @@ export default class DocumentsList extends Vue {
     }
 
     return false;
+  }
+
+  resetEasyRefreshScroll() {
+    this.$nextTick(() => {
+      const easyRefresh = this.$refs.easyRefresh;
+      if(easyRefresh) {
+        //@ts-ignore
+        easyRefresh.onResize();
+      }
+    })
   }
 
   async loadMore(done: (noMore: boolean) => void) {
@@ -256,6 +270,18 @@ export default class DocumentsList extends Vue {
 
   &__list + &__skel {
     border-top: 1px #C8C7CC solid;
+  }
+
+  &__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 18px;
   }
 
   &__filter {

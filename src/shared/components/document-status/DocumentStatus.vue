@@ -2,7 +2,7 @@
   <div class="document-status" :style="{color: color}">
     <p v-if="isSigned || isRejected" class="document-status__main" >
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="13" fill="none">
-        <template v-if="false">
+        <template v-if="isSigned">
           <path :fill="color" d="M1.687 4.816c-.251 0-.455.187-.455.418 0 .23.204.417.455.417H6c.25 0 .454-.187.454-.417 0-.231-.203-.418-.454-.418H1.687ZM1.687 6.532c-.251 0-.455.187-.455.418 0 .23.204.418.455.418h3.805c.251 0 .455-.187.455-.418 0-.23-.204-.418-.455-.418H1.687ZM1.687 9.965c-.251 0-.455.187-.455.418 0 .23.204.417.455.417h6.288c.25 0 .454-.187.454-.418 0-.23-.203-.417-.454-.417H1.687ZM10.426 5.973a.316.316 0 0 0-.04-.472.386.386 0 0 0-.512.037l-.989 1.06-.356-.382a.386.386 0 0 0-.513-.036.316.316 0 0 0-.04.471l.564.604a.48.48 0 0 0 .69 0l1.196-1.282Z"/>
           <path :fill="color" fill-rule="evenodd" d="M3.447.5a.952.952 0 0 0-.632.235L.277 2.994a.804.804 0 0 0-.277.6v8.07c0 .462.407.836.909.836h7.735c.502 0 .909-.374.909-.836V9.14a3.178 3.178 0 0 1-.451.033C10.703 9.168 12 7.973 12 6.5c0-1.476-1.3-2.672-2.906-2.672h.004c.155 0 .307.011.455.033V1.336C9.553.874 9.146.5 8.644.5H3.447Zm4 8.201c.351.223.758.376 1.197.439v2.524H.91V4.218H3.17c.502 0 .91-.374.91-.835V1.336h4.563V3.86c-1.39.2-2.455 1.305-2.455 2.64 0 .66.26 1.265.693 1.732H1.687c-.251 0-.455.187-.455.418 0 .23.204.417.455.417h5.31c.231 0 .423-.16.45-.366ZM3.171 3.383H1.147L3.17 1.58v1.802Zm5.923 4.953c1.103 0 1.997-.822 1.997-1.836 0-1.014-.894-1.836-1.997-1.836-1.102 0-1.997.822-1.997 1.836 0 1.014.895 1.836 1.997 1.836Z" clip-rule="evenodd"/>
         </template>
@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { HrLinkDocumentInterface } from "@/types/HrLinkDocument/HrLinkDocumentInterface";
-import { formatDateWithComa } from "@/shared/helpers/dateFormating";
+import { formatDateWithComa } from "@/helpers/dateFormating";
 import DocumentSigners from "./DocumentSigners.vue";
 
 @Component({ components: { DocumentSigners }})

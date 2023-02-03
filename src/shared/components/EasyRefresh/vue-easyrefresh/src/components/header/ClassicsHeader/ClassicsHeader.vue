@@ -76,7 +76,7 @@ export default class ClassicsHeader extends Vue implements Header {
   private alignment!: string;
 
   // 显示文字
-  private showText: string = this.refreshText;
+  private showText: string = this.refreshText || "";
   // 显示更多信息
   private showMoreInfo: string = '';
   // Header的高度

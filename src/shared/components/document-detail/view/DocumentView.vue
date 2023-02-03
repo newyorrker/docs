@@ -34,7 +34,7 @@ import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel"
 
 import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
-import { getLink } from "@/shared/helpers/linkHelper";
+import { getLink } from "@/helpers/linkHelper";
 
 @Component({ components: { DocumentInfo, PdfViewer, DocumentCommentView, Button1 }})
 

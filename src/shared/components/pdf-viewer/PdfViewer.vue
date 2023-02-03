@@ -136,6 +136,7 @@ export default class PadViewer extends Vue {
   display: flex;
   flex-direction: column;
   position: relative;
+  user-select: text;
 
   &__actions {
     display: flex;

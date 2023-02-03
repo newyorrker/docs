@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { refreshSession } from '@/shared/helpers/interopHelper';
+import { refreshSession } from '../../helpers/interopHelper';
 import { UserProfile } from '../../../../../common/api/models/UserProfile';
 
 export default class Api {

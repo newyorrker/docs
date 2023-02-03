@@ -30,8 +30,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import UserProfile from '../user-profile/UserProfile.vue';
 import DocumentStatus from '../document-status/DocumentStatus.vue';
 import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
-import { getLink } from "@/shared/helpers/linkHelper";
-import { formatDate } from "@/shared/helpers/dateFormating";
+import { getLink } from "@/helpers/linkHelper";
+import { formatDate } from "@/helpers/dateFormating";
 
 @Component({ components: {
     UserProfile,

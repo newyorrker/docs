@@ -93,7 +93,6 @@ export default class ClassName extends Vue {
       border: 0;
       padding: 0;
       background-color: transparent;
-      cursor: pointer;
     }
 }
 

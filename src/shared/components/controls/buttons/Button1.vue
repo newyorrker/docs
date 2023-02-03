@@ -1,5 +1,5 @@
 <template>
-  <button @click="$emit('click', $event)" v-bind="{...$listeners, ...$attrs}" :style="styleObject" class="button-1"><slot/></button>
+  <button @click="$emit('click', $event)" v-bind="$listeners" :style="styleObject" class="button-1"><slot/></button>
 </template>
 
 <script lang="ts">
@@ -8,8 +8,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 @Component({ components: {  }})
 
 export default class Button1 extends Vue {
-  @Prop({ default: "var(--accent-color)" }) color!: string;
-  @Prop({ default: "var(--accent-color)" }) borderColor!: string;
+  @Prop({ default: "#F39420" }) color!: string;
+  @Prop({ default: "#F39420" }) borderColor!: string;
   @Prop({ default: "#ffffff" }) textColor!: string;
 
   get styleObject() {

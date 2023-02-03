@@ -86,10 +86,12 @@ import BackgroundIconKey from "@/shared/components/background-icon/BackgroundIco
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { DateTime, Duration } from "luxon";
 import { AxiosError } from "axios";
-import { getLink } from "@/shared/helpers/linkHelper";
+import { getLink } from "@/helpers/linkHelper";
 
 import { interpret } from "xstate";
 import { stateMachine, Event, State } from "./stateMachine";
+import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
+import MobileAppButtonType from "@/types/MobileAppButtonType";
 
 const COUNT_DOWN_MINUTES = 1;
 
@@ -182,7 +184,8 @@ export default class DocumentSign extends Vue {
     }
     catch(e) {
       //catch the wrong pincode
-      if(false) {
+      //false beacause some problem with checking code on backend
+      if(false && (e as any)?.response?.data?.code === "HRLink.incorrectCode") {
         this.stateService.send(Event.wrongCodeError);
       }
       else {
@@ -203,9 +206,19 @@ export default class DocumentSign extends Vue {
   }
 
   goToList() {
+    const buttons: MobileAppChangeButtonMessage[] = [
+      {
+        type: MobileAppButtonType.filter,
+        params: {
+          visible: true
+        }
+      }
+    ]
     const link = getLink(
       this.$store.getters['platform'],
-      {}
+      {},
+      "Мои документы",
+      buttons
     );
 
     document.location.href = link;
