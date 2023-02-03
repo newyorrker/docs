@@ -36,7 +36,7 @@ declare global {
       changeButtons: (arg0: any) => void;
       postMessage: (arg0: any) => void;
     };
-    clickButton: (arg0: any) => void;
+    clickButton?: (arg0: any) => void;
     // eslint-disable-next-line
     webkit: any;
     // eslint-disable-next-line

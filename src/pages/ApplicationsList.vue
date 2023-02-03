@@ -14,6 +14,15 @@ import MobileAppButtonType from "@/types/MobileAppButtonType";
 @Component({ components: {  }})
 
 export default class ApplicationsList extends Vue {
+
+  mounted() {
+    window.clickButton = this.buttonClicked;
+  }
+
+  destroyed() {
+    window.clickButton = undefined;
+  }
+
   goToApplicationsCreate() {
     const link = getLink(
       this.$store.getters['platform'],

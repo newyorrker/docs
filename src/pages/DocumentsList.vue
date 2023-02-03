@@ -109,6 +109,10 @@ export default class DocumentsList extends Vue {
     this.getList();
   }
 
+  destroyed() {
+    window.clickButton = undefined;
+  }
+
   async getList(loadMore = false) {
 
     this.isLoading = true;
