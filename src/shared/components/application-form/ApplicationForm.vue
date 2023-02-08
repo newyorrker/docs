@@ -48,6 +48,8 @@ import { UgmkUserProfile } from "@/models/UgmkUserProfile";
 import { SelectorItem } from "../controls/select/types";
 import { DateTime } from "luxon";
 import { ApplicationFormService } from "./ApplicationFormService";
+import { getLink } from "@/shared/helpers/linkHelper";
+import { HRLinkApplicationDto } from "@/types/HRLinkApplication/HrLinkApplicationDto";
 
 const sleep = (time: number) => {
       return new Promise((resolve) => setTimeout(resolve, time));
@@ -151,9 +153,15 @@ export default class ApplicationForm extends Vue {
 
     try {
       this.$emit("loading", true);
-      // await sleep(10000000)
-      // throw Error()
-      const someThing = this.$hrLinkRepository.createApplication(query);
+      const application = await this.$hrLinkRepository.createApplication(query);
+
+      if(application) {
+        console.log(application);
+        this.goToApplication(application);
+      }
+      else {
+        this.$emit("error", "При создании заявления произошла ошибка")
+      }
     }
     catch(e) {
       this.$emit("error", "При создании заявления произошла ошибка")
@@ -162,6 +170,16 @@ export default class ApplicationForm extends Vue {
     finally {
       this.$emit("loading", false);
     }
+  }
+
+  goToApplication(item: HRLinkApplicationDto) {
+    const link = getLink(
+      this.$store.getters['platform'],
+      { id: item.id },
+      item.typeName
+    );
+
+    document.location.href = link;
   }
 
   /**

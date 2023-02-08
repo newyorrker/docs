@@ -12,6 +12,7 @@
         />
       </form-group>
 
+      <!-- FORM -->
       <application-form v-if="selectedTypeId"
         @loading="isLoading = $event"
         @error="makeError"

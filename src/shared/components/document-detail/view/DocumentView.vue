@@ -6,7 +6,7 @@
         <document-comment-view v-if="source.rejected && source.rejectionComment" class="document-view__comment" :rawText="source.rejectionComment" :mayBeExpanded="true" />
       </div>
 
-      <pdf-viewer @done="loading = false" class="document-view__pdf" :id="source.id" :name="source.name" />
+      <pdf-viewer @done="loading = false" class="document-view__pdf" :id="source.id" :fileDataLoader="fileDataLoader" :name="source.name" />
 
       <footer v-if="showFooter" class="document-view__footer">
         <button-1 @click="sign">Подписать</button-1>
@@ -24,6 +24,7 @@ import DocumentInfo from '@/shared/components/document-info/DocumentInfo.vue';
 import BackgroundSpinner from "@/shared/components/background-spinner/BackgroundSpinner.vue";
 import PdfViewer from "@/shared/components/pdf-viewer/PdfViewer.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
+import { DocumentFileDataLoader } from "./DocumentFileDataLoader";
 
 import DocumentCommentView from '@/shared/components/document-comment-view/DocumentCommentView.vue';
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
@@ -34,6 +35,8 @@ import { getLink } from "@/shared/helpers/linkHelper";
 export default class DocumentView extends Vue {
 
   @Prop({required: true}) source: HrLinkDocumentModel;
+
+  fileDataLoader = new DocumentFileDataLoader(this.$hrLinkRepository);
 
   loading = true;
 

@@ -1,51 +1,7 @@
-import { DocumentUserProfile } from "../HrLinkDocument/DocumentUserProfile";
-
 export enum FieldType {
     string = "STRING",
     number = "NUMBER",
     date = "DATE"
-}
-
-export interface HRLinkApplicationInterface {
-    /**
-     * Идентификатор
-     */
-    id: string;
-
-    /**
-     * Идентификатор группы заявлений
-     */
-    applicationGroupId: string;
-
-    /**
-     * Дата создания
-     */
-    createdAt: string
-
-    /**
-     * Номер
-     */
-    number: String
-
-    /**
-     * Идентификатор типа
-     */
-    typeId: string;
-
-    /**
-     * Тип заявления
-     */
-    typeName: String;
-
-    /**
-     * Создатель заявления
-     */
-    creator: DocumentUserProfile;
-
-    /**
-     * Получатель заявления
-     */
-    approver: DocumentUserProfile;
 }
 
 export interface ApplicationsTypesResponse {

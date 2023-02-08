@@ -1,26 +1,31 @@
 <template>
- <div class="application-detal">
-    <application-view :source="item" />
- </div>
+  <div class="application-detal">
+    <application-view v-if="item" :source="item" />
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-import ApplcationView from "@/shared/components/application-detail/view/ApplcationView.vue"
+import ApplicationView from "@/shared/components/application-detail/view/ApplicationView.vue";
+import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 
-@Component({ components: { ApplcationView }})
+@Component({ components: { ApplicationView }})
 
 export default class ApplicationDetail extends Vue {
   @Prop({required: true}) id: string;
 
-  item: any | null = null; //HrLinkApplicationModel
+  item: HrLinkApplicationModel | null = null; //
 
   isError = false;
 
+  created() {
+    this.load();
+  }
+
   async load() {
     try {
-      const data = await this.$hrLinkRepository.getDocument(this.id);
+      const data = await this.$hrLinkRepository.getApplication(this.id);
 
       this.item = data;
 

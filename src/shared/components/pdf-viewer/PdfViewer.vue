@@ -37,6 +37,7 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import VuePdfApp from "vue-pdf-app";
+import { FileDataLoaderInterface } from "@/types/FileDataLoaderInterface";
 
 @Component({ components: { VuePdfApp }})
 
@@ -44,6 +45,7 @@ export default class PadViewer extends Vue {
 
   @Prop({required: true}) id: string;
   @Prop({required: true}) name: string;
+  @Prop({ required: true}) fileDataLoader: FileDataLoaderInterface;
 
   idConfig = {
     zoomIn: "vuePdfAppZoomIn",
@@ -56,7 +58,7 @@ export default class PadViewer extends Vue {
   async mounted() {
 
     try {
-      const data = await this.$hrLinkRepository.getDocumentFile(this.id);
+      const data = await this.fileDataLoader.load(this.id);
       const reader = new FileReader();
 
       reader.onloadend = () => {

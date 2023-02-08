@@ -1,6 +1,6 @@
-<template template>
+<template>
  <div class="applications-list">
-    <button v-if="showNewApplicationButton" @click="goToApplicationsCreate">Show filter</button>
+    <button v-if="showNewApplicationButton" @click="goToApplicationsCreate">Add new</button>
     Applications list
  </div>
 </template>
