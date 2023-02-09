@@ -2,12 +2,9 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { DateTime, Duration } from "luxon";
 import { AxiosError } from "axios";
-import { getLink } from "@/shared/helpers/linkHelper";
 
 import { interpret } from "xstate";
 import { stateMachine, Event, State } from "./stateMachine";
-import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
-import MobileAppButtonType from "@/types/MobileAppButtonType";
 
 const COUNT_DOWN_MINUTES = 1;
 
@@ -110,25 +107,6 @@ export default class DocumentSign extends Vue {
   @Watch("pinCodeValue")
   resetPinCodeError() {
     this.stateService.send(Event.resetCodeValidation)
-  }
-
-  goToList() {
-    const buttons: MobileAppChangeButtonMessage[] = [
-      {
-        type: MobileAppButtonType.filter,
-        params: {
-          visible: true
-        }
-      }
-    ]
-    const link = getLink(
-      this.$store.getters['platform'],
-      {},
-      "Мои документы",
-      buttons
-    );
-
-    document.location.href = link;
   }
 
   protected validate() {

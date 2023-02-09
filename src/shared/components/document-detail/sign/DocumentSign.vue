@@ -70,6 +70,9 @@ import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel"
 import SignTroubleshooting from "@/shared/components/sign/SignTroubleshooting.vue";
 import SignTitle from "@/shared/components/sign/SignTitle.vue";
 import SignLoading from "@/shared/components/sign/SignLoading.vue";
+import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
+import MobileAppButtonType from "@/types/MobileAppButtonType";
+import { getLink } from "@/shared/helpers/linkHelper";
 
 @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey, SignTroubleshooting, SignTitle, SignLoading }})
 
@@ -82,6 +85,25 @@ export default class DocumentSign extends SignBase {
       return;
     }
     this.startSign();
+  }
+
+  goToList() {
+    const buttons: MobileAppChangeButtonMessage[] = [
+      {
+        type: MobileAppButtonType.filter,
+        params: {
+          visible: true
+        }
+      }
+    ]
+    const link = getLink(
+      this.$store.getters['platform'],
+      {},
+      "Мои документы",
+      buttons
+    );
+
+    document.location.href = link;
   }
 }
 

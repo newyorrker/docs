@@ -70,6 +70,9 @@
   import SignTroubleshooting from "@/shared/components/sign/SignTroubleshooting.vue";
   import SignTitle from "@/shared/components/sign/SignTitle.vue";
   import SignLoading from "@/shared/components/sign/SignLoading.vue";
+  import { getLink } from "@/shared/helpers/linkHelper";
+  import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
+  import MobileAppButtonType from "@/types/MobileAppButtonType";
 
   @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey, SignTroubleshooting, SignTitle, SignLoading }})
 
@@ -82,6 +85,25 @@
         return;
       }
       this.startSign();
+    }
+
+    goToList() {
+      const buttons: MobileAppChangeButtonMessage[] = [
+        {
+          type: MobileAppButtonType.new,
+          params: {
+            visible: true
+          }
+        }
+      ]
+      const link = getLink(
+        this.$store.getters['platform'],
+        {},
+        "Мои заявления",
+        buttons
+      );
+
+      document.location.href = link;
     }
   }
 
