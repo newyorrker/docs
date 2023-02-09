@@ -18,7 +18,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import UserProfile from '@/shared/components/user-profile/UserProfile.vue';
 import DocumentStatus from '@/shared/components/document-status/DocumentStatus.vue';
 import { formatDate } from "@/shared/helpers/dateFormating";
-import { HrLinkApplicationModel } from "@/types/HrLinkApplication/HrLinkApplicationModel";
+import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 
 @Component({ components: { UserProfile, DocumentStatus }})
 

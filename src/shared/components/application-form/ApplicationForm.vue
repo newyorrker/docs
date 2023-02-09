@@ -156,7 +156,6 @@ export default class ApplicationForm extends Vue {
       const application = await this.$hrLinkRepository.createApplication(query);
 
       if(application) {
-        console.log(application);
         this.goToApplication(application);
       }
       else {
@@ -175,7 +174,7 @@ export default class ApplicationForm extends Vue {
   goToApplication(item: HRLinkApplicationDto) {
     const link = getLink(
       this.$store.getters['platform'],
-      { id: item.id },
+      { id: item.applicationGroupId },
       item.typeName
     );
 

@@ -41,7 +41,7 @@ import { FileDataLoaderInterface } from "@/types/FileDataLoaderInterface";
 
 @Component({ components: { VuePdfApp }})
 
-export default class PadViewer extends Vue {
+export default class PDFViewer extends Vue {
 
   @Prop({required: true}) id: string;
   @Prop({required: true}) name: string;

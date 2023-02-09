@@ -1,6 +1,21 @@
 <template>
   <div class="application-detal">
-    <application-view v-if="item" :source="item" />
+    <template v-if="!isError && item">
+
+      <application-sign v-if="isSign"
+        @signed="load"
+        :source="item"
+        :id="item.applicationGroupId"
+        :defaultErrorMessage="'При попытке подписания документа произошла ошибка'"/>
+
+      <application-view v-else :source="item" />
+
+    </template>
+
+    <background-icon-error v-else-if="isError">
+      <p>При загрузке документа произошла ошибка</p>
+    </background-icon-error>
+
   </div>
 </template>
 
@@ -8,14 +23,16 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import ApplicationView from "@/shared/components/application-detail/view/ApplicationView.vue";
+import ApplicationSign from "@/shared/components/application-detail/sign/ApplicationSign.vue";
 import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
+import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 
-@Component({ components: { ApplicationView }})
+@Component({ components: { ApplicationView, BackgroundIconError, ApplicationSign}})
 
 export default class ApplicationDetail extends Vue {
   @Prop({required: true}) id: string;
 
-  item: HrLinkApplicationModel | null = null; //
+  item: HrLinkApplicationModel | null = null;
 
   isError = false;
 
@@ -35,9 +52,15 @@ export default class ApplicationDetail extends Vue {
       this.isError = true;
     }
   }
+
+  get isSign(): boolean {
+    return (this.$store.getters['urlParam']('isSign') ?? '') === "true";
+  }
 }
 
 </script>
 <style lang="scss">
-
+  .application-detal {
+    height: 100%;
+  }
 </style>

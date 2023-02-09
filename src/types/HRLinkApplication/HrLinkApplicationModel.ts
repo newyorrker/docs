@@ -25,6 +25,7 @@ export class HrLinkApplicationModel implements HrLinkApplicationInterface {
       }
       else {
         this.createdAt = DateTime.local();
+        console.error("remove this wrong time")
       }
 
       this.creator = Object.freeze(new DocumentUserProfileModel(data.creator));

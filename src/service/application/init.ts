@@ -8,7 +8,7 @@ import { HrLinkRepository } from '@/service/repositories/HrLinkRepository';
 import { ObjectRepository } from "../../../../../common/api/repositories/ObjectRepository";
 import { UserRepository } from "../../../../../common/api/repositories/UserRepository";
 
-export const initApplication = (App: VueConstructor) => {
+export const initApplication = (App: VueConstructor, type: "documents" | "applications") => {
     const app = new Vue({
     components: {
         App,
@@ -38,7 +38,7 @@ export const initApplication = (App: VueConstructor) => {
             await store.dispatch("fetchProfile");
             this.isSessionSet = true;
 
-            Vue.prototype.$hrLinkRepository = new HrLinkRepository();
+            Vue.prototype.$hrLinkRepository = new HrLinkRepository(type);
             Vue.prototype.$objectRepository = new ObjectRepository(Api.getInstance().getClient());
             Vue.prototype.$userRepository = new UserRepository(Api.getInstance().getClient());
         },

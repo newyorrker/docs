@@ -8,7 +8,7 @@
                 <span>Сформировано:</span> {{ creationDate }}
             </p>
 
-            <document-status class="document-info__status" :source="source" :extended="true" />
+            <document-status class="document-info__status" :source="source" :extended="useStatus" />
         </div>
     </div>
 
@@ -26,6 +26,8 @@ import { formatDate } from "@/shared/helpers/dateFormating";
 
 export default class DocumentInfo extends Vue {
     @Prop({required: true}) source: HrLinkDocumentModel;
+    @Prop({default: true}) useStatus: boolean;
+
 
     //duplicated
     get creationDate() {

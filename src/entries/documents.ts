@@ -11,7 +11,7 @@ Vue.config.productionTip = false;
 Vue.use(TextareaAutosize);
 Vue.use(EasyRefresh);
 
-const app = initApplication(App);
+const app = initApplication(App, "documents");
 
 app.$mount('#app');
 

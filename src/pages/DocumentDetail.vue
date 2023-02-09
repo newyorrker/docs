@@ -3,7 +3,11 @@
       <template v-if="!isError && item">
 
         <template v-if="isSign || isReject">
-          <document-sign v-if="isSign" @signed="load" :source="item" />
+          <document-sign v-if="isSign"
+            @signed="load"
+            :source="item"
+            :id="item.id"
+            :defaultErrorMessage="'При попытке подписания документа произошла ошибка'"/>
           <document-reject v-if="isReject" :source="item" />
         </template>
         <document-view v-else :source="item" />

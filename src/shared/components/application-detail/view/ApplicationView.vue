@@ -6,10 +6,9 @@
 
       <pdf-viewer @done="loading = false" class="application-view__pdf" :id="source.id" :fileDataLoader="fileDataLoader" :name="source.typeName" />
 
-      <!-- <footer v-if="showFooter" class="application-view__footer">
+      <footer v-if="true" class="application-view__footer">
         <button-1 @click="sign">Подписать</button-1>
-        <button-1 @click="reject" :color="'#ffffff'" :textColor="'#F39420'">Отклонить</button-1>
-      </footer> -->
+      </footer>
 
       <background-spinner v-if="loading" />
     </div>
@@ -21,12 +20,11 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import ApplicationInfo from '@/shared/components/application-info/ApplicationInfo.vue';
 import BackgroundSpinner from "@/shared/components/background-spinner/BackgroundSpinner.vue";
 import PdfViewer from "@/shared/components/pdf-viewer/PdfViewer.vue";
-import { HrLinkApplicationModel } from "@/types/HrLinkApplication/HrLinkApplicationModel";
+import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 import { getLink } from "@/shared/helpers/linkHelper";
 import { ApplicationFileDataLoader } from "./ApplicationFileDataLoader";
-
 
 @Component({ components: { ApplicationInfo, PdfViewer, Button1, BackgroundSpinner }})
 
@@ -38,25 +36,15 @@ export default class ApplicationView extends Vue {
 
   fileDataLoader = new ApplicationFileDataLoader(this.$hrLinkRepository);
 
-//   sign() {
-//     const link = getLink(
-//       this.$store.getters['platform'],
-//       { id: this.source.id, isSign: "true" },
-//       this.source.type
-//     );
+  sign() {
+    const link = getLink(
+      this.$store.getters['platform'],
+      { id: this.source.applicationGroupId, isSign: "true" },
+      this.source.typeName
+    );
 
-//     document.location.href = link;
-//   }
-
-//   reject() {
-//     const link = getLink(
-//       this.$store.getters['platform'],
-//       { id: this.source.id, isReject: "true" },
-//       this.source.type
-//     );
-
-//     document.location.href = link;
-//   }
+    document.location.href = link;
+  }
 
 //   get showFooter() {
 //     const { rejected, signed } = this.source;
@@ -90,10 +78,6 @@ export default class ApplicationView extends Vue {
     margin-top: 17px;
     margin-bottom: 10px;
     padding: 13px 16px 12px;
-
-    button + button {
-      margin-left: 16px;
-    }
   }
 }
 </style>
