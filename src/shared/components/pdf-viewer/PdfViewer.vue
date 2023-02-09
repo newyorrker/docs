@@ -47,6 +47,8 @@ export default class PDFViewer extends Vue {
   @Prop({required: true}) name: string;
   @Prop({ required: true}) fileDataLoader: FileDataLoaderInterface;
 
+  counter: number | null = null;
+
   idConfig = {
     zoomIn: "vuePdfAppZoomIn",
     zoomOut: "vuePdfAppZoomOut",
@@ -55,9 +57,13 @@ export default class PDFViewer extends Vue {
   blobUrl: string = "";
   filebase64String: string = "";
 
-  async mounted() {
+  mounted() {
+    this.load()  ;
+  }
 
+  async load() {
     try {
+      // throw Error("LKE")
       const data = await this.fileDataLoader.load(this.id);
       const reader = new FileReader();
 
@@ -70,12 +76,24 @@ export default class PDFViewer extends Vue {
 
       const blob = new window.Blob([data], { type: 'application/pdf' });
       this.blobUrl = window.URL.createObjectURL(blob);
+
+      if(this.counter) {
+        clearTimeout(this.counter || undefined);
+      }
+
+      this.$emit("done");
     }
     catch(e) {
+      //@ts-ignore
+      const errorDataString = await e?.response?.data?.text?.();
+      const errorData = JSON.parse(errorDataString || "{}") as { code?: string; message?: string } | undefined ;
+      if(errorData?.code === "HRLink.error") {
+        this.counter = setTimeout(() => {
+          this.load();
+        }, 1000);
+      }
+
       this.$store.dispatch('reportError', e);
-    }
-    finally {
-      this.$emit("done");
     }
   }
 
@@ -111,6 +129,8 @@ export default class PDFViewer extends Vue {
 
   beforeDestroy() {
     window.URL.revokeObjectURL(this.blobUrl);
+
+    clearTimeout(this.counter || undefined);
   }
 }
 
