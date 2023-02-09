@@ -3,9 +3,9 @@
       <template v-if="showMain">
         <div class="document-sign__container">
 
-          <sign-title :title="source.type" :type="'заявление'" />
+          <sign-title :title="source.typeName" :type="''" />
 
-          <document-info :source="source" :useStatus="false" />
+          <application-info :source="source" />
 
           <!-- PINCODE: -->
           <pin-code v-model="pinCodeValue" :error="isPinCodeError" />
@@ -62,28 +62,25 @@
   import SignBase from "@/shared/components/sign/SignBase.vue";
   import PinCode from '@/shared/components/pin-code/PinCode.vue';
   import Button1 from "@/shared/components/controls/buttons/Button1.vue";
-  import DocumentInfo from "@/shared/components/document-info/DocumentInfo.vue";
+  import ApplicationInfo from "@/shared/components/application-info/ApplicationInfo.vue";
   import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
   import BackgroundIconSuccess from "@/shared/components/background-icon/BackgroundIconSuccess.vue";
   import BackgroundIconKey from "@/shared/components/background-icon/BackgroundIconKey.vue";
-  import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
   import SignTroubleshooting from "@/shared/components/sign/SignTroubleshooting.vue";
   import SignTitle from "@/shared/components/sign/SignTitle.vue";
   import SignLoading from "@/shared/components/sign/SignLoading.vue";
   import { getLink } from "@/shared/helpers/linkHelper";
   import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
   import MobileAppButtonType from "@/types/MobileAppButtonType";
+  import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 
-  @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey, SignTroubleshooting, SignTitle, SignLoading }})
+  @Component({ components: { ApplicationInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey, SignTroubleshooting, SignTitle, SignLoading }})
 
   export default class ApplicationSign extends SignBase {
 
-    @Prop({required: true}) source: HrLinkDocumentModel;
+    @Prop({required: true}) source: HrLinkApplicationModel;
 
     mounted() {
-      if(this.source.rejected || this.source.signed) {
-        return;
-      }
       this.startSign();
     }
 

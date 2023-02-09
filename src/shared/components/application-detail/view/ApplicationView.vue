@@ -6,7 +6,7 @@
 
       <pdf-viewer @done="loading = false" class="application-view__pdf" :id="source.id" :fileDataLoader="fileDataLoader" :name="source.typeName" />
 
-      <footer v-if="true" class="application-view__footer">
+      <footer class="application-view__footer">
         <button-1 @click="sign">Подписать</button-1>
       </footer>
 

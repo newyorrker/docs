@@ -17,34 +17,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
+import SignersBase from "@/shared/components/sign/SignersBase.vue";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
-import SignerProfile from "./SignerProfile.vue";
+import SignerProfile from "@/shared/components/document-status/SignerProfile.vue";
 import { Signer } from "./types";
-import { DocumentUserProfileModel } from "@/types/HrLinkDocument/DocumentUserProfileModel";
 
 @Component({ components: { SignerProfile }})
-export default class DocumentSigners extends Vue {
-  @Prop({ required: true }) source: HrLinkDocumentModel;
-
-  openProfile(userProfile?: DocumentUserProfileModel) {
-    const link = this.getLink(userProfile?.id);
-    if(link) {
-      document.location.href = link;
-    }
-  }
-
-  private getLink(profileId?: string) {
-    if (profileId) {
-      let params = {
-        schemaId: 'UserProfiles',
-        objectId: profileId
-      };
-
-      return 'actor:ContactsPageActor?params=' + encodeURIComponent(JSON.stringify(params));
-    }
-    return '';
-  }
+export default class DocumentSigners extends SignersBase<HrLinkDocumentModel> {
 
   get waitingList(): Signer[] {
     const result: Signer[] = [];
@@ -106,24 +86,24 @@ export default class DocumentSigners extends Vue {
     return result;
   }
 
-  get currentUserIsHeadManager() {
+  private get currentUserIsHeadManager() {
     //текущий пользователь может быть руководителем
     //если текущий пользователь явяляется руководителем то не показываем
     return this.currentUserProfile.id === this.headProfile?.id
   }
 
-  get waitingForCurrentUser() {
+  private get waitingForCurrentUser() {
     return !this.source.signed;
   }
 
-  get waitingForHead() {
+  private get waitingForHead() {
     const rejected = !!this.headProfile?.rejectedAt;
     const signed = !!this.headProfile?.signedAt;
 
     return !rejected && !signed;
   }
 
-  get waitingForEmployees() {
+  private get waitingForEmployees() {
     return this.employees.filter((employer) => !employer.signedAt && !employer.rejectedAt);
   }
 
@@ -146,26 +126,4 @@ export default class DocumentSigners extends Vue {
 
 </script>
 <style lang="scss">
-
-.document-signers {
-  color: #6D6D72;
-
-  &__list {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-left: -8px;
-    line-height: 1.35;
-
-    & > span {
-      margin-left: 8px;
-    }
-  }
-
-  &__list-item {
-    display: inline-block;
-    content: ", ";
-    margin-left: 8px;
-  }
-}
 </style>

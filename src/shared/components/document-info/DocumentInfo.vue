@@ -28,7 +28,6 @@ export default class DocumentInfo extends Vue {
     @Prop({required: true}) source: HrLinkDocumentModel;
     @Prop({default: true}) useStatus: boolean;
 
-
     //duplicated
     get creationDate() {
         return formatDate(this.source.createdAt);

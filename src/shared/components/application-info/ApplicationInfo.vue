@@ -7,6 +7,8 @@
             <p>
                 <span>Сформировано:</span> {{ creationDate }}
             </p>
+
+            <application-signers class="application-info__signers" :source="source" />
         </div>
     </div>
 
@@ -16,11 +18,12 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import UserProfile from '@/shared/components/user-profile/UserProfile.vue';
-import DocumentStatus from '@/shared/components/document-status/DocumentStatus.vue';
 import { formatDate } from "@/shared/helpers/dateFormating";
 import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
+import { UgmkUserProfile } from "@/models/UgmkUserProfile";
+import ApplicationSigners from "@/shared/components/application-detail/sign/ApplicationSigners.vue"
 
-@Component({ components: { UserProfile, DocumentStatus }})
+@Component({ components: { UserProfile, ApplicationSigners }})
 
 export default class ApplicationInfo extends Vue {
     @Prop({required: true}) source: HrLinkApplicationModel;
@@ -28,6 +31,10 @@ export default class ApplicationInfo extends Vue {
     //duplicated
     get creationDate() {
         return formatDate(this.source.createdAt);
+    }
+
+    get currentUserProfile(): UgmkUserProfile {
+        return this.$store.state.userProfile;
     }
 }
 
@@ -50,8 +57,8 @@ export default class ApplicationInfo extends Vue {
         }
     }
 
-    &__status {
-        margin-top: 6px;
+    &__signers {
+        margin-top: 4px;
     }
 }
 </style>
