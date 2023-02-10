@@ -16,7 +16,7 @@ export interface HrLinkRepositoryInterface {
     confirmSign(id: string, requestId: string, code: string): Promise<any>;
     rejectSign(id: string, reason: string): any;
 
-
+    getApplications(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]>;
     getApplication(id: string): Promise<HrLinkApplicationModel | null>;
     getApplicationFile(applicationId: string): Promise<Blob>;
     getApplicationsTypes(): Promise<ApplicationsTypesResponse>;
@@ -64,6 +64,13 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
     }
     async rejectSign(id: string, reason: string) {
         await this.api.client.post(`/hrlink/documents/${id}/sign/reject`, { reason });
+    }
+
+    async getApplications(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]> {
+        return this.api.client.post<HRLinkApplicationDto[]>("/hrlink/applications/query", query, config)
+            .then((response) => {
+                return response.data.map((item) => new HrLinkApplicationModel(item))
+            });
     }
 
     async getApplication(id: string): Promise<HrLinkApplicationModel | null> {

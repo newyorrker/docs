@@ -54,38 +54,26 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 
-import DocumentCard from '@/shared/components/document-card/DocumentCard.vue';
-import DocumentsListFilter from '@/shared/components/documents-list-filter/DocumentsListFilter.vue';
-import DocumentsListSkel from '@/shared/components/documents-list-skel/DocumentsListSkel.vue';
+import DocumentCard from '@/shared/components/documents/document-card/DocumentCard.vue';
+import DocumentsListFilter from '@/shared/components/documents/documents-list-filter/DocumentsListFilter.vue';
+import DocumentsListSkel from '@/shared/components/documents/documents-list-skel/DocumentsListSkel.vue';
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { DocumentsListService } from "@/shared/services/documents-list/DocumentsListService";
 import { DocumentListFilterState, DocumentsListQueryFabric } from "@/shared/services/documents-list/DocumentsListQueryFabric";
-import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { getLink } from "@/shared/helpers/linkHelper";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
 import { changeButtons } from "@/shared/helpers/interopHelper";
+import ItemsListBase from "@/shared/components/items-list/ItemsListBase.vue";
 
 @Component({ components: { DocumentCard, DocumentsListFilter, DocumentsListSkel, BackgroundIconError }})
 
-export default class DocumentsList extends Vue {
+export default class DocumentsList extends ItemsListBase<HrLinkDocumentModel> {
 
   documentsListService: DocumentsListService;
 
-  items: HrLinkDocumentModel[] = [];
-
-  pagingState: PagingStateInterface = {
-    skip: 0,
-    take: 20
-  }
-
-  isLoading = false;
-  isOnRefresh = false;
-  loaded = false;
-
-  isError = false;
   showFilter = false;
 
   filterState: DocumentListFilterState = {
@@ -101,16 +89,6 @@ export default class DocumentsList extends Vue {
       new DocumentsListQueryFabric(this.pagingState),
       this.$hrLinkRepository
     )
-  }
-
-  mounted() {
-    window.clickButton = this.buttonClicked;
-
-    this.getList();
-  }
-
-  destroyed() {
-    window.clickButton = undefined;
   }
 
   async getList(loadMore = false) {
@@ -152,41 +130,7 @@ export default class DocumentsList extends Vue {
     return false;
   }
 
-  resetEasyRefreshScroll() {
-    this.$nextTick(() => {
-      const easyRefresh = this.$refs.easyRefresh;
-      if(easyRefresh) {
-        //@ts-ignore
-        easyRefresh.onResize();
-      }
-    })
-  }
-
-  async loadMore(done: (noMore: boolean) => void) {
-    if(this.isError) {
-      done(true);
-      return;
-    }
-    const res = await this.getList(true);
-    done(res);
-  }
-
-  async refresh(done: () => void) {
-    try {
-      this.isOnRefresh = true;
-
-      await this.getList();
-      done();
-    }
-    catch(e) {
-      this.$store.dispatch('reportError', e);
-    }
-    finally {
-      this.isOnRefresh = false;
-    }
-  }
-
-  buttonClicked(button: MobileAppButtonType): void {
+  buttonClicked(button: MobileAppButtonType) {
     if (button === MobileAppButtonType.filter) {
       this.showFilter = true;
     }
@@ -219,18 +163,6 @@ export default class DocumentsList extends Vue {
     return !!documentDateFrom || !!documentDateTo || !!statuses?.length || !!employeeSignerStatuses?.length || !!headSignerStatuses?.length;
   }
 
-  get showList() {
-    return this.loaded;
-  }
-
-  get showSkel() {
-    return this.isLoading && !this.isOnRefresh;
-  }
-
-  get listIsEmpty() {
-    return false;
-  }
-
   get showFilterButton() {
     return this.$store.getters["platform"] === "Web";
   }
@@ -239,66 +171,5 @@ export default class DocumentsList extends Vue {
 </script>
 
 <style lang="scss">
-.documents-list {
-  height: 100%;
-  position: relative;
 
-  &__refresh_error {
-    .v-easy-refresh-body > div {
-      height: 100%;
-    }
-  }
-
-  &__list {
-    & > div {
-      border-top: 1px #C8C7CC solid;
-      border-bottom: 1px #C8C7CC solid;
-    }
-
-    & > div:first-child {
-      border-top: 0;
-    }
-
-    & > div:last-child {
-      border-bottom: 0;
-    }
-
-    & > div + div {
-      margin-top: 10px
-    }
-  }
-
-  &__list_bordered {
-    border-bottom: 1px #C8C7CC solid;
-  }
-
-  &__list + &__skel {
-    border-top: 1px #C8C7CC solid;
-  }
-
-  &__empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 18px;
-  }
-
-  &__filter {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    position: absolute;
-  }
-
-  &__web-filter-toggle-button {
-    position: absolute;
-    bottom: 0;
-  }
-}
 </style>

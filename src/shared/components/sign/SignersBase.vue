@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Vue, Component, Prop } from "vue-property-decorator";
   import { DocumentUserProfileModel } from "@/types/HrLinkDocument/DocumentUserProfileModel";
-  import SignerProfile from "../document-status/SignerProfile.vue";
+  import SignerProfile from "@/shared/components/documents/document-status/SignerProfile.vue";
 
   @Component({ components: { SignerProfile }})
   export default class DocumentSigners<T> extends Vue {

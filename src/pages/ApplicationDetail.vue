@@ -22,8 +22,8 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-import ApplicationView from "@/shared/components/application-detail/view/ApplicationView.vue";
-import ApplicationSign from "@/shared/components/application-detail/sign/ApplicationSign.vue";
+import ApplicationView from "@/shared/components/applications/application-detail/view/ApplicationView.vue";
+import ApplicationSign from "@/shared/components/applications/application-detail/sign/ApplicationSign.vue";
 import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 

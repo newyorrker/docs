@@ -38,7 +38,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
-import ApplicationForm from "@/shared/components/application-form/ApplicationForm.vue";
+import ApplicationForm from "@/shared/components/applications/application-form/ApplicationForm.vue";
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
 import BackgroundSpinner from "@/shared/components/background-spinner/BackgroundSpinner.vue";
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";

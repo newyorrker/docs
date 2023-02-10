@@ -2,7 +2,7 @@ import { HrLinkRepositoryInterface } from "@/service/repositories/HrLinkReposito
 import { QueryFabricInterface } from "@/types/QueryFabric/QueryFabricInterface";
 import Axios, { CancelTokenSource } from "axios";
 
-export class DocumentsListService {
+export class ApplicationsListService {
 
     private cancelToken?: CancelTokenSource;
 
@@ -23,6 +23,6 @@ export class DocumentsListService {
         this.cancelToken = Axios.CancelToken.source();
 
 
-        return await this.hrLinkRepository.getDocuments(queryParams, { cancelToken: this.cancelToken.token });
+        return await this.hrLinkRepository.getApplications(queryParams, { cancelToken: this.cancelToken.token });
     }
 }
