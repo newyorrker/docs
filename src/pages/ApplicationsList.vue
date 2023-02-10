@@ -129,7 +129,7 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
 
     const link = getLink(
       this.$store.getters['platform'],
-      { id: item.id },
+      { id: item.applicationGroupId },
       item.typeName
     );
 
