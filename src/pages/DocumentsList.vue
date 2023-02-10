@@ -15,7 +15,10 @@
       <template v-if="!isError">
 
         <div v-if="showList" class="documents-list__list" :class="{'documents-list__list_bordered': showSkel}">
-          <document-card v-for="document in items" :source="document" :key="document.id" @click.native="openItem(document)" />
+          <document-card v-for="document in items" @click.native="openItem(document)"
+            :title="document.type"
+            :source="document"
+            :key="document.id"  />
         </div>
         <documents-list-skel v-show="showSkel" class="documents-list__skel" />
       </template>
