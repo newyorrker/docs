@@ -2,6 +2,7 @@
   <div class="application-form">
     <template v-if="!isError">
       <div class="application-form__extra-controls">
+        <!-- APPROVER -->
         <form-group :name="'Получатель заявления'">
           <select-control
             v-model="selectedApproverUserId"
@@ -9,10 +10,19 @@
             :placeholder="'Выберите получателя'"
             :is-loading="false"
             :is-ajax="false"
-            :select-model="false"
-          />
+            :select-model="false">
+
+            <template v-slot="{item}">
+              <div class="application-form__approver-profile">
+                <user-profile-component :userProfile="item.profile" />
+              </div>
+            </template>
+
+          </select-control>
           <span class="form-error" v-if="errors.selectedApproverUserId">Обязательное поле</span>
         </form-group>
+
+        <!-- DATE -->
         <form-group  :name="'Дата заявления'">
           <date-input v-model="applicationDate" :needClear="false" />
         </form-group>
@@ -45,22 +55,30 @@ import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
 import FormControlList from "./FormControlList.vue";
 import { LocalStorageClient } from "@/shared/services/common/local-storage-client/LocalStorageClient";
 import { UgmkUserProfile } from "@/models/UgmkUserProfile";
-import { SelectorItem } from "@/shared/components/controls/select/types";
 import { DateTime } from "luxon";
 import { ApplicationFormService } from "./ApplicationFormService";
 import { getLink } from "@/shared/helpers/linkHelper";
 import { HRLinkApplicationDto } from "@/types/HRLinkApplication/HrLinkApplicationDto";
+import UserProfileComponent from '@/shared/components/user-profile/UserProfile.vue';
+
+import { UserProfile } from "../../../../../../../common/api/models/UserProfile";
 
 const sleep = (time: number) => {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    };
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
 
 export interface FormSubmitPayload {
   systemFields: [string, FormDataEntryValue][];
   mainFields: [string, FormDataEntryValue][];
 }
 
-@Component({ components: { Button1, FormControlList, DateInput, FormGroup, SelectControl }})
+interface AproversSelectItem {
+  id: number;
+  title: string;
+  profile: UserProfile;
+}
+
+@Component({ components: { Button1, FormControlList, DateInput, FormGroup, SelectControl, UserProfileComponent }})
 
 export default class ApplicationForm extends Vue {
   @Prop({ default: () => [] }) mainFields: HRLinkApplicationTypeField[];
@@ -70,7 +88,7 @@ export default class ApplicationForm extends Vue {
   localStorageClient: LocalStorageClient = new LocalStorageClient();
   selectedApproverUserId: number | null = null;
   applicationDate: string = "";
-  approversList: SelectorItem[] = [];
+  approversList: AproversSelectItem[] = [];
 
   FieldType = FieldType;
 
@@ -93,7 +111,14 @@ export default class ApplicationForm extends Vue {
         this.$emit("loading", true);
         // await sleep(100000000)
         // throw Error()
-        this.approversList = await this.service.getApproversList(currentUserDirectionId, this.currentUserProfile.userId);
+        const data = await this.service.getApproversList(currentUserDirectionId, this.currentUserProfile.userId);
+        this.approversList = data.map((item) => {
+          return {
+            profile: item,
+            id: item.userId as number,
+            title: item.fullName
+          }
+        })
         this.restoreSelectedApprover();
       }
       catch(e) {

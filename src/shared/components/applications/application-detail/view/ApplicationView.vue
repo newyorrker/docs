@@ -45,11 +45,6 @@ export default class ApplicationView extends Vue {
 
     document.location.href = link;
   }
-
-//   get showFooter() {
-//     const { rejected, signed } = this.source;
-//     return !rejected && !signed;
-//   }
 }
 
 </script>

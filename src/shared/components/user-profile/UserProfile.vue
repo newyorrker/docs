@@ -1,11 +1,11 @@
 <template>
     <div class="user-profile">
         <div class="user-profile__icon">
-            <user-icon :userProfile="userProfile" :size="30" />
+          <user-icon :userProfile="userProfile" :size="30" />
         </div>
         <div class="user-profile__text">
-             <p class="user-profile__name">{{ userProfile.fullName }}</p> <!--{{  }} -->
-            <p class="user-profile__position">{{ userProfile.position }}</p>
+          <p class="user-profile__name">{{ userProfile.fullName }}</p> <!--{{  }} -->
+          <p class="user-profile__position">{{ userProfile.position }}</p>
         </div>
     </div>
 </template>

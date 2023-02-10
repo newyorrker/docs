@@ -31,7 +31,7 @@
         :class="{ 'is-selected': isSelected(item) }"
         @click="select(item)"
       >
-        {{ item.title }}
+        <slot :item="item">{{ item.title }}</slot>
       </div>
       <template v-if="!isLoading">
         <div class="selector__item is-non-selectable" v-if="showNotFound">Не найдено</div>

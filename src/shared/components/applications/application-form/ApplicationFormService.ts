@@ -14,8 +14,8 @@ export class ApplicationFormService {
 
     }
 
-    async getApproversList(currentUserDirectionId: string, currentUserId: number): Promise<SelectorItem[]> {
-        const profiles = await this.userRepository.profiles({ include: ["firstName", "lastName", "middleName", "userId"], where: { directionId: currentUserDirectionId }, take: -1 })
+    async getApproversList(currentUserDirectionId: string, currentUserId: number): Promise<UserProfile[]> {
+        const profiles = await this.userRepository.profiles({ include: ["firstName", "lastName", "middleName", "userId", "position", "photoFileId"], where: { directionId: currentUserDirectionId }, take: -1 })
 
         if(!profiles.length) {
             return [];
@@ -41,14 +41,8 @@ export class ApplicationFormService {
       //restore selected approver from LS it it exist in @list
 
       //по полученному списку формируем итоговый список профилей для отображения в списке
-      const result = list.map((item) => {
-        return {
-          id: item.userId as number,
-          title: item.fullName
-        }
-      });
 
-      return result;
+      return list;
     }
 
     /**
