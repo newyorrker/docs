@@ -1,5 +1,5 @@
-import { THRLinkDocumentRequest } from "@/service/repositories/types";
+import { HRLinkItemsRequest } from "@/service/repositories/types";
 
 export interface QueryFabricInterface<T = Record<string, any>> {
-    getQuery(filterState: T): THRLinkDocumentRequest;
+    getQuery(filterState: T): HRLinkItemsRequest<T>;
 }

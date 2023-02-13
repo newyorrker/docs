@@ -5,10 +5,10 @@ import { HrLinkDocumentDto } from "@/types/HrLinkDocument/HrLinkDocumentDto";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import Api from "../network/api";
-import { THRLinkDocumentRequest } from "./types";
+import { HRLinkItemsRequest } from "./types";
 
 export interface HrLinkRepositoryInterface {
-    getDocuments(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkDocumentModel[]>;
+    getDocuments<T>(query?: HRLinkItemsRequest<T>, config?: AxiosRequestConfig): Promise<HrLinkDocumentModel[]>;
     getDocument(id: string): Promise<HrLinkDocumentModel>;
     getDocumentFile(documentId: string) : Promise<Blob>;
 
@@ -16,7 +16,7 @@ export interface HrLinkRepositoryInterface {
     confirmSign(id: string, requestId: string, code: string): Promise<any>;
     rejectSign(id: string, reason: string): any;
 
-    getApplications(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]>;
+    getApplications<T>(query?: HRLinkItemsRequest<T>, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]>;
     getApplication(id: string): Promise<HrLinkApplicationModel | null>;
     getApplicationFile(applicationId: string): Promise<Blob>;
     getApplicationsTypes(): Promise<ApplicationsTypesResponse>;
@@ -32,7 +32,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
         this.api = Api.getInstance();
     }
 
-    async getDocuments(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkDocumentModel[]> {
+    async getDocuments<T>(query?: HRLinkItemsRequest<T>, config?: AxiosRequestConfig): Promise<HrLinkDocumentModel[]> {
         return this.api.client.post<HrLinkDocumentDto[]>("/hrlink/documents/query", query, config)
             .then((response) => {
                 return response.data.map((item) => new HrLinkDocumentModel(item))
@@ -66,7 +66,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
         await this.api.client.post(`/hrlink/documents/${id}/sign/reject`, { reason });
     }
 
-    async getApplications(query?: THRLinkDocumentRequest, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]> {
+    async getApplications<T>(query?: HRLinkItemsRequest<T>, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]> {
         return this.api.client.post<HRLinkApplicationDto[]>("/hrlink/applications/query", query, config)
             .then((response) => {
                 return response.data.map((item) => new HrLinkApplicationModel(item))
@@ -74,7 +74,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
     }
 
     async getApplication(id: string): Promise<HrLinkApplicationModel | null> {
-        return this.api.client.post(`/hrlink/applications/${id}`)
+        return this.api.client.get(`/hrlink/applications/${id}`)
             .then((response) => {
                 return new HrLinkApplicationModel(response.data);
             });
@@ -93,7 +93,7 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
     }
 
     async getApplicationFile(applicationId: string) {
-        return this.api.client.post<any, AxiosResponse<Blob>>(`/hrlink/applications/${applicationId}/file`, {}, {
+        return this.api.client.get<any, AxiosResponse<Blob>>(`/hrlink/applications/${applicationId}/file`, {
             responseType: 'blob',
         })
         .then(async (response) => {

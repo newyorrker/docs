@@ -1,6 +1,6 @@
 import { Statuses } from "@/shared/components/documents/documents-list-filter/types";
+import { OtherStatuses } from "@/shared/components/documents/documents-list-filter/types";
 import { Status } from "../../filter/types";
-import { OtherStatuses } from "./types";
 
 export const getStatuses = (): Status<Statuses>[] => {
     return [
@@ -22,7 +22,6 @@ export const getStatuses = (): Status<Statuses>[] => {
             isActive: false,
             iconName: "document-progress-icon"
         }
-
     ]
 }
 

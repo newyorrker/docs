@@ -1,6 +1,7 @@
 <template>
  <div class="documents-list">
     <button v-if="showNewApplicationButton" @click="goToApplicationsCreate">Add new</button>
+    <button v-if="showFilterButton" @click="showFilter = true">Show filter</button>
     <easy-refresh
       :on-refresh="refresh"
       :loadMore="loadMore"
@@ -47,6 +48,12 @@
     <div class="documents-list__empty" v-if="showList && !items.length && !showSkel && !isError">
       Список заявлений пуст
     </div>
+
+    <keep-alive>
+      <applications-list-filter v-if="showFilter" class="documents-list__filter"
+        @apply="applyFilter"
+        @close="showFilter = false" />
+    </keep-alive>
  </div>
 </template>
 
@@ -57,20 +64,29 @@ import ItemsListBase from "@/shared/components/items-list/ItemsListBase.vue";
 import DocumentCard from '@/shared/components/documents/document-card/DocumentCard.vue';
 import DocumentsListSkel from '@/shared/components/documents/documents-list-skel/DocumentsListSkel.vue';
 import BackgroundIconError from "@/shared/components/background-icon/BackgroundIconError.vue";
+import ApplicationsListFilter from "@/shared/components/applications/applications-list-filter/ApplicationsListFilter.vue";
 
 import { getLink } from "@/shared/helpers/linkHelper";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
 
+import { changeButtons } from "@/shared/helpers/interopHelper";
+
 import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 import { ApplicationsListService } from "@/shared/services/applications-list/ApplicationsListService";
-import { ApplicationsListQueryFabric } from "@/shared/services/applications-list/ApplicationsListQueryFabric";
+import { ApplicationsListFilterState, ApplicationsListQueryFabric } from "@/shared/services/applications-list/ApplicationsListQueryFabric";
 
 
-@Component({ components: { DocumentsListSkel, DocumentCard, BackgroundIconError }})
+@Component({ components: { DocumentsListSkel, DocumentCard, BackgroundIconError, ApplicationsListFilter }})
 
 export default class ApplicationsList extends ItemsListBase<HrLinkApplicationModel> {
 
   applicationsListService: ApplicationsListService;
+
+  filterState: ApplicationsListFilterState = {
+    applicationDateFrom: "",
+    applicationDateTo: "",
+    statuses: []
+  }
 
   created() {
     this.applicationsListService = new ApplicationsListService(
@@ -136,6 +152,16 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
     document.location.href = link;
   }
 
+  applyFilter(filterState: ApplicationsListFilterState) {
+    this.filterState = filterState;
+
+    changeButtons([{ type: MobileAppButtonType.filter, params: { filtered: this.filterHasValue } }]);
+
+    this.items = [];
+
+    this.getList();
+  }
+
   goToApplicationsCreate() {
     const link = getLink(
       this.$store.getters['platform'],
@@ -152,7 +178,17 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
     }
   }
 
+  get filterHasValue() {
+    const { statuses } = this.filterState;
+
+    return !!statuses?.length;
+  }
+
   get showNewApplicationButton() {
+    return this.$store.getters["platform"] === "Web";
+  }
+
+  get showFilterButton() {
     return this.$store.getters["platform"] === "Web";
   }
 }

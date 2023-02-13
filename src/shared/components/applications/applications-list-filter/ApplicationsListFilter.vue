@@ -2,6 +2,7 @@
     <div class="documents-list-filter">
         <!-- HEADER -->
         <div class="documents-list-filter__container">
+            <!-- COMPONENT -->
             <header class="documents-list-filter__header">
                 <div class="documents-list-filter__reset">
                     <button @click="reset">Сбросить</button>
@@ -18,6 +19,8 @@
                     </button>
                 </div>
             </header>
+
+
             <!-- MAIN -->
             <main>
                 <!-- PERIOD -->
@@ -34,37 +37,10 @@
 
                 <!-- STATUS -->
                 <documents-listFilter-section>
-                    <template #header>Статус документа</template>
+                    <template #header>Статус рассмотрения</template>
 
                     <div class="documents-list-filter__status">
                         <status-tag v-for="status in statuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
-                            <template #icon>
-                                <component :inverted="status.isActive" :is="status.iconName" />
-                            </template>
-                            {{ status.title }}
-                        </status-tag>
-                    </div>
-                </documents-listFilter-section>
-
-                <!-- STATUS: user -->
-                <documents-listFilter-section>
-                    <template #header>Статус документа для пользователя</template>
-
-                    <div class="documents-list-filter__status">
-                        <status-tag v-for="status in employeeSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
-                            <template #icon>
-                                <component :inverted="status.isActive" :is="status.iconName" />
-                            </template>
-                            {{ status.title }}
-                        </status-tag>
-                    </div>
-                </documents-listFilter-section>
-
-                <!-- STATUS: head -->
-                <documents-listFilter-section>
-                    <template #header>Статус документа для руководителя</template>
-                    <div class="documents-list-filter__status">
-                        <status-tag v-for="status in headSignerStatuses" @toggle="status.isActive = !status.isActive" :active="status.isActive" :key="status.id">
                             <template #icon>
                                 <component :inverted="status.isActive" :is="status.iconName" />
                             </template>
@@ -85,12 +61,11 @@ import { Vue, Component } from "vue-property-decorator";
 
 import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
-import DocumentListFilterSection from "@/shared/components/filter/DocumentsListFilterSection.vue";
-import { DocumentListFilterState } from '@/shared/services/documents-list/DocumentsListQueryFabric';
 import DocumentsListFilterSection from '@/shared/components/filter/DocumentsListFilterSection.vue';
+import ListFilterBase from "@/shared/components/filter/ListFilterBase.vue";
 import StatusTag from '@/shared/components/filter/StatusTag.vue';
-import { getOtherStatuses, getStatuses } from "./data";
 import { Status } from "@/shared/components/filter/types";
+import { getStatuses } from "./data";
 
 import EyeIcon from "@/shared/components/filter/icons/eye-icon.vue";
 import EyeStrikethroughIcon from "@/shared/components/filter/icons/eye-strikethrough-icon.vue";
@@ -98,13 +73,12 @@ import CrossIcon from "@/shared/components/filter/icons/cross-icon.vue";
 import ApplyIcon from "@/shared/components/filter/icons/apply-icon.vue";
 import DocumentCheckIcon from "@/shared/components/filter/icons/document-check-icon.vue";
 import DocumentProgressIcon from "@/shared/components/filter/icons/document-progress-icon.vue";
-import ListFilterBase from "@/shared/components/filter/ListFilterBase.vue";
-import { OtherStatuses } from "./types";
+import { ApplicationsListFilterState } from "@/shared/services/applications-list/ApplicationsListQueryFabric";
+
 
 @Component({ components: {
     DateInput,
     Button1,
-    DocumentListFilterSection,
     DocumentsListFilterSection,
     StatusTag,
     EyeIcon,
@@ -120,8 +94,6 @@ export default class DocumentsListFilter extends ListFilterBase {
     dateRight =  "";
 
     statuses: Status[] = getStatuses();
-    employeeSignerStatuses: Status<OtherStatuses>[] = getOtherStatuses();
-    headSignerStatuses: Status<OtherStatuses>[] = getOtherStatuses();
 
     apply() {
         this.$emit('apply', this.filterState);
@@ -132,21 +104,20 @@ export default class DocumentsListFilter extends ListFilterBase {
         this.dateRight = "";
 
         this.statuses = getStatuses();
-        this.employeeSignerStatuses = getOtherStatuses();
-        this.headSignerStatuses = getOtherStatuses();
 
         this.apply();
     }
 
-    get filterState(): DocumentListFilterState {
+    get filterState(): ApplicationsListFilterState {
         return {
-            documentDateFrom: this.dateLeft,
-            documentDateTo: this.dateRight,
+            applicationDateFrom: this.dateLeft,
+            applicationDateTo: this.dateRight,
             statuses: this.statuses.filter(s => s.isActive).map(i => i.id),
-            employeeSignerStatuses: this.employeeSignerStatuses.filter(s => s.isActive).map(i => i.id),
-            headSignerStatuses: this.headSignerStatuses.filter(s => s.isActive).map(i => i.id)
         }
     }
 }
 
 </script>
+
+<style lang="scss">
+</style>

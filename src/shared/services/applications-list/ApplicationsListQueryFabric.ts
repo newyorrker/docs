@@ -1,7 +1,9 @@
-import { THRLinkDocumentRequest } from "@/service/repositories/types";
+import { HRLinkItemsRequest } from "@/service/repositories/types";
+import { HRLinkApplicationRequestWhere } from "@/shared/components/applications/applications-list-filter/types";
 import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { QueryFabricInterface } from "@/types/QueryFabric/QueryFabricInterface";
 
+export interface ApplicationsListFilterState extends HRLinkApplicationRequestWhere {};
 
 export class ApplicationsListQueryFabric implements QueryFabricInterface {
     constructor(
@@ -9,9 +11,9 @@ export class ApplicationsListQueryFabric implements QueryFabricInterface {
     ) {
     }
 
-    getQuery(): THRLinkDocumentRequest {
+    getQuery(filterState: ApplicationsListFilterState): HRLinkItemsRequest<HRLinkApplicationRequestWhere> {
 
-        const queryParams: THRLinkDocumentRequest = {
+        const queryParams: HRLinkItemsRequest<HRLinkApplicationRequestWhere> = {
             take: this.pagingState.take,
             skip: this.pagingState.skip
         };

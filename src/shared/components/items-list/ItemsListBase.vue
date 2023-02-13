@@ -8,6 +8,8 @@ import { Vue, Component } from "vue-property-decorator";
 export default class ItemsList<T> extends Vue {
   items: T[] = [];
 
+  showFilter = false;
+
   pagingState: PagingStateInterface = {
     skip: 0,
     take: 20

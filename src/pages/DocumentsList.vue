@@ -77,8 +77,6 @@ export default class DocumentsList extends ItemsListBase<HrLinkDocumentModel> {
 
   documentsListService: DocumentsListService;
 
-  showFilter = false;
-
   filterState: DocumentListFilterState = {
     documentDateFrom: "",
     documentDateTo: "",

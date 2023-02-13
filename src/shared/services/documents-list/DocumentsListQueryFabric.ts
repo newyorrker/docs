@@ -1,9 +1,10 @@
-import { THRLinkDocumentRequest, THRLinkDocumentRequestWhere } from "@/service/repositories/types";
+import { HRLinkItemsRequest } from "@/service/repositories/types";
+import { HRLinkDocumentRequestWhere } from "@/shared/components/documents/documents-list-filter/types";
 import { PagingStateInterface } from "@/types/PagingStateInterface";
 import { QueryFabricInterface } from "@/types/QueryFabric/QueryFabricInterface";
 
 
-export interface DocumentListFilterState extends THRLinkDocumentRequestWhere {};
+export interface DocumentListFilterState extends HRLinkDocumentRequestWhere {};
 
 
 export class DocumentsListQueryFabric implements QueryFabricInterface {
@@ -12,11 +13,11 @@ export class DocumentsListQueryFabric implements QueryFabricInterface {
     ) {
     }
 
-    getQuery(filterState: DocumentListFilterState): THRLinkDocumentRequest {
+    getQuery(filterState: DocumentListFilterState): HRLinkItemsRequest<HRLinkDocumentRequestWhere> {
 
-        let where: THRLinkDocumentRequestWhere = filterState;
+        let where: HRLinkDocumentRequestWhere = filterState;
 
-        const queryParams: THRLinkDocumentRequest = {
+        const queryParams: HRLinkItemsRequest<HRLinkDocumentRequestWhere> = {
             take: this.pagingState.take,
             skip: this.pagingState.skip,
             where
@@ -24,5 +25,4 @@ export class DocumentsListQueryFabric implements QueryFabricInterface {
 
         return queryParams;
     }
-
 }

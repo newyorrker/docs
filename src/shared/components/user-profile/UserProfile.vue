@@ -48,6 +48,7 @@ export default defineComponent({
 
     &__name, &__position {
         margin: 0;
+        line-height: 1;
     }
 
     &__name {
