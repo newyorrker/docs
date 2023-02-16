@@ -21,7 +21,7 @@
         </footer>
       </template>
 
-      <sign-loading v-if="isBusy" :type="'заявление'" :showText="currentState.matches(State.onConfirmation)" />
+      <sign-loading v-if="onSignStart || onSendingTheCode" :type="'заявление'" :showText="onSendingTheCode" />
 
       <!-- error or success -->
 
@@ -34,7 +34,7 @@
         </footer>
       </template>
 
-      <template v-if="currentState.matches(State.confirmationError)">
+      <template v-if="currentState.matches(State.signError)">
         <background-icon-error >
           <p>Ошибка! <br> Не удалось подписать заявление</p>
         </background-icon-error>

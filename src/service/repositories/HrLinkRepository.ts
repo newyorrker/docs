@@ -3,6 +3,7 @@ import { HRLinkApplicationDto } from "@/types/HRLinkApplication/HrLinkApplicatio
 import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
 import { HrLinkDocumentDto } from "@/types/HrLinkDocument/HrLinkDocumentDto";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
+import { SignStatus } from "@/types/HrLinkDocument/SignStatus";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import Api from "../network/api";
 import { HRLinkItemsRequest } from "./types";
@@ -21,6 +22,8 @@ export interface HrLinkRepositoryInterface {
     getApplicationFile(applicationId: string): Promise<Blob>;
     getApplicationsTypes(): Promise<ApplicationsTypesResponse>;
     createApplication(query: HRLinkApplicationRequest): Promise<HRLinkApplicationDto>;
+
+    getSignStatus(documentId: string, signId: string): Promise<SignStatus>;
 }
 
 export class HrLinkRepository implements HrLinkRepositoryInterface {
@@ -62,8 +65,16 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
     async confirmSign(id: string, requestId: string, code: string) {
         return await this.api.client.put(`/hrlink/${this.documentType}/${id}/sign`, { id, requestId, code });
     }
+
     async rejectSign(id: string, reason: string) {
         await this.api.client.post(`/hrlink/documents/${id}/sign/reject`, { reason });
+    }
+
+    async getSignStatus(documentId: string, signId: string) {
+        return await this.api.client.get<null, AxiosResponse<{ state: SignStatus}>>(`/hrlink/documents/${documentId}/signStatus/${signId}`)
+            .then((response) => {
+                return response.data.state;
+            })
     }
 
     async getApplications<T>(query?: HRLinkItemsRequest<T>, config?: AxiosRequestConfig): Promise<HrLinkApplicationModel[]> {

@@ -1,0 +1,7 @@
+export enum SignStatus {
+    WAITING_CODE = "WAITING_CODE",
+    CONFIRMING = "CONFIRMING",
+    WRONG_CODE = "WRONG_CODE",
+    SUCCEEDED = "SUCCEEDED",
+    FAILED = "FAILED"
+}

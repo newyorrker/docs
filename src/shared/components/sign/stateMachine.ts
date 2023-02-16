@@ -4,8 +4,7 @@ export enum Event {
 
   /* errors on sign start */
   success = "SUCCESS",
-  startSignError = "START_SIGN_ERROR",
-  // timeIsUp = "TIME_IS_UP",
+  error = "ERROR",
 
   /* errors on confirm  */
   confirmationError = "CONFORMATION_ERROR",
@@ -17,6 +16,8 @@ export enum Event {
   confirm = "CONFIRM",
   retryStart = "RETRY_START",
   retryConfirm = "RETRY_CONFIRM",
+
+  tooLongOperation = "TOO_LONG_OPERATION"
 }
 
 export enum State {
@@ -33,9 +34,14 @@ export enum State {
   waitingCodeInput = "waitingCode",
 
   /**
-   * Ожидание ответа на запрос подтверждения подписи (подписываем документ)
+   * Отправка кода подтверждения
    */
-  onConfirmation = "onConfirmation",
+  onSendingTheCode = "sendingTheCode",
+
+  /**
+   * Ожидание подписания документа (подписываем документ)
+   */
+  onSigning = "onSigning",
 
   /**
    * Введенный код не валиден
@@ -53,66 +59,84 @@ export enum State {
   startSignError = "startSignError",
 
   /**
-   * Неизвестаня ошибка подтверждения подписи
+   * Неизвестаня ошибка при подписании
    */
-  confirmationError = "confirmationError",
+  signError = "signError",
 
   /**
    * Подписан успешно
    */
-  signIsSucceed = "signIsSucceed"
+  signIsSucceed = "signIsSucceed",
+
+  /**
+   * Время ожидания подписания вышло
+   */
+  signTimeIsOut = "signTimeIsOut"
 }
 
-
-export const stateMachine = createMachine({
-  initial: State.initial,
-  states: {
-    [State.initial]: {
-      on: {
-        [Event.startSign]: State.onSignStart,
-      }
-    },
-    [State.onSignStart]: {
-      on: {
-        [Event.success]: State.waitingCodeInput,
-        [Event.startSignError]: State.startSignError,
-      }
-    },
-    [State.startSignError]: {
-      on: {
-        [Event.retryStart]: State.onSignStart
-      }
-    },
-    [State.waitingCodeInput]: {
-      on: {
-        [Event.confirm]: State.onConfirmation,
-      }
-    },
-    [State.onConfirmation]: {
-      on: {
-        //
-        [Event.invalidCode]: State.invalidCode,
-        [Event.success]: State.signIsSucceed,
-        [Event.wrongCodeError]: State.wrongCode,
-        [Event.confirmationError]: State.confirmationError
-      }
-    },
-    [State.invalidCode]: {
-      on: {
-        [Event.resetCodeValidation]: State.waitingCodeInput
-      }
-    },
-    [State.wrongCode]: {
-      on: {
-        [Event.resetCodeValidation]: State.waitingCodeInput
-      }
-    },
-    [State.confirmationError]: {
-      on: {
-        [Event.retryConfirm]: State.onConfirmation
-      }
-    },
-    [State.signIsSucceed]: {
+const states =  {
+  [State.initial]: {
+    on: {
+      [Event.startSign]: State.onSignStart,
     }
+  },
+  [State.onSignStart]: {
+    on: {
+      [Event.success]: State.waitingCodeInput,
+      [Event.error]: State.startSignError,
+    }
+  },
+  [State.startSignError]: {
+    on: {
+      [Event.retryStart]: State.onSignStart
+    }
+  },
+  [State.waitingCodeInput]: {
+    on: {
+      [Event.confirm]: State.onSendingTheCode,
+    }
+  },
+  [State.onSendingTheCode]: {
+    on: {
+      [Event.invalidCode]: State.invalidCode,
+      [Event.success]: State.onSigning,
+      [Event.error]: State.signError
+    }
+  },
+  [State.invalidCode]: {
+    on: {
+      [Event.resetCodeValidation]: State.waitingCodeInput
+    }
+  },
+  [State.wrongCode]: {
+    on: {
+      [Event.resetCodeValidation]: State.waitingCodeInput
+    }
+  },
+  [State.signError]: {
+    on: {
+      [Event.retryConfirm]: State.onSendingTheCode
+    }
+  },
+  [State.signIsSucceed]: {
+
+  },
+  [State.onSigning]: {
+    on: {
+      [Event.tooLongOperation]: State.signTimeIsOut,
+      [Event.success]: State.signIsSucceed,
+      [Event.wrongCodeError]: State.wrongCode,
+      [Event.error]: State.signError
+    }
+  },
+  [State.signTimeIsOut]: {
+
   }
-})
+}
+
+const data = {
+  initial: State.initial,
+  states: states
+}
+
+export const stateMachine = createMachine(data);

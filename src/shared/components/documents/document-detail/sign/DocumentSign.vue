@@ -21,11 +21,12 @@
       </footer>
     </template>
 
-    <sign-loading v-if="isBusy" :type="'документ'" :showText="currentState.matches(State.onConfirmation)" />
+    <sign-loading v-if="onSendingTheCode || onSignStart" :type="'документ'" :showText="onSendingTheCode" />
+    <sign-loading v-if="onSigning" :verb="'Идет'" :type="'подписание...'" :showText="true" />
 
     <!-- error or success -->
 
-    <template v-if="currentState.matches(State.startSignError)">
+    <template v-if="currentState.matches(State.startSignError) || currentState.matches(State.signTimeIsOut)">
       <background-icon-error >
         <p>{{ errorMessage }}</p>
       </background-icon-error>
@@ -34,7 +35,7 @@
       </footer>
     </template>
 
-    <template v-if="currentState.matches(State.confirmationError)">
+    <template v-if="currentState.matches(State.signError)">
       <background-icon-error >
         <p>Ошибка! <br> Не удалось подписать документ</p>
       </background-icon-error>
@@ -73,6 +74,8 @@ import SignLoading from "@/shared/components/sign/SignLoading.vue";
 import MobileAppChangeButtonMessage from "@/models/MobileAppChangeButtonMessage";
 import MobileAppButtonType from "@/types/MobileAppButtonType";
 import { getLink } from "@/shared/helpers/linkHelper";
+import { State, Event } from "@/shared/components/sign/stateMachine";
+import { SignStatus } from "@/types/HrLinkDocument/SignStatus";
 
 @Component({ components: { DocumentInfo, PinCode, Button1, BackgroundIconError, BackgroundIconSuccess, BackgroundIconKey, SignTroubleshooting, SignTitle, SignLoading }})
 
@@ -85,6 +88,47 @@ export default class DocumentSign extends SignBase {
       return;
     }
     this.startSign();
+  }
+
+  async startCheckTheSign() {
+    // на протяжении минуты каждую секунду выполнять запрос проверки статуса подписания
+
+    const intervalTimer = setInterval(async () => {
+      if(!this.requestId) {
+        return;
+      }
+
+      const state = await this.$hrLinkRepository.getSignStatus(this.id, this.requestId);
+
+      if(state === SignStatus.WAITING_CODE || state === SignStatus.CONFIRMING) {
+        return;
+      }
+
+      if(state === SignStatus.SUCCEEDED) {
+        this.stateService.send(Event.success);
+        this.$emit('signed');
+      }
+
+      if(state === SignStatus.FAILED) {
+        this.stateService.send(Event.error);
+      }
+
+      if(state === SignStatus.WRONG_CODE) {
+        this.stateService.send(Event.wrongCodeError);
+      }
+
+      clearTimeout(timeoutTimer);
+      clearInterval(intervalTimer);
+
+    }, 1000);
+
+
+    const timeoutTimer = setTimeout(() => {
+      clearInterval(intervalTimer);
+      this.errorMessage = "Время ожидания подписания вышло";
+      this.stateService.send(Event.tooLongOperation);
+
+    }, 60 * 1000);
   }
 
   goToList() {
@@ -104,6 +148,10 @@ export default class DocumentSign extends SignBase {
     );
 
     document.location.href = link;
+  }
+
+  get onSigning() {
+    return this.currentState.matches(State.onSigning);
   }
 }
 

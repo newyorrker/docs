@@ -57,7 +57,7 @@ export default class DocumentSign extends Vue {
       this.errorMessage = (e as AxiosError).response?.data?.message || this.defaultErrorMessage;
 
       //show error
-      this.stateService.send(Event.startSignError);
+      this.stateService.send(Event.error);
       this.$store.dispatch('reportError', e);
     }
   }
@@ -80,7 +80,8 @@ export default class DocumentSign extends Vue {
 
         await this.$hrLinkRepository.confirmSign(this.id, this.requestId, this.code);
         this.stateService.send(Event.success);
-        this.$emit("signed");
+
+        this.startCheckTheSign();
       }
       else {
         this.stateService.send(Event.invalidCode);
@@ -89,15 +90,17 @@ export default class DocumentSign extends Vue {
     catch(e) {
       //catch the wrong pincode
       //false beacause some problem with checking code on backend
-      if(false && (e as any)?.response?.data?.code === "HRLink.incorrectCode") {
-        this.stateService.send(Event.wrongCodeError);
-      }
-      else {
-        this.stateService.send(Event.confirmationError);
-        this.errorMessage = (e as AxiosError).response?.data?.message || this.defaultErrorMessage;
-        this.$store.dispatch('reportError', e);
-      }
+      this.stateService.send(Event.error);
+      this.errorMessage = (e as AxiosError).response?.data?.message || this.defaultErrorMessage;
+      this.$store.dispatch('reportError', e);
     }
+  }
+
+  startCheckTheSign() {
+    this.stateService.send(Event.success);
+    //it is for application actualy
+
+    this.$emit("signed");
   }
 
   async restart() {
@@ -148,20 +151,24 @@ export default class DocumentSign extends Vue {
     return this.pinCodeValue.join("");
   }
 
-  get isBusy() {
-    return this.currentState.matches(State.onConfirmation) || this.currentState.matches(State.onSignStart);
-  }
-
   get isPinCodeError() {
     return this.currentState.matches(State.wrongCode) || this.currentState.matches(State.invalidCode);
   }
 
   get isError() {
-    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.confirmationError);
+    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.signError);
   }
 
   get showMain() {
     return !this.isError && !this.currentState.matches(State.signIsSucceed);
+  }
+
+  get onSignStart() {
+    return this.currentState.matches(State.onSignStart);
+  }
+
+  get onSendingTheCode() {
+    return this.currentState.matches(State.onSendingTheCode);
   }
 }
 

@@ -8,7 +8,7 @@
         <path stroke="#FFB400" stroke-width="6" d="M40.5 20.5A20 20 0 0 0 13.795 1.657l1.009 2.835A16.99 16.99 0 0 1 37.49 20.5H40.5Z" mask="url(#a)"/>
       </svg>
 
-      <div v-if="showText">Подписываем {{type}}</div>
+      <div v-if="showText">{{verb}} {{type}}</div>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 @Component({ components: {  }})
 
 export default class SignLoading extends Vue {
+  @Prop({ default: "Подписываем" }) verb: string;
   @Prop() type: string;
   @Prop() showText: boolean;
 }
