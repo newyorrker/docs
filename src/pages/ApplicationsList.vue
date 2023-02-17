@@ -1,7 +1,9 @@
 <template>
  <div class="documents-list">
-    <button v-if="showNewApplicationButton" @click="goToApplicationsCreate">Add new</button>
-    <button v-if="showFilterButton" @click="showFilter = true">Show filter</button>
+    <div v-if="showNewApplicationButton || showFilterButton" class="documents-list__web-buttons">
+      <button v-if="showNewApplicationButton" @click="goToApplicationsCreate">Add new</button>
+      <button v-if="showFilterButton" @click="showFilter = true">Show filter</button>
+    </div>
     <easy-refresh
       :on-refresh="refresh"
       :loadMore="loadMore"
@@ -85,7 +87,7 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
   filterState: ApplicationsListFilterState = {
     applicationDateFrom: "",
     applicationDateTo: "",
-    statuses: []
+    hrManagerStatuses: []
   }
 
   created() {
@@ -188,9 +190,9 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
   }
 
   get filterHasValue() {
-    const { statuses, applicationDateFrom, applicationDateTo } = this.filterState;
+    const { hrManagerStatuses, applicationDateFrom, applicationDateTo } = this.filterState;
 
-    return !!statuses?.length || !!applicationDateFrom || !!applicationDateTo;
+    return !!hrManagerStatuses?.length || !!applicationDateFrom || !!applicationDateTo;
   }
 
   get showNewApplicationButton() {
@@ -203,6 +205,3 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
 }
 
 </script>
-<style lang="scss">
-
-</style>

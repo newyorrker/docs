@@ -15,7 +15,8 @@ export class ApplicationsListQueryFabric implements QueryFabricInterface {
 
         const queryParams: HRLinkItemsRequest<HRLinkApplicationRequestWhere> = {
             take: this.pagingState.take,
-            skip: this.pagingState.skip
+            skip: this.pagingState.skip,
+            where: filterState
         };
 
         return queryParams;

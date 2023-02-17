@@ -88,6 +88,11 @@ export default class ItemsList<T> extends Vue {
   height: 100%;
   position: relative;
 
+  &__web-buttons {
+    z-index: 1;
+    position: relative;
+  }
+
   &__refresh_error {
     .v-easy-refresh-body > div {
       height: 100%;
@@ -139,6 +144,7 @@ export default class ItemsList<T> extends Vue {
     top: 0;
     left: 0;
     position: absolute;
+    z-index: 2;
   }
 
   &__web-filter-toggle-button {

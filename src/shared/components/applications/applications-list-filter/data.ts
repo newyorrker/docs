@@ -1,55 +1,37 @@
-import { Statuses } from "@/shared/components/documents/documents-list-filter/types";
-import { OtherStatuses } from "@/shared/components/documents/documents-list-filter/types";
+import { Statuses } from "@/shared/components/applications/applications-list-filter/types";
 import { Status } from "../../filter/types";
 
 export const getStatuses = (): Status<Statuses>[] => {
     return [
         {
-            id: Statuses.completed,
-            title: "Завершен",
+            id: Statuses.WAITING_FOR_APPROVAL,
+            title: "На рассмотрении",
             isActive: false,
-            iconName: "document-check-icon"
+            iconName: "hourglass-top"
         },
         {
-            id: Statuses.rejected,
+            id: Statuses.WITHOUT_HR_MANAGER,
+            title: "Не требует рассмотрения ",
+            isActive: false,
+            iconName: "warning"
+        },
+        {
+            id: Statuses.PROCESSED,
+            title: "В процессе",
+            isActive: false,
+            iconName: "paper-plane"
+        },
+        {
+            id: Statuses.REJECTED,
             title: "Отменен",
             isActive: false,
             iconName: "cross-icon"
         },
         {
-            id: Statuses.inProcess,
-            title: "В процессе",
-            isActive: false,
-            iconName: "document-progress-icon"
-        }
-    ]
-}
-
-export const getOtherStatuses = (): Status<OtherStatuses>[] => {
-    return [
-        {
-            id: Statuses.notSeen,
-            title: "Не просмотрен",
-            isActive: false,
-            iconName: "eye-strikethrough-icon"
-        },
-        {
-            id: Statuses.seen,
-            title: "Просмотрен",
-            isActive: false,
-            iconName: "eye-icon"
-        },
-        {
-            id: Statuses.rejected,
-            title: "Отклонен",
-            isActive: false,
-            iconName: "cross-icon"
-        },
-        {
-            id: Statuses.signed,
-            title: "Подписан",
+            id: Statuses.CLAIMED,
+            title: "Утверждено",
             isActive: false,
             iconName: "apply-icon"
         }
-    ];
+    ]
 }

@@ -63,17 +63,20 @@ import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 import DocumentsListFilterSection from '@/shared/components/filter/DocumentsListFilterSection.vue';
 import ListFilterBase from "@/shared/components/filter/ListFilterBase.vue";
+
+
+import CrossIcon from "@/shared/components/filter/icons/cross-icon.vue";//+
+import PaperPlane from "@/shared/components/filter/icons/paper-plane.vue";//+
+import Warning from "@/shared/components/filter/icons/warning.vue";//+
+import HourglassTop from "@/shared/components/filter/icons/hourglass-top.vue";//+
+import ApplyIcon from "@/shared/components/filter/icons/apply-icon.vue";//+
+
 import StatusTag from '@/shared/components/filter/StatusTag.vue';
 import { Status } from "@/shared/components/filter/types";
 import { getStatuses } from "./data";
 
-import EyeIcon from "@/shared/components/filter/icons/eye-icon.vue";
-import EyeStrikethroughIcon from "@/shared/components/filter/icons/eye-strikethrough-icon.vue";
-import CrossIcon from "@/shared/components/filter/icons/cross-icon.vue";
-import ApplyIcon from "@/shared/components/filter/icons/apply-icon.vue";
-import DocumentCheckIcon from "@/shared/components/filter/icons/document-check-icon.vue";
-import DocumentProgressIcon from "@/shared/components/filter/icons/document-progress-icon.vue";
 import { ApplicationsListFilterState } from "@/shared/services/applications-list/ApplicationsListQueryFabric";
+import { Statuses } from "@/shared/components/applications/applications-list-filter/types";
 
 
 @Component({ components: {
@@ -81,19 +84,18 @@ import { ApplicationsListFilterState } from "@/shared/services/applications-list
     Button1,
     DocumentsListFilterSection,
     StatusTag,
-    EyeIcon,
-    EyeStrikethroughIcon,
     CrossIcon,
     ApplyIcon,
-    DocumentCheckIcon,
-    DocumentProgressIcon
+    HourglassTop,
+    Warning,
+    PaperPlane
 }})
 
 export default class DocumentsListFilter extends ListFilterBase {
     dateLeft = "";
     dateRight =  "";
 
-    statuses: Status[] = getStatuses();
+    statuses: Status<Statuses>[] = getStatuses();
 
     apply() {
         this.$emit('apply', this.filterState);
@@ -112,7 +114,7 @@ export default class DocumentsListFilter extends ListFilterBase {
         return {
             applicationDateFrom: this.dateLeft,
             applicationDateTo: this.dateRight,
-            statuses: this.statuses.filter(s => s.isActive).map(i => i.id),
+            hrManagerStatuses: this.statuses.filter(s => s.isActive).map(i => i.id),
         }
     }
 }

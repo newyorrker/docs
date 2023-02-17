@@ -1,8 +1,15 @@
-import { Statuses } from "@/shared/components/documents/documents-list-filter/types";
+
+export enum Statuses {
+    PROCESSED = "PROCESSED",
+    REJECTED = "REJECTED",
+    CLAIMED = "CLAIMED",
+    WITHOUT_HR_MANAGER = "WITHOUT_HR_MANAGER",
+    WAITING_FOR_APPROVAL = "WAITING_FOR_APPROVAL"
+}
 
 export interface HRLinkApplicationRequestWhere {
     ids?: string[];
-    statuses?: Statuses[];
+    hrManagerStatuses?: Statuses[];
 
     /**
      * Левая граница даты документа

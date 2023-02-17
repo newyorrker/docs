@@ -87,16 +87,10 @@
     goToList() {
       const buttons: MobileAppChangeButtonMessage[] = [
         {
-          type: MobileAppButtonType.filter,
-          params: {
-            visible: true
-          }
+          type: MobileAppButtonType.new
         },
         {
-          type: MobileAppButtonType.new,
-          params: {
-            visible: true
-          }
+          type: MobileAppButtonType.filter
         }
       ]
       const link = getLink(
