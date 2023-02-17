@@ -35,5 +35,12 @@ export default class Button1 extends Vue {
     padding: 11px 0;
     cursor: pointer;
     border: 1px var(--border-color) solid;
+
+    &:disabled {
+      background-color: #F2F2F2;
+      color: #7B7B7B;
+      border-color: #F2F2F2;
+      cursor: default;
+    }
 }
 </style>

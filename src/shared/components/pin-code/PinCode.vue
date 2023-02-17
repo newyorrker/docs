@@ -34,6 +34,16 @@ export default class PinCode extends Vue {
         let value = (e.target as HTMLInputElement | null)?.value;
 
         this.input(value, index);
+
+        if(index === this.value.length - 1 && value) {
+            const inputs = this.getInputRefs();
+
+            if(typeof inputs === "object") {
+                inputs[index].blur();
+            }
+
+            this.$emit("filled");
+        }
     }
 
     input(value: string | undefined, index: number) {

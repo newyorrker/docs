@@ -8,7 +8,7 @@
         <document-info :source="source" />
 
         <!-- PINCODE: -->
-        <pin-code v-model="pinCodeValue" :error="isPinCodeError" />
+        <pin-code v-model="pinCodeValue" @filled="filled" :error="isPinCodeError" />
 
         <sign-troubleshooting @restart="restart"
           :codeIsWrong="currentState.matches(State.wrongCode)"
@@ -17,7 +17,7 @@
 
       </div>
       <footer class="document-sign__footer">
-        <button-1 @click="confirm">Подтвердить</button-1>
+        <button-1 @click="confirm" :disabled="isPinCodeError">Подтвердить</button-1>
       </footer>
     </template>
 
@@ -91,6 +91,10 @@ export default class DocumentSign extends SignBase {
       return;
     }
     this.startSign();
+  }
+
+  filled() {
+    this.confirm();
   }
 
   async startCheckTheSign() {

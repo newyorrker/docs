@@ -109,8 +109,7 @@ const states =  {
   },
   [State.wrongCode]: {
     on: {
-      [Event.resetCodeValidation]: State.waitingCodeInput,
-      [Event.confirm]: State.onSendingTheCode
+      [Event.resetCodeValidation]: State.waitingCodeInput
     }
   },
   [State.signError]: {
