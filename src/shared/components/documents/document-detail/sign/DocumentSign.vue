@@ -26,7 +26,8 @@
 
     <!-- error or success -->
 
-    <template v-if="currentState.matches(State.startSignError) || currentState.matches(State.signTimeIsOut)">
+    <!-- STARTERROR -->
+    <template v-if="currentState.matches(State.startSignError)">
       <background-icon-error >
         <p>{{ errorMessage }}</p>
       </background-icon-error>
@@ -35,9 +36,10 @@
       </footer>
     </template>
 
-    <template v-if="currentState.matches(State.signError)">
+    <!-- SIGNING:ERROR -->
+    <template v-if="currentState.matches(State.signError) || currentState.matches(State.signTimeIsOut)">
       <background-icon-error >
-        <p>Ошибка! <br> Не удалось подписать документ</p>
+        <p>Ошибка! <br> {{ errorMessage }}</p>
       </background-icon-error>
 
       <footer class="document-sign__footer">
@@ -45,6 +47,7 @@
       </footer>
     </template>
 
+    <!-- SUCCESS -->
     <template v-if="currentState.matches(State.signIsSucceed)">
       <background-icon-success >
         <p>Вы подписали документ!</p>

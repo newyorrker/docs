@@ -43,7 +43,9 @@ export default class DocumentSign extends Vue {
    */
   async startSign() {
 
+    this.resendDuration = null;
     this.canRestartSign = false;
+    this.pinCodeValue = ["", "", "", "", "", ""];
 
     this.stateService.send(Event.startSign);
 
@@ -91,7 +93,7 @@ export default class DocumentSign extends Vue {
       //catch the wrong pincode
       //false beacause some problem with checking code on backend
       this.stateService.send(Event.error);
-      this.errorMessage = (e as AxiosError).response?.data?.message || this.defaultErrorMessage;
+      this.errorMessage = (e as AxiosError).response?.data?.message || "Не удалось подписать документ";
       this.$store.dispatch('reportError', e);
     }
   }
@@ -156,7 +158,7 @@ export default class DocumentSign extends Vue {
   }
 
   get isError() {
-    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.signError);
+    return  this.currentState.matches(State.startSignError) || this.currentState.matches(State.signError) || this.currentState.matches(State.signTimeIsOut);
   }
 
   get showMain() {

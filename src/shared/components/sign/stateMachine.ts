@@ -15,7 +15,6 @@ export enum Event {
   startSign = "START_SIGN",
   confirm = "CONFIRM",
   retryStart = "RETRY_START",
-  retryConfirm = "RETRY_CONFIRM",
 
   tooLongOperation = "TOO_LONG_OPERATION"
 }
@@ -110,12 +109,13 @@ const states =  {
   },
   [State.wrongCode]: {
     on: {
-      [Event.resetCodeValidation]: State.waitingCodeInput
+      [Event.resetCodeValidation]: State.waitingCodeInput,
+      [Event.confirm]: State.onSendingTheCode
     }
   },
   [State.signError]: {
     on: {
-      [Event.retryConfirm]: State.onSendingTheCode
+      [Event.confirm]: State.onSendingTheCode,
     }
   },
   [State.signIsSucceed]: {
@@ -130,7 +130,9 @@ const states =  {
     }
   },
   [State.signTimeIsOut]: {
-
+    on: {
+      [Event.confirm]: State.onSendingTheCode
+    }
   }
 }
 

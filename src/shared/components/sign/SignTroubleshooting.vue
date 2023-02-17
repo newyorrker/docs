@@ -3,7 +3,7 @@
     <p>
       <span>{{codeIsWrong ? 'Неверный код!' : 'Не пришел код?'}} </span>
       <a v-if="canRestartSign" @click="restart">Отправить повторно</a>
-      <a v-else>Отправить повторно через {{ time }}</a>
+      <a v-else-if="time">Отправить повторно через {{ time }}</a>
     </p>
   </div>
 </template>
