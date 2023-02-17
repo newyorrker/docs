@@ -1,6 +1,7 @@
 import { HrLinkRepositoryInterface } from "@/service/repositories/HrLinkRepository";
 import { QueryFabricInterface } from "@/types/QueryFabric/QueryFabricInterface";
 import Axios, { CancelTokenSource } from "axios";
+import { ApplicationsListFilterState } from "./ApplicationsListQueryFabric";
 
 export class ApplicationsListService {
 
@@ -13,7 +14,7 @@ export class ApplicationsListService {
 
     }
 
-    async load(filterState: any) {
+    async load(filterState: ApplicationsListFilterState) {
         const queryParams = this.queryFabric.getQuery(filterState);
 
         if (this.cancelToken) {

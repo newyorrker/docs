@@ -116,7 +116,7 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
     }
 
     try {
-      const newDocuments = await this.applicationsListService.load({});
+      const newDocuments = await this.applicationsListService.load(this.filterState);
 
       this.isError = false;
 
@@ -155,7 +155,12 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
   applyFilter(filterState: ApplicationsListFilterState) {
     this.filterState = filterState;
 
-    changeButtons([{ type: MobileAppButtonType.filter, params: { filtered: this.filterHasValue } }]);
+    changeButtons(
+      [
+        { type: MobileAppButtonType.filter, params: { filtered: this.filterHasValue } },
+        { type: MobileAppButtonType.new, params: {  } }
+      ]
+    );
 
     this.items = [];
 
@@ -176,12 +181,16 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
     if (button === MobileAppButtonType.new) {
       this.goToApplicationsCreate();
     }
+
+    if (button === MobileAppButtonType.filter) {
+      this.showFilter = true;
+    }
   }
 
   get filterHasValue() {
-    const { statuses } = this.filterState;
+    const { statuses, applicationDateFrom, applicationDateTo } = this.filterState;
 
-    return !!statuses?.length;
+    return !!statuses?.length || !!applicationDateFrom || !!applicationDateTo;
   }
 
   get showNewApplicationButton() {

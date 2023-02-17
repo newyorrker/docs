@@ -87,6 +87,12 @@
     goToList() {
       const buttons: MobileAppChangeButtonMessage[] = [
         {
+          type: MobileAppButtonType.filter,
+          params: {
+            visible: true
+          }
+        },
+        {
           type: MobileAppButtonType.new,
           params: {
             visible: true
