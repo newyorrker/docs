@@ -9,7 +9,7 @@ import { Vue, Component } from "vue-property-decorator";
 
 import SpinnerSvg from "@/shared/components/svg/SpinnerSvg.vue";
 
-@Component({ components: {  }})
+@Component({ components: { SpinnerSvg }})
 
 export default class BackgroundSpinner extends Vue {
 

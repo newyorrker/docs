@@ -105,7 +105,7 @@ export default class ApplicationForm extends Vue {
     const currentUserDirectionId = this.currentUserProfile.directionId;
 
     if(currentUserDirectionId && this.currentUserProfile.userId) {
-      this.service = new ApplicationFormService(this.$userRepository, this.$objectRepository, this.localStorageClient, this.currentUserProfile.userId);
+      this.service = new ApplicationFormService(this.$hrLinkRepository, this.localStorageClient, this.currentUserProfile.userId);
 
       try {
         this.$emit("loading", true);

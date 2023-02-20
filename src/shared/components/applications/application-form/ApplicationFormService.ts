@@ -1,13 +1,11 @@
 import { LocalStorageClient } from "@/shared/services/common/local-storage-client/LocalStorageClient";
 import { UserProfile } from "../../../../../../../common/api/models/UserProfile";
-import { ObjectRepository } from "../../../../../../../common/api/repositories/ObjectRepository";
-import { UserRepository } from "../../../../../../../common/api/repositories/UserRepository";
 import { SelectorItem } from "@/shared/components/controls/select/types";
+import { HrLinkRepositoryInterface } from "@/service/repositories/HrLinkRepository";
 
 export class ApplicationFormService {
     constructor(
-        private userRepository: UserRepository,
-        private objectRepository: ObjectRepository,
+        private hrLinkRepository: HrLinkRepositoryInterface,
         private localStorageClient: LocalStorageClient,
         private userId: number
     ) {
@@ -15,34 +13,15 @@ export class ApplicationFormService {
     }
 
     async getApproversList(currentUserDirectionId: string, currentUserId: number): Promise<UserProfile[]> {
-        const profiles = await this.userRepository.profiles({ include: ["firstName", "lastName", "middleName", "userId", "position", "photoFileId"], where: { directionId: currentUserDirectionId }, take: -1 })
 
-        if(!profiles.length) {
-            return [];
+        const query = {
+            include: ["firstName", "firstNameRaw", "lastName", "lastNameRaw", "middleName", "middleNameRaw", "userId", "position", "positionRaw", "photoFileId"],
+            where: { directionId: currentUserDirectionId }, take: -1
         }
 
-        //получить список пользователей своего подраздаления по schema UserProfiles
+        const list = await this.hrLinkRepository.getColleagues(query);
 
-
-        const userIds = profiles
-        .filter(p => p.userId !== currentUserId && p.userId)
-        .map(p => p.userId as number);
-
-
-      const profilesMap = new Map(profiles.map((profile) => [profile.userId, profile]));
-
-      //по списку userIds получаем HRLinkUserSettings
-      const settingsUserIds = await this.objectRepository.query<{userId: number}>("HRLinkUserSettings", { include: ['userId'], where: { userId: { $in: userIds } }, take: -1 })
-
-
-      const list = settingsUserIds.filter(({userId}) => profilesMap.has(userId)).map(({userId}) => profilesMap.get(userId)) as UserProfile[];
-
-
-      //restore selected approver from LS it it exist in @list
-
-      //по полученному списку формируем итоговый список профилей для отображения в списке
-
-      return list;
+        return list.filter(item => item.userId !== currentUserId);
     }
 
     /**

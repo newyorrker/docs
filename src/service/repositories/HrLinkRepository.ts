@@ -1,6 +1,8 @@
 import { ApplicationsTypesResponse, HRLinkApplicationRequest } from "@/types/HRLinkApplication";
 import { HRLinkApplicationDto } from "@/types/HRLinkApplication/HrLinkApplicationDto";
 import { HrLinkApplicationModel } from "@/types/HRLinkApplication/HrLinkApplicationModel";
+import { DocumentUserProfile } from "@/types/HrLinkDocument/DocumentUserProfile";
+import { DocumentUserProfileModel } from "@/types/HrLinkDocument/DocumentUserProfileModel";
 import { HrLinkDocumentDto } from "@/types/HrLinkDocument/HrLinkDocumentDto";
 import { HrLinkDocumentModel } from "@/types/HrLinkDocument/HrLinkDocumentModel";
 import { SignStatus } from "@/types/HrLinkDocument/SignStatus";
@@ -24,6 +26,8 @@ export interface HrLinkRepositoryInterface {
     createApplication(query: HRLinkApplicationRequest): Promise<HRLinkApplicationDto>;
 
     getSignStatus(documentId: string, signId: string): Promise<SignStatus>;
+
+    getColleagues(query: any): Promise<DocumentUserProfileModel[]>;
 }
 
 export class HrLinkRepository implements HrLinkRepositoryInterface {
@@ -110,5 +114,12 @@ export class HrLinkRepository implements HrLinkRepositoryInterface {
         .then(async (response) => {
             return response.data;
         });
+    }
+
+    async getColleagues(query: any = {}): Promise<DocumentUserProfileModel[]> {
+        return this.api.client.post<DocumentUserProfile[]>("/hrlink/colleagues/query", query)
+            .then((response) => {
+                return response.data.map((item) => new DocumentUserProfileModel(item));
+            });
     }
 }

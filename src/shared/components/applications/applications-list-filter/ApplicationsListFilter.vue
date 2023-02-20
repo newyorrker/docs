@@ -57,19 +57,18 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 
 import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 import DocumentsListFilterSection from '@/shared/components/filter/DocumentsListFilterSection.vue';
 import ListFilterBase from "@/shared/components/filter/ListFilterBase.vue";
 
-
-import CrossIcon from "@/shared/components/filter/icons/cross-icon.vue";//+
-import PaperPlane from "@/shared/components/filter/icons/paper-plane.vue";//+
-import Warning from "@/shared/components/filter/icons/warning.vue";//+
-import HourglassTop from "@/shared/components/filter/icons/hourglass-top.vue";//+
-import ApplyIcon from "@/shared/components/filter/icons/apply-icon.vue";//+
+import CrossIcon from "@/shared/components/filter/icons/cross-icon.vue";
+import PaperPlane from "@/shared/components/filter/icons/paper-plane.vue";
+import Warning from "@/shared/components/filter/icons/warning.vue";
+import HourglassTop from "@/shared/components/filter/icons/hourglass-top.vue";
+import ApplyIcon from "@/shared/components/filter/icons/apply-icon.vue";
 
 import StatusTag from '@/shared/components/filter/StatusTag.vue';
 import { Status } from "@/shared/components/filter/types";

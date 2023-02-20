@@ -6,7 +6,6 @@ import i18n from '@/service/locale/i18';
 import Api from '@/service/network/api';
 import { HrLinkRepository } from '@/service/repositories/HrLinkRepository';
 import { ObjectRepository } from "../../../../../common/api/repositories/ObjectRepository";
-import { UserRepository } from "../../../../../common/api/repositories/UserRepository";
 
 export const initApplication = (App: VueConstructor, type: "documents" | "applications") => {
     const app = new Vue({
@@ -39,8 +38,6 @@ export const initApplication = (App: VueConstructor, type: "documents" | "applic
             this.isSessionSet = true;
 
             Vue.prototype.$hrLinkRepository = new HrLinkRepository(type);
-            Vue.prototype.$objectRepository = new ObjectRepository(Api.getInstance().getClient());
-            Vue.prototype.$userRepository = new UserRepository(Api.getInstance().getClient());
         },
         activateFromNative() {
             this.activate = !this.activate;

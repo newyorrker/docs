@@ -1,7 +1,5 @@
 import Vue, { VNode } from "vue";
 import { HrLinkRepositoryInterface } from "@/service/repositories/HrLinkRepository";
-import { ObjectRepository } from "../../../common/api/repositories/ObjectRepository";
-import { UserRepository } from "../../../common/api/repositories/UserRepository";
 
 declare global {
   namespace JSX {
@@ -19,8 +17,6 @@ declare module "vue/types/vue" {
   interface Vue {
     $style: Record<string, string>;
     $hrLinkRepository: HrLinkRepositoryInterface;
-    $objectRepository: ObjectRepository;
-    $userRepository: UserRepository;
   }
 }
 
