@@ -5,7 +5,6 @@ import store from '@/service/store';
 import i18n from '@/service/locale/i18';
 import Api from '@/service/network/api';
 import { HrLinkRepository } from '@/service/repositories/HrLinkRepository';
-import { ObjectRepository } from "../../../../../common/api/repositories/ObjectRepository";
 
 export const initApplication = (App: VueConstructor, type: "documents" | "applications") => {
     const app = new Vue({

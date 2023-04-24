@@ -1,10 +1,10 @@
 <template>
   <div class="form-control-list">
     <div v-for="field in fields" class="form-control-list__item">
-      <form-group :name="field.label" :nameFor="field.id">
-        <text-input v-if="field.type === FieldType.string" :name="field.id" />
-        <number-input v-if="field.type === FieldType.number" :name="field.id" />
-        <date-input v-if="field.type === FieldType.date" :name="field.id" :value="''" />
+      <form-group :title="field.label" :forName="field.id">
+        <input-text v-if="field.type === FieldType.string" :name="field.id" />
+        <input-text v-if="field.type === FieldType.number" :name="field.id" type="number" inputmode="numeric" />
+        <input-date v-if="field.type === FieldType.date" :name="field.id" :value="''" />
         <span v-if="errors[field.id]" class="form-error">Обязательное поле</span>
       </form-group>
     </div>
@@ -14,13 +14,9 @@
 <script lang="ts">
 import { FieldType, HRLinkApplicationTypeField } from "@/types/HRLinkApplication";
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { FormGroup, InputDate, InputText } from "ui-lib";
 
-import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
-import TextInput from "@/shared/components/controls/text/TextInput.vue";
-import NumberInput from "@/shared/components/controls/number/NumberInput.vue";
-import FormGroup from "@/shared/components/form/FormGroup.vue";
-
-@Component({ components: { DateInput, TextInput, NumberInput, FormGroup }})
+@Component({ components: { InputDate, FormGroup, InputText }})
 
 export default class FormControlList extends Vue {
   @Prop() fields: HRLinkApplicationTypeField[];

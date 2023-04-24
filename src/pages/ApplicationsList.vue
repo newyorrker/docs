@@ -172,7 +172,7 @@ export default class ApplicationsList extends ItemsListBase<HrLinkApplicationMod
   goToApplicationsCreate() {
     const link = getLink(
       this.$store.getters['platform'],
-      { isApplicationCreate: "true", isTypeSelect: "true" },
+      { isApplicationCreate: "true" },
       "Создание заявления"
     );
 

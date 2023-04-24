@@ -1,7 +1,7 @@
 <template>
   <div class="applications-create">
     <template v-if="!isError">
-      <form-group class="applications-create__type" :name="'Тип заявления'">
+      <form-group class="applications-create__type" :title="'Тип заявления'">
         <select-control
           v-model="selectedTypeId"
           :items="applicationTypesList"
@@ -45,9 +45,7 @@ import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 
 import { ApplicationsTypesResponse } from "@/types/HRLinkApplication";
 
-import SelectControl from "@/shared/components/controls/select/SelectControl.vue"
-import FormGroup from "@/shared/components/form/FormGroup.vue";
-import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
+import { FormGroup, SelectControl } from "ui-lib";
 import { UgmkUserProfile } from "@/models/UgmkUserProfile";
 import { SelectorItem } from "@/shared/components/controls/select/types";
 
@@ -56,7 +54,7 @@ const sleep = (time: number) => {
 };
 
 
-@Component({ components: { DateInput, ApplicationForm, SelectControl, FormGroup, BackgroundIconError, BackgroundSpinner, Button1 }})
+@Component({ components: { ApplicationForm, SelectControl, FormGroup, BackgroundIconError, BackgroundSpinner, Button1 }})
 
 export default class ApplicationsCreate extends Vue {
 

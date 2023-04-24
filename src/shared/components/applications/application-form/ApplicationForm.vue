@@ -3,7 +3,7 @@
     <template v-if="!isError">
       <div class="application-form__extra-controls">
         <!-- APPROVER -->
-        <form-group :name="'Получатель заявления'">
+        <form-group :title="'Получатель заявления'">
           <select-control
             v-model="selectedApproverUserId"
             :items="approversList"
@@ -23,8 +23,8 @@
         </form-group>
 
         <!-- DATE -->
-        <form-group  :name="'Дата заявления'">
-          <date-input v-model="applicationDate" :needClear="false" />
+        <form-group  :title="'Дата заявления'">
+          <input-date v-model="applicationDate" :platform="platform" />
         </form-group>
         <span class="form-error" v-if="errors.applicationDate">Обязательное поле</span>
       </div>
@@ -48,9 +48,7 @@ import { FieldType, HRLinkApplicationField, HRLinkApplicationRequest, HRLinkAppl
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
-import SelectControl from "@/shared/components/controls/select/SelectControl.vue"
-import FormGroup from "@/shared/components/form/FormGroup.vue";
-import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
+import { FormGroup, InputDate, SelectControl } from "ui-lib";
 
 import FormControlList from "./FormControlList.vue";
 import { LocalStorageClient } from "@/shared/services/common/local-storage-client/LocalStorageClient";
@@ -78,7 +76,7 @@ interface AproversSelectItem {
   profile: UserProfile;
 }
 
-@Component({ components: { Button1, FormControlList, DateInput, FormGroup, SelectControl, UserProfileComponent }})
+@Component({ components: { Button1, FormControlList, InputDate, FormGroup, SelectControl, UserProfileComponent }})
 
 export default class ApplicationForm extends Vue {
   @Prop({ default: () => [] }) mainFields: HRLinkApplicationTypeField[];
@@ -198,7 +196,7 @@ export default class ApplicationForm extends Vue {
 
   goToApplication(item: HRLinkApplicationDto) {
     const link = getLink(
-      this.$store.getters['platform'],
+      this.platform,
       { id: item.applicationGroupId },
       item.typeName
     );
@@ -293,6 +291,10 @@ export default class ApplicationForm extends Vue {
   @Watch("applicationDate")
   watchApplicationDateHandler(value: string) {
     //сброс ошибки
+  }
+
+  get platform() {
+    return this.$store.getters['platform'];
   }
 
   get systemFieldsIds() {

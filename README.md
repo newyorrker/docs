@@ -18,12 +18,7 @@ yarn serve
 yarn build
 ```
 
-### Lints and fixes files
 
-```
-yarn lint
-```
+### Проект содержит в себе 2 entry points applications и documents
 
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Что-бы загрузить экран нужно указывать соответствующий html файл applications.html или documents.html вместо index.html

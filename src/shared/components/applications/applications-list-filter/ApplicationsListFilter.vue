@@ -29,9 +29,9 @@
                         Период публикации
                     </template>
                     <div class="documents-list-filter__date">
-                        <date-input v-model="dateLeft"/>
+                        <input-date v-model="dateLeft"/>
                         —
-                        <date-input v-model="dateRight"/>
+                        <input-date v-model="dateRight"/>
                     </div>
                 </documents-listFilter-section>
 
@@ -59,7 +59,7 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 
-import DateInput from "@/shared/components/controls/date-input/DateInput.vue";
+import { InputDate } from "ui-lib";
 import Button1 from "@/shared/components/controls/buttons/Button1.vue";
 import DocumentsListFilterSection from '@/shared/components/filter/DocumentsListFilterSection.vue';
 import ListFilterBase from "@/shared/components/filter/ListFilterBase.vue";
@@ -79,7 +79,7 @@ import { Statuses } from "@/shared/components/applications/applications-list-fil
 
 
 @Component({ components: {
-    DateInput,
+    InputDate,
     Button1,
     DocumentsListFilterSection,
     StatusTag,

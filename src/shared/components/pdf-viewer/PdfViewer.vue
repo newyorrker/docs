@@ -123,7 +123,7 @@ export default class PDFViewer extends Vue {
     }
     else {
       // @ts-ignore
-      appercode.openFromDataUrl(this.data, name, "application/pdf");
+      appercode.openFromDataUrl(this.filebase64String, name, "application/pdf");
     }
   }
 

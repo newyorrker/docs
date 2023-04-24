@@ -1,46 +1,19 @@
 <template>
-  <button @click="$emit('click', $event)" v-bind="{...$listeners, ...$attrs}" :style="styleObject" class="button-1"><slot/></button>
+  <button-default @click="$emit('click', $event)" :color="color" :textColor="textColor" v-bind="{...$listeners, ...$attrs}">
+    <slot/>
+  </button-default>
+  <!-- <button  :style="styleObject" class="button-1"></button> -->
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { ButtonDefault } from "ui-lib";
 
-@Component({ components: {  }})
+@Component({ components: { ButtonDefault }})
 
 export default class Button1 extends Vue {
   @Prop({ default: "var(--accent-color)" }) color!: string;
-  @Prop({ default: "var(--accent-color)" }) borderColor!: string;
   @Prop({ default: "#ffffff" }) textColor!: string;
-
-  get styleObject() {
-      return {
-          '--bg-color' : this.color,
-          '--border-color' : this.borderColor,
-          '--text-color': this.textColor
-      }
-  }
 }
 
 </script>
-<style lang="scss">
-.button-1 {
-    width: 100%;
-    background-color: var(--bg-color);
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 17px;
-    color: var(--text-color);
-    border: 0;
-    border-radius: 4px;
-    padding: 11px 0;
-    cursor: pointer;
-    border: 1px var(--border-color) solid;
-
-    &:disabled {
-      background-color: #F2F2F2;
-      color: #7B7B7B;
-      border-color: #F2F2F2;
-      cursor: default;
-    }
-}
-</style>
